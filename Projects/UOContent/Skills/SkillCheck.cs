@@ -123,7 +123,9 @@ public static class SkillCheck
             }
             else if (AllowGain(from, skill, amObj))
             {
-                var gc = (double)(from.Skills.Cap - from.Skills.Total) / from.Skills.Cap;
+                var gc = SoloProgression.AppliesTo(from)
+                    ? 1.0
+                    : (double)(from.Skills.Cap - from.Skills.Total) / from.Skills.Cap;
                 gc += (skill.Cap - skill.Base) / skill.Cap;
                 gc /= 2;
 
@@ -245,7 +247,10 @@ public static class SkillCheck
             return;
         }
 
-        if (skill.Base < skill.Cap && skill.Lock == SkillLock.Up)
+        var solo = SoloProgression.AppliesTo(from);
+        var cap = solo ? Math.Min(skill.CapFixedPoint, SoloProgression.MaxSkill * 10) : skill.CapFixedPoint;
+
+        if (skill.BaseFixedPoint < cap && skill.Lock == SkillLock.Up)
         {
             var toGain = 1;
 
@@ -256,7 +261,7 @@ public static class SkillCheck
 
             var skills = from.Skills;
 
-            if (from.Player && skills.Total / (double)skills.Cap >= Utility.RandomDouble())
+            if (!solo && from.Player && skills.Total / (double)skills.Cap >= Utility.RandomDouble())
             {
                 for (var i = 0; i < skills.Length; ++i)
                 {
@@ -275,9 +280,9 @@ public static class SkillCheck
                 toGain *= Utility.RandomMinMax(2, 5);
             }
 
-            if (!from.Player || skills.Total < skills.Cap)
+            if (solo || !from.Player || skills.Total < skills.Cap)
             {
-                skill.BaseFixedPoint = Math.Min(skill.BaseFixedPoint + toGain, skill.CapFixedPoint);
+                skill.BaseFixedPoint = Math.Min(skill.BaseFixedPoint + toGain, cap);
             }
         }
 
@@ -349,10 +354,13 @@ public static class SkillCheck
         };
     }
 
+    private static int GetStatMax(Mobile from) =>
+        SoloProgression.Enabled && from is PlayerMobile player ? SoloProgression.GetStatLimit(player) : _statMax;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool CanRaise(Mobile from, Stat stat)
     {
-        if (!(from is BaseCreature creature && creature.Controlled))
+        if (!SoloProgression.AppliesTo(from) && !(from is BaseCreature creature && creature.Controlled))
         {
             if (from.RawStatTotal >= from.StatCap)
             {
@@ -360,18 +368,20 @@ public static class SkillCheck
             }
         }
 
+        var statMax = GetStatMax(from);
         return stat switch
         {
-            Stat.Str => from.StrLock == StatLockType.Up && from.RawStr < _statMax,
-            Stat.Dex => from.DexLock == StatLockType.Up && from.RawDex < _statMax,
-            Stat.Int => from.IntLock == StatLockType.Up && from.RawInt < _statMax,
+            Stat.Str => from.StrLock == StatLockType.Up && from.RawStr < statMax,
+            Stat.Dex => from.DexLock == StatLockType.Up && from.RawDex < statMax,
+            Stat.Int => from.IntLock == StatLockType.Up && from.RawInt < statMax,
             _        => false
         };
     }
 
     public static void IncreaseStat(Mobile from, Stat stat, bool atrophy)
     {
-        atrophy = atrophy || from.RawStatTotal >= from.StatCap;
+        atrophy = !SoloProgression.AppliesTo(from) && (atrophy || from.RawStatTotal >= from.StatCap);
+        var statMax = GetStatMax(from);
 
         switch (stat)
         {
@@ -391,7 +401,7 @@ public static class SkillCheck
 
                     if (CanRaise(from, Stat.Str))
                     {
-                        from.RawStr = Math.Min(from.RawStr + 1, _statMax);
+                        from.RawStr = Math.Min(from.RawStr + 1, statMax);
                     }
 
                     break;
@@ -412,7 +422,7 @@ public static class SkillCheck
 
                     if (CanRaise(from, Stat.Dex))
                     {
-                        from.RawDex = Math.Min(from.RawDex + 1, _statMax);
+                        from.RawDex = Math.Min(from.RawDex + 1, statMax);
                     }
 
                     break;
@@ -433,7 +443,7 @@ public static class SkillCheck
 
                     if (CanRaise(from, Stat.Int))
                     {
-                        from.RawInt = Math.Min(from.RawInt + 1, _statMax);
+                        from.RawInt = Math.Min(from.RawInt + 1, statMax);
                     }
 
                     break;
@@ -498,7 +508,8 @@ public static class SkillCheck
                 }
         }
 
-        var atrophy = from.RawStatTotal / (double)from.StatCap >= Utility.RandomDouble();
+        var atrophy = !SoloProgression.AppliesTo(from) &&
+                      from.RawStatTotal / (double)from.StatCap >= Utility.RandomDouble();
 
         IncreaseStat(from, stat, atrophy);
     }

@@ -24,6 +24,11 @@ public partial class StatCapScroll : SpecialScroll
     {
         get
         {
+            if (SoloProgression.Enabled)
+            {
+                return 0;
+            }
+
             var level = Math.DivRem((int)Value - 230, 5, out var rem);
 
             /* Wondrous Scroll (+5 Maximum Stats): OR
@@ -41,11 +46,20 @@ public partial class StatCapScroll : SpecialScroll
         }
     }
 
-    public override string DefaultTitle =>
-        Html.Color($"Power Scroll ({((int)Value - 225 >= 0 ? "+" : "")}{(int)Value - 225} Maximum Stats):", 0xFFFFFF);
+    private int SoloBonus => SoloProgression.GetStatScrollBonus((int)Value);
+
+    public override string DefaultTitle => SoloProgression.Enabled
+        ? Html.Color($"Stat Power Scroll (+{SoloBonus} to each stat cap)", 0xFFFFFF)
+        : Html.Color($"Power Scroll ({((int)Value - 225 >= 0 ? "+" : "")}{(int)Value - 225} Maximum Stats):", 0xFFFFFF);
 
     public override void AddNameProperty(IPropertyList list)
     {
+        if (SoloProgression.Enabled)
+        {
+            list.Add($"Stat Power Scroll (+{SoloBonus} to each stat cap)");
+            return;
+        }
+
         var truncValue = (int)Value;
         var level = Math.DivRem(truncValue - 230, 5, out var rem);
 
@@ -68,6 +82,12 @@ public partial class StatCapScroll : SpecialScroll
 
     public override void OnSingleClick(Mobile from)
     {
+        if (SoloProgression.AppliesTo(from))
+        {
+            LabelTo(from, $"Stat Power Scroll (+{SoloBonus} to each stat cap)");
+            return;
+        }
+
         var truncValue = (int)Value;
         var level = (truncValue - 230) / 5;
 
@@ -82,6 +102,16 @@ public partial class StatCapScroll : SpecialScroll
         }
     }
 
+    private int TargetCap(Mobile from)
+    {
+        if (SoloProgression.AppliesTo(from))
+        {
+            return (SoloProgression.BaseStat + SoloBonus) * 3;
+        }
+
+        return (int)Value + (from is PlayerMobile { HasStatReward: true } ? 5 : 0);
+    }
+
     public override bool CanUse(Mobile from)
     {
         if (!base.CanUse(from))
@@ -89,14 +119,7 @@ public partial class StatCapScroll : SpecialScroll
             return false;
         }
 
-        var newValue = (int)Value;
-
-        if (from is PlayerMobile { HasStatReward: true })
-        {
-            newValue += 5;
-        }
-
-        if (from.StatCap >= newValue)
+        if (from.StatCap >= TargetCap(from))
         {
             from.SendLocalizedMessage(1049510); // Your stats are too high for this power scroll.
             return false;
@@ -114,14 +137,7 @@ public partial class StatCapScroll : SpecialScroll
 
         from.SendLocalizedMessage(1049512); // You feel a surge of magic as the scroll enhances your powers!
 
-        if (from is PlayerMobile { HasStatReward: true } mobile)
-        {
-            mobile.StatCap = (int)Value + 5;
-        }
-        else
-        {
-            from.StatCap = (int)Value;
-        }
+        from.StatCap = TargetCap(from);
 
         Effects.SendLocationParticles(
             EffectItem.Create(from.Location, from.Map, EffectItem.DefaultDuration),

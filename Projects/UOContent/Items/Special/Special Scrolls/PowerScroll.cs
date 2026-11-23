@@ -68,6 +68,7 @@ public partial class PowerScroll : SpecialScroll
     */
 
     private static SkillName[] _skills;
+    private static SkillName[] _soloSkills;
 
     [Constructible]
     public PowerScroll(SkillName skill = SkillName.Alchemy, double value = 0.0) : base(skill, value)
@@ -116,6 +117,11 @@ public partial class PowerScroll : SpecialScroll
     {
         get
         {
+            if (SoloProgression.Enabled)
+            {
+                return _soloSkills ??= Array.ConvertAll(SkillInfo.Table, info => (SkillName)info.SkillID);
+            }
+
             if (_skills == null)
             {
                 var totalSkills = _preAosSkills.Length;
@@ -235,6 +241,9 @@ public partial class PowerScroll : SpecialScroll
         LabelTo(from, $"a power scroll of {GetSkillName()} ({truncValue:0.#} Skill)");
     }
 
+    private double TargetCap(Mobile from) =>
+        SoloProgression.AppliesTo(from) ? Math.Min(Value, SoloProgression.MaxSkill) : Value;
+
     public override bool CanUse(Mobile from)
     {
         if (!base.CanUse(from))
@@ -249,7 +258,7 @@ public partial class PowerScroll : SpecialScroll
             return false;
         }
 
-        if (skill.Cap >= Value)
+        if (skill.Cap >= TargetCap(from))
         {
             // Your ~1_type~ is too high for this power scroll.
             from.SendLocalizedMessage(1049511, $"#{AosSkillBonuses.GetLowercaseLabel(Skill)}");
@@ -269,7 +278,7 @@ public partial class PowerScroll : SpecialScroll
         // You feel a surge of magic as the scroll enhances your ~1_type~!
         from.SendLocalizedMessage(1049513, $"#{AosSkillBonuses.GetLowercaseLabel(Skill)}");
 
-        from.Skills[Skill].Cap = Value;
+        from.Skills[Skill].Cap = TargetCap(from);
 
         Effects.SendLocationParticles(
             EffectItem.Create(from.Location, from.Map, EffectItem.DefaultDuration),

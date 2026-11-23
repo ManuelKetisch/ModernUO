@@ -572,7 +572,7 @@ namespace Server.Engines.VeteranRewards
 
             ComputeRewardInfo(pm, out var cur, out var max, out var level);
 
-            if (pm.SkillsCap is 7000 or 7050 or 7100 or 7150 or 7200)
+            if (!SoloProgression.Enabled && pm.SkillsCap is 7000 or 7050 or 7100 or 7150 or 7200)
             {
                 level = Math.Clamp(level, 0, 4);
 
@@ -586,7 +586,7 @@ namespace Server.Engines.VeteranRewards
                 }
             }
 
-            if (Core.ML && !pm.HasStatReward && HasHalfLevel(pm))
+            if (!SoloProgression.Enabled && Core.ML && !pm.HasStatReward && HasHalfLevel(pm))
             {
                 pm.HasStatReward = true;
                 pm.StatCap += 5;

@@ -221,14 +221,16 @@ namespace Server.Misc
         {
             var bank = m.BankBox;
 
-            // The new AOS bankboxes don't have powerscrolls, they are automatically 'applied':
-
-            for (var i = 0; i < PowerScroll.Skills.Length; ++i)
+            if (!SoloProgression.AppliesTo(m))
             {
-                m.Skills[PowerScroll.Skills[i]].Cap = 120.0;
-            }
+                // The AOS bankbox grants the scroll ceilings as part of Test Center setup.
+                for (var i = 0; i < PowerScroll.Skills.Length; ++i)
+                {
+                    m.Skills[PowerScroll.Skills[i]].Cap = 120.0;
+                }
 
-            m.StatCap = 250;
+                m.StatCap = 250;
+            }
 
             Container cont;
 

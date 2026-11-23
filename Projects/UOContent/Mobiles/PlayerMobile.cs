@@ -203,6 +203,7 @@ namespace Server.Mobiles
 
             m_GameTime = TimeSpan.Zero;
             m_GuildRank = RankDefinition.Lowest;
+            SoloProgression.Apply(this);
         }
 
         public PlayerMobile(Serial s) : base(s)
@@ -1272,6 +1273,7 @@ namespace Server.Mobiles
                 return;
             }
 
+            SoloProgression.Apply(from);
             VirtueSystem.CheckAtrophies(from);
             from.ClaimAutoStabledPets();
             AnimalForm.GetContext(from)?.Timer.Start();
