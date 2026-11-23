@@ -250,6 +250,9 @@ namespace Server
 
         public static int Scale(int input, int percent) => input * percent / 100;
 
+        public static int GetDefenseChanceCap(Mobile defender) =>
+            SoloProgression.AppliesTo(defender) ? SoloProgression.DefenseChanceCap : 45;
+
         public static int GetStatus(Mobile from, int index)
         {
             return index switch
@@ -261,7 +264,7 @@ namespace Server
                 3  => from.GetMaxResistance(ResistanceType.Poison),
                 4  => from.GetMaxResistance(ResistanceType.Energy),
                 5  => AosAttributes.GetValue(from, AosAttribute.DefendChance),
-                6  => 45,
+                6  => GetDefenseChanceCap(from),
                 7  => AosAttributes.GetValue(from, AosAttribute.AttackChance),
                 8  => AosAttributes.GetValue(from, AosAttribute.WeaponSpeed),
                 9  => AosAttributes.GetValue(from, AosAttribute.WeaponDamage),

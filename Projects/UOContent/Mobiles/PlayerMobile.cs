@@ -1118,12 +1118,13 @@ namespace Server.Mobiles
 
         public override int GetMaxResistance(ResistanceType type)
         {
-            if (AccessLevel > AccessLevel.Player)
+            var solo = SoloProgression.Enabled;
+            if (!solo && AccessLevel > AccessLevel.Player)
             {
                 return 100;
             }
 
-            var max = base.GetMaxResistance(type);
+            var max = solo ? SoloProgression.ResistanceCap : base.GetMaxResistance(type);
 
             if (type != ResistanceType.Physical && CurseSpell.UnderEffect(this))
             {
@@ -1132,10 +1133,10 @@ namespace Server.Mobiles
 
             if (Core.ML && Race == Race.Elf && type == ResistanceType.Energy)
             {
-                max += 5; // Intended to go after the 60 max from curse
+                max += 5; // The racial bonus applies after Curse.
             }
 
-            return max;
+            return solo ? Math.Min(max, SoloProgression.ResistanceCap) : max;
         }
 
         protected override void OnRaceChange(Race oldRace)
@@ -1212,7 +1213,8 @@ namespace Server.Mobiles
                 min = int.MinValue;
             }
 
-            return Math.Clamp(min, base.GetMinResistance(type), MaxPlayerResistance);
+            var max = SoloProgression.Enabled ? GetMaxResistance(type) : MaxPlayerResistance;
+            return Math.Clamp(min, base.GetMinResistance(type), max);
         }
 
         public override void OnManaChange(int oldValue)

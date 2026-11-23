@@ -1312,11 +1312,7 @@ public abstract partial class BaseWeapon
                 bonus -= discordanceEffect;
             }
 
-            // Defense Chance Increase = 45%
-            if (bonus > 45)
-            {
-                bonus = 45;
-            }
+            bonus = Math.Min(bonus, AOS.GetDefenseChanceCap(defender));
 
             theirValue = (defValue + 20.0) * (100 + bonus);
 

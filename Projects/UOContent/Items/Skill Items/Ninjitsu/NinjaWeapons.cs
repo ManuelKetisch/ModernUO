@@ -257,10 +257,7 @@ public static class NinjaWeapon
             defenseValue -= refBonus;
         }
 
-        if (defenseValue > 45)
-        {
-            defenseValue = 45;
-        }
+        defenseValue = Math.Min(defenseValue, AOS.GetDefenseChanceCap(defender));
 
         defenseValue = (defSkillValue + 20.0) * (100 + defenseValue);
 

@@ -14,9 +14,16 @@ public static class SoloProgression
     private const int BaseStatTotal = BaseStat * 3;
 
     public static bool Enabled { get; private set; }
+    public static int ResistanceCap { get; private set; }
+    public static int DefenseChanceCap { get; private set; }
 
-    public static void Configure() =>
+    public static void Configure()
+    {
         Enabled = ServerConfiguration.GetOrUpdateSetting("progression.soloEnabled", false);
+        ResistanceCap = Math.Clamp(ServerConfiguration.GetOrUpdateSetting("progression.soloResistanceCap", 85), 0, 100);
+        DefenseChanceCap =
+            Math.Clamp(ServerConfiguration.GetOrUpdateSetting("progression.soloDefenseChanceCap", 85), 0, 100);
+    }
 
     public static void Initialize()
     {
