@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/mattpocock/skills",
+  "revision": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+  "adapted_on": "2026-10-21",
+  "sources": {
+    "skills/engineering/diagnosing-bugs/SKILL.md": "849198df88cdb65fd0d97236604c1fca7ff2f22d2f705f9724a800d0266b118d"
+  },
+  "license_sha256": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+  "adaptations": [
+    "Allow safe investigation without a runnable reproduction; qualify cause and verification.",
+    "Use private captures and device safeguards; no automatic Git or deployment actions."
+  ],
+  "britannia_solo_adaptation": {
+    "source": "equanimity-platform/.agents/skills/diagnosing-bugs/SKILL.md",
+    "source_sha256": "75ee385b612688af46ebca3af68638649e9c876c0a224531d47d8aeb506f799e",
+    "adapted_on": "2026-11-24",
+    "scope": "C# and C++ game code, two Git checkouts, and isolated local shard validation."
+  }
+}

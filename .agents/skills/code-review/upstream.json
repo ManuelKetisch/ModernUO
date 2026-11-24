@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/mattpocock/skills",
+  "revision": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+  "adapted_on": "2026-10-21",
+  "sources": {
+    "skills/engineering/code-review/SKILL.md": "09eb147f793e4647949edd32dbad278f0554dfb56e0d46b699cd4c2c55bf0357"
+  },
+  "license_sha256": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+  "adaptations": [
+    "Include relevant staged, unstaged and untracked work; pin scope and detect movement.",
+    "Use canonical programme requirements; sequential fallback when delegation is unavailable.",
+    "Keep review read-only unless fixes are authorized; report defects separately from preferences.",
+    "Independent reviewers start in a fresh context; same-context passes never close an independent-review gate.",
+    "Route copy, privacy and security parts of the standards axis to their repository skills; name the backlog packet command and the not-run label (skill-review 2026-11-12)."
+  ],
+  "reviewed_revision": "5863806dd4e15c63174bee4e7515a4256792ecfa",
+  "britannia_solo_adaptation": {
+    "source": "equanimity-platform/.agents/skills/code-review/SKILL.md",
+    "source_sha256": "8f169346d4f303c20ed20c6c6285e8ea5b8a7a486e93262f71199992f9efcb83",
+    "adapted_on": "2026-11-24",
+    "scope": "C# and C++ game code, two Git checkouts, and isolated local shard validation."
+  }
+}

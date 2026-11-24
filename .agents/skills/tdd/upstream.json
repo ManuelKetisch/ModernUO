@@ -1,0 +1,22 @@
+{
+  "repository": "https://github.com/mattpocock/skills",
+  "revision": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+  "adapted_on": "2026-10-21",
+  "sources": {
+    "skills/engineering/tdd/SKILL.md": "5505d25bbaa8fc14a79e4d20163936958992a2995b7f1dd1d6197edc9ed722e0",
+    "skills/engineering/tdd/tests.md": "859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a",
+    "skills/engineering/tdd/mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef"
+  },
+  "license_sha256": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+  "adaptations": [
+    "Derive test boundaries from authorized requirements without routine approval.",
+    "Allow contract-relevant storage, ordering and internal doubles; preserve meaningful red evidence.",
+    "Match validation to scope and keep host evidence separate from acceptance."
+  ],
+  "britannia_solo_adaptation": {
+    "source": "equanimity-platform/.agents/skills/tdd/SKILL.md",
+    "source_sha256": "c109986a4b51ad10b218af08017de0eefc9556871b635a7eacc129448f3ad252",
+    "adapted_on": "2026-11-24",
+    "scope": "C# and C++ game code, two Git checkouts, and isolated local shard validation."
+  }
+}
