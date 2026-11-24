@@ -1,0 +1,46 @@
+{
+  "retrieved_utc": "2026-11-23T22:09:16+00:00",
+  "base_archive": {
+    "url": "https://archive.org/details/wiki-uoexnet_w",
+    "file": "source/uoexnet_w-20140701-wikidump.7z",
+    "sha1": "013af2b71c2806d24f4782e4682c584ede7bb22d",
+    "snapshot_date": "2014-07-01",
+    "xml_page_records_by_kind": {
+      "article": 436,
+      "category": 29,
+      "file": 593,
+      "talk": 9,
+      "template": 22,
+      "user talk": 2,
+      "user": 6
+    },
+    "materialized_base_pages": 476
+  },
+  "wayback": {
+    "selected_titles": 97,
+    "successful_replays": 83,
+    "used_in_mirror": 83,
+    "older_revision_than_base": 0,
+    "capture_range": [
+      "2021-09-28",
+      "2025-08-23"
+    ],
+    "coverage_report": "source/wayback-coverage.json"
+  },
+  "materialized_total": 483,
+  "by_kind": {
+    "article": 432,
+    "category": 29,
+    "template": 22
+  },
+  "browser_pdf": {
+    "capture_date": "2026-11-23",
+    "reviewed": 18,
+    "matching_mirror_revision": 17,
+    "new_articles": 1,
+    "article": "pages/treasure_hunting.md",
+    "source_file": "pages/PDFs/Treasure Hunting - UO Excelsior Wiki - Ultima Online Free Shard.pdf",
+    "source_sha256": "000b03fe8c9ce5405481f9c2a31ed51f9a8927b2628e3226ae494cb26b0d400f",
+    "review": "PDF-REVIEW.md"
+  }
+}

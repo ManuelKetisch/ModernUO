@@ -1,0 +1,23 @@
+# UO Excelsior topics
+
+- [Main Page](<pages/main_page.md>) — Wayback replay, 2025-08-23
+- [FAQ](<pages/faq.md>) — Wayback replay, 2023-12-10
+- [Pet Breeding](<pages/pet_breeding.md>) — Wayback replay, 2023-12-10
+- [Pet Leveling](<pages/pet_leveling.md>) — Wayback replay, 2023-12-10
+- [Custom tamables](<pages/custom_tamables.md>) — Wayback replay, 2023-12-10
+- [Skills Explained](<pages/skills_explained.md>) — Wayback replay, 2023-12-10
+- [Skill Guides](<pages/skill_guides.md>) — Wayback replay, 2023-12-10
+- [Stat Caps](<pages/stat_caps.md>) — Wayback replay, 2023-12-10
+- [Stat Scrolls](<pages/stat_scrolls.md>) — Wayback replay, 2023-12-10
+- [Powerscrolls](<pages/powerscrolls.md>) — Wayback replay, 2023-12-10
+- [Training Room](<pages/training_room.md>) — Wayback replay, 2022-01-20
+- [NPC Skill Trainers](<pages/npc_skill_trainers.md>) — Wayback replay, 2023-12-10
+- [Apiculture (beehives and beekeeping)](<pages/apiculture_beehives_and_beekeeping.md>) — Wayback replay, 2024-12-08
+- [Bio Engineering](<pages/bio_engineering.md>) — Wayback replay, 2023-12-10
+- [Levelable Weapons](<pages/levelable_weapons.md>) — Wayback replay, 2023-12-10
+- [Powerscroll Bag](<pages/powerscroll_bag.md>) — Wayback replay, 2023-12-10
+- [Imprisoned Pets](<pages/imprisoned_pets.md>) — Wayback replay, 2023-12-10
+- [Treasure Hunting](<pages/treasure_hunting.md>) — browser PDF, 2026-11-23
+- [Gravedigging](<pages/gravedigging.md>) and [Maxxed NonCasting Human Bios](<pages/maxxed_noncasting_human_bios.md>) — [PDF visuals](PDF-REVIEW.md)
+- [Ointments](<pages/ointments.md>) — Wayback replay, 2021-11-28
+- [Horticulture (Plants)](<pages/horticulture_plants.md>) — Wayback replay, 2021-11-28

@@ -41,6 +41,8 @@ Apply these in every session, in this repository and in any fork or custom proje
 
 ## Dev-Docs Reference
 
+For research on custom shard mechanics such as pet breeding, skill essences, or progression, start with the [UO Excelsior wiki reference](dev-docs/references/uoex/README.md).
+
 | Topic | File |
 |---|---|
 | Code standards & LINQ tiers | `dev-docs/code-standards.md` |
