@@ -409,6 +409,11 @@ public abstract class WeaponAbility
 
     public static WeaponAbility GetCurrentAbility(Mobile m)
     {
+        if (m is PlayerMobile { IsSwingingOffHand: true })
+        {
+            return null;
+        }
+
         if (!Core.AOS)
         {
             ClearCurrentAbility(m);

@@ -51,6 +51,19 @@ public class AccountHandlerTests : IDisposable
         Assert.Equal(expected, AccountHandler.IsValidUsername(username));
     }
 
+    [Theory]
+    [InlineData(0, 0, false)]
+    [InlineData(7, 0, true)]
+    [InlineData(7, 6, true)]
+    [InlineData(7, 7, false)]
+    public void CharacterDeletionHonorsConfiguredAgeLimit(int delayDays, int ageDays, bool expected)
+    {
+        var created = DateTime.UnixEpoch;
+        Assert.Equal(expected, AccountHandler.IsCharacterTooYoung(
+            created, created.AddDays(ageDays), TimeSpan.FromDays(delayDays)
+        ));
+    }
+
     [Fact]
     public void AccountCount_GroupsSlash64()
     {

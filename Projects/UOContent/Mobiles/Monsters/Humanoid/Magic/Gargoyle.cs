@@ -40,7 +40,7 @@ namespace Server.Mobiles
 
             if (Utility.RandomDouble() < 0.025)
             {
-                PackItem(new GargoylesPickaxe());
+                PackItem(new GargoylesPickaxe(100));
             }
         }
 

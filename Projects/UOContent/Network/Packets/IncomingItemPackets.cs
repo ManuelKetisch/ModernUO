@@ -55,10 +55,14 @@ public static class IncomingItemPackets
             return;
         }
 
-        reader.Seek(5, SeekOrigin.Current);
+        reader.Seek(4, SeekOrigin.Current);
+        var requestedLayer = (Layer)reader.ReadByte();
         var to = World.FindMobile((Serial)reader.ReadUInt32()) ?? from;
 
-        if (!to.AllowEquipFrom(from) || !to.EquipItem(item))
+        var equipped = to.AllowEquipFrom(from) &&
+                       (to is PlayerMobile pm ? pm.EquipItem(item, requestedLayer) : to.EquipItem(item));
+
+        if (!equipped)
         {
             item.Bounce(from);
         }

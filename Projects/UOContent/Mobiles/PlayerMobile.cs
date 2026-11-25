@@ -1019,6 +1019,18 @@ namespace Server.Mobiles
                     continue;
                 }
 
+                if (item is BaseWeapon weapon && pm.CanEquipOffHand(weapon))
+                {
+                    pm.EquipItem(weapon);
+                    continue;
+                }
+
+                if (JewelrySlots.IsMultiSlotJewelry(item) && JewelrySlots.HasFreeSlot(pm, item))
+                {
+                    pm.EquipItem(item);
+                    continue;
+                }
+
                 var toMove = pm.FindItemOnLayer(item.Layer);
 
                 if (toMove != null)
@@ -1055,7 +1067,9 @@ namespace Server.Mobiles
             for (var i = eq.Count - 1; i >= 0; i--)
             {
                 var item = eq[i];
-                if (layers.Contains(item.Layer))
+                if (layers.Contains(item.Layer) ||
+                    JewelrySlots.IsExtendedJewelryLayer(item.Layer) &&
+                    layers.Contains(JewelrySlots.GetCanonicalLayer(item.Layer)))
                 {
                     pack.TryDropItem(pm, item, false);
                 }
@@ -1711,6 +1725,11 @@ namespace Server.Mobiles
         {
             base.OnItemAdded(item);
 
+            if (item is BaseWeapon { EquippedOffHand: true })
+            {
+                UpdateOffHandCombat(weaponAdded: true);
+            }
+
             if (item is BaseArmor or BaseWeapon)
             {
                 CheckStatTimers();
@@ -1725,6 +1744,22 @@ namespace Server.Mobiles
         public override void OnItemRemoved(Item item)
         {
             base.OnItemRemoved(item);
+
+            if (item is BaseWeapon)
+            {
+                if (item.Layer == Layer.OneHanded &&
+                    FindItemOnLayer(Layer.TwoHanded) is BaseWeapon { EquippedOffHand: true } offHand)
+                {
+                    offHand.SetOffHand(false);
+                }
+
+                UpdateOffHandCombat();
+            }
+
+            if (JewelrySlots.IsExtendedJewelryLayer(item.Layer))
+            {
+                JewelrySlots.ResetToCanonicalLayer(item);
+            }
 
             if (item is BaseArmor or BaseWeapon)
             {
@@ -3315,6 +3350,7 @@ namespace Server.Mobiles
 
         public override void OnAfterDelete()
         {
+            _offHandCombatTimer.Cancel();
             base.OnAfterDelete();
 
             var faction = Faction.Find(this);

@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "type": "Server.Items.WyrmForgeBlueprint",
+  "properties": [
+    {
+      "name": "Recipe",
+      "type": "Server.Engines.HybridForge.HybridForgeRecipe",
+      "rule": "EnumMigrationRule"
+    }
+  ]
+}

@@ -145,5 +145,6 @@ public class DefMasonry : CraftSystem
         AddSubRes(typeof(AgapiteGranite), 1044028, 90.0, 1044514, 1044527);
         AddSubRes(typeof(VeriteGranite), 1044029, 95.0, 1044514, 1044527);
         AddSubRes(typeof(ValoriteGranite), 1044030, 99.0, 1044514, 1044527);
+        ExcelsiorMaterials.AddCraftResources(this, CraftResourceType.Metal, 1044527, 2);
     }
 }

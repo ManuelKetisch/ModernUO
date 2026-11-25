@@ -1,0 +1,42 @@
+{
+  "version": 0,
+  "type": "Server.Engines.BioEngineering.BioConstruct",
+  "properties": [
+    {
+      "name": "Creator",
+      "type": "Server.Mobiles.PlayerMobile",
+      "rule": "SerializableInterfaceMigrationRule"
+    },
+    {
+      "name": "Assembled",
+      "type": "bool",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    },
+    {
+      "name": "Trait",
+      "type": "Server.Engines.BioEngineering.BioTrait",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "MimicSounds",
+      "type": "int[]",
+      "rule": "ArrayMigrationRule",
+      "ruleArguments": [
+        "int",
+        "PrimitiveTypeMigrationRule",
+        ""
+      ]
+    },
+    {
+      "name": "NextTraitAt",
+      "type": "System.DateTime",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

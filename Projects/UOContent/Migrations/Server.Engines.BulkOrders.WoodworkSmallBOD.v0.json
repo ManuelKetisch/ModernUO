@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "type": "Server.Engines.BulkOrders.WoodworkSmallBOD",
+  "properties": [
+    {
+      "name": "OrderProfession",
+      "type": "Server.Engines.BulkOrders.BODType",
+      "rule": "EnumMigrationRule"
+    }
+  ]
+}

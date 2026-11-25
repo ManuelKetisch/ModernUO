@@ -7,7 +7,8 @@ checkout before relying on them.
 | Feature | Read when working on |
 | --- | --- |
 | [`uoex-reference`](uoex-reference/README.md) | Excelsior archive coverage, provenance, and source lookup |
-| [`server-progression`](server-progression/README.md) | Solo skill caps, powerscrolls, and Swordsmanship essences |
+| [`server-progression`](server-progression/README.md) | Solo skill caps, powerscrolls, essences, and Weapon Leveling |
+| [`pet-systems`](pet-systems/README.md) | Pet training, breeding, and Bio Engineering |
 | [`client`](client/README.md) | CrossUO quick loot, render uploads, or frame pacing |
 | [`local-shard`](local-shard/README.md) | Finder launcher, staged rebuild, and runtime testing |
 

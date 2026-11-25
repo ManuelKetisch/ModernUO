@@ -5,12 +5,14 @@ namespace Server.Engines.Harvest
     public class HarvestBank
     {
         private readonly int m_Maximum;
+        private readonly Map _map;
         private int m_Current;
         private DateTime m_NextRespawn;
         private HarvestVein m_Vein, m_DefaultVein;
 
-        public HarvestBank(HarvestDefinition def, HarvestVein defaultVein)
+        public HarvestBank(HarvestDefinition def, HarvestVein defaultVein, Map map = null)
         {
+            _map = map;
             m_Maximum = Utility.RandomMinMax(def.MinTotal, def.MaxTotal);
             m_Current = m_Maximum;
             m_DefaultVein = defaultVein;
@@ -60,7 +62,7 @@ namespace Server.Engines.Harvest
 
             if (Definition.RandomizeVeins)
             {
-                m_DefaultVein = Definition.GetVeinFrom((uint)Utility.Random(Definition.VeinWeights));
+                m_DefaultVein = Definition.GetVeinFrom((uint)Utility.Random(Definition.GetVeinWeights(_map)), _map);
             }
 
             m_Vein = m_DefaultVein;

@@ -4,6 +4,7 @@ using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Engines.Craft;
+using Server.Engines.WeaponLeveling;
 
 namespace Server.Items
 {
@@ -73,7 +74,20 @@ namespace Server.Items
                         return GetDelay(attacker);
                     }
 
-                    if (OnFired(attacker, defender))
+                    if (AmmoType == typeof(Arrow) && DippedArrow.TryFire(attacker, out var dipped))
+                    {
+                        attacker.MovingParticles(defender, EffectID, 18, 1, false, false, 0, 0, 0, 0, 0, EffectLayer.RightHand, 0);
+                        if (CheckHit(attacker, defender))
+                        {
+                            ResolveHit(attacker, defender, 1, false);
+                            DippedArrowEffects.Apply(this, attacker, defender, dipped);
+                        }
+                        else
+                        {
+                            base.OnMiss(attacker, defender);
+                        }
+                    }
+                    else if (OnFired(attacker, defender))
                     {
                         if (CheckHit(attacker, defender))
                         {
@@ -88,7 +102,10 @@ namespace Server.Items
                     {
                         // Lightning Arrow doesn't require ammunition
                         attacker.MovingParticles(defender, EffectID, 18, 1, false, false, 0, 0, 0, 0, 0, EffectLayer.RightHand, 0);
-                        lightningArrow.OnHit(attacker, defender, 0, new WorldLocation(defender));
+                        using (WeaponLevelingCombat.BeginWeaponAbility(this))
+                        {
+                            lightningArrow.OnHit(attacker, defender, 0, new WorldLocation(defender));
+                        }
                     }
                 }
 
@@ -102,9 +119,12 @@ namespace Server.Items
             return TimeSpan.FromSeconds(0.25);
         }
 
-        public override void OnHit(Mobile attacker, Mobile defender, double damageBonus = 1)
+        public override void OnHit(Mobile attacker, Mobile defender, double damageBonus = 1) =>
+            ResolveHit(attacker, defender, damageBonus, true);
+
+        private void ResolveHit(Mobile attacker, Mobile defender, double damageBonus, bool recoverAmmo)
         {
-            if (attacker.Player && !defender.Player && (defender.Body.IsAnimal || defender.Body.IsMonster) &&
+            if (recoverAmmo && attacker.Player && !defender.Player && (defender.Body.IsAnimal || defender.Body.IsMonster) &&
                 Utility.RandomDouble() < 0.4 && Ammo is { } ammo && !defender.AddToBackpack(ammo))
             {
                 ammo.Delete();
@@ -116,7 +136,10 @@ namespace Server.Items
 
                 if (bonus > 0 && _velocity > Utility.Random(100))
                 {
-                    AOS.Damage(defender, attacker, bonus * 3, 100, 0, 0, 0, 0);
+                    using (WeaponLevelingCombat.BeginWeaponHit(this, attacker, defender as BaseCreature))
+                    {
+                        AOS.Damage(defender, attacker, bonus * 3, 100, 0, 0, 0, 0);
+                    }
 
                     if (attacker.Player)
                     {

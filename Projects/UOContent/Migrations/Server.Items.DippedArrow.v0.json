@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "type": "Server.Items.DippedArrow",
+  "properties": [
+    {
+      "name": "Kind",
+      "type": "Server.Items.ArrowDipKind",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "Readied",
+      "type": "bool",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

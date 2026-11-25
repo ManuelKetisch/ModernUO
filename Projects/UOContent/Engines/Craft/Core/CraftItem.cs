@@ -84,6 +84,14 @@ namespace Server.Engines.Craft
                 [typeof(WoodenBowlOfPeas), typeof(PewterBowlOfPeas)]
             ];
 
+            foreach (var grade in ExcelsiorMaterials.CraftingGrades)
+            {
+                if (grade.Family is CraftResourceType.Wood or CraftResourceType.Leather)
+                {
+                    types.Add(grade.Info.ResourceTypes);
+                }
+            }
+
             // Gump-based crafting allows blank scrolls as a substitute for blank maps in cartography
             if (!T2ACraftSystem.Enabled)
             {
@@ -1251,6 +1259,21 @@ namespace Server.Engines.Craft
             return null;
         }
 
+        private static void ConsumeEquippedCraftBonus(Mobile from, CraftSystem craftSystem, BaseTool tool)
+        {
+            BaseTool hammer = craftSystem switch
+            {
+                DefBlacksmithy                 => from.FindItemOnLayer<AncientSmithyHammer>(Layer.OneHanded),
+                DefCarpentry or DefBowFletching => from.FindItemOnLayer<AncientTradeHammer>(Layer.OneHanded),
+                _ => null
+            };
+
+            if (hammer != null && hammer != tool && hammer.CraftSystem == craftSystem && --hammer.UsesRemaining < 1)
+            {
+                hammer.Delete();
+            }
+        }
+
         private static bool IsHuedMatch(Item item, Type type, Type[] equivalents, int hue)
         {
             if (item.Hue != hue)
@@ -1444,18 +1467,7 @@ namespace Server.Engines.Craft
                 {
                     tool.UsesRemaining--;
 
-                    if (craftSystem is DefBlacksmithy)
-                    {
-                        var hammer = from.FindItemOnLayer<AncientSmithyHammer>(Layer.OneHanded);
-                        if (hammer != null && hammer != tool)
-                        {
-                            hammer.UsesRemaining--;
-                            if (hammer.UsesRemaining < 1)
-                            {
-                                hammer.Delete();
-                            }
-                        }
-                    }
+                    ConsumeEquippedCraftBonus(from, craftSystem, tool);
 
                     if (tool.UsesRemaining < 1 && tool.BreakOnDepletion)
                     {
@@ -1743,18 +1755,7 @@ namespace Server.Engines.Craft
                 {
                     tool.UsesRemaining--;
 
-                    if (craftSystem is DefBlacksmithy)
-                    {
-                        var hammer = from.FindItemOnLayer<AncientSmithyHammer>(Layer.OneHanded);
-                        if (hammer != null && hammer != tool)
-                        {
-                            hammer.UsesRemaining--;
-                            if (hammer.UsesRemaining < 1)
-                            {
-                                hammer.Delete();
-                            }
-                        }
-                    }
+                    ConsumeEquippedCraftBonus(from, craftSystem, tool);
 
                     if (tool.UsesRemaining < 1 && tool.BreakOnDepletion)
                     {

@@ -26,14 +26,7 @@ public partial class BOBSmallEntry : BaseBOBEntry
         _itemType = bod.Type;
         RequireExceptional = bod.RequireExceptional;
 
-        if (bod is SmallTailorBOD)
-        {
-            DeedType = BODType.Tailor;
-        }
-        else if (bod is SmallSmithBOD)
-        {
-            DeedType = BODType.Smith;
-        }
+        DeedType = ExcelsiorOrderRules.BookKind(bod);
 
         Material = bod.Material;
         _amountCur = bod.AmountCur;
@@ -42,21 +35,19 @@ public partial class BOBSmallEntry : BaseBOBEntry
         _graphic = bod.Graphic;
     }
 
-    public override Item Reconstruct()
+    public override Item Reconstruct() => DeedType switch
     {
-        SmallBOD bod = null;
-
-        if (DeedType == BODType.Smith)
-        {
-            bod = new SmallSmithBOD(AmountCur, AmountMax, ItemType, Number, Graphic, RequireExceptional, Material);
-        }
-        else if (DeedType == BODType.Tailor)
-        {
-            bod = new SmallTailorBOD(AmountCur, AmountMax, ItemType, Number, Graphic, RequireExceptional, Material);
-        }
-
-        return bod;
-    }
+        BODType.Smith => new SmallSmithBOD(AmountCur, AmountMax, ItemType, Number, Graphic, RequireExceptional, Material),
+        BODType.Tailor => new SmallTailorBOD(AmountCur, AmountMax, ItemType, Number, Graphic, RequireExceptional, Material),
+        BODType.Carpentry or BODType.Fletching => new WoodworkSmallBOD(
+            DeedType, AmountCur, AmountMax, ItemType, Number, Graphic, RequireExceptional, Material
+        ),
+        BODType.ExcelsiorSmith or BODType.ExcelsiorTailor => ExcelsiorOrderRules.NewSmall(
+            DeedType, AmountCur, AmountMax, ItemType, Number, Graphic, RequireExceptional, Material
+        ),
+        BODType.Taming => new TamingSmallBOD(AmountCur, AmountMax, ItemType),
+        _ => null
+    };
 
     private void Deserialize(IGenericReader reader, int version)
     {

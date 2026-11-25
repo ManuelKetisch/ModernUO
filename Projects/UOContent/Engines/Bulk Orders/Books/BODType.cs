@@ -3,6 +3,11 @@ namespace Server.Engines.BulkOrders
     public enum BODType
     {
         Smith,
-        Tailor
+        Tailor,
+        Carpentry,
+        Fletching,
+        Taming,
+        ExcelsiorSmith,
+        ExcelsiorTailor
     }
 }

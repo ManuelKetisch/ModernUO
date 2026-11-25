@@ -84,7 +84,7 @@ namespace Server.Engines.Craft
                         CraftResource.Agapite    => 90.0,
                         CraftResource.Verite     => 95.0,
                         CraftResource.Valorite   => 99.0,
-                        _                        => 0.0
+                        _                        => ExcelsiorMaterials.RequiredSkill(resource)
                     };
 
                     if (difficulty > from.Skills.Mining.Value)

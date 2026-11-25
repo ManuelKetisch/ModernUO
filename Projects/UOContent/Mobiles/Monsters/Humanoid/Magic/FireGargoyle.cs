@@ -1,4 +1,5 @@
 using ModernUO.Serialization;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -40,6 +41,13 @@ namespace Server.Mobiles
             Karma = -3500;
 
             VirtualArmor = 32;
+
+            if (Utility.RandomDouble() < 0.2)
+            {
+                // Existing fire-gargoyle spawners also produce these skinning-tool bearers.
+                Name = Utility.RandomBool() ? "a blazing gargoyle" : "a burning gargoyle";
+                PackItem(new GargoylesKnife(Utility.RandomMinMax(30, 60)));
+            }
         }
 
         public override string CorpseName => "a charred corpse";

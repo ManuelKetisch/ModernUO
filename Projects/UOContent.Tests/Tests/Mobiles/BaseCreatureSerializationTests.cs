@@ -406,6 +406,108 @@ public class BaseCreatureSerializationTests : IDisposable
         Assert.Equal(owner, copy.SummonMaster);
     }
 
+    [Fact]
+    public void V24TamedPetStream_KeepsOwnershipAndStartsAtLevelOne()
+    {
+        const int controlled = 13;
+        const int master = 14;
+        const int tamable = 19;
+        const int hitsMaxSeed = 25;
+        const int bonded = 42;
+
+        var owner = NewMaster();
+        var donor = _harness.Track(new MobileStub());
+        var writer = new BufferWriter(true);
+        donor.Serialize(writer);
+
+        writer.Write(24);
+        writer.Write(1UL << controlled | 1UL << master | 1UL << tamable | 1UL << hitsMaxSeed | 1UL << bonded);
+        writer.WriteEncodedInt((int)AIType.AI_Melee);
+        writer.Write(owner);
+        writer.WriteEncodedInt(240);
+
+        var copy = Load(writer.Buffer.AsSpan(0, (int)writer.Position).ToArray());
+
+        Assert.True(copy.Controlled);
+        Assert.Same(owner, copy.ControlMaster);
+        Assert.True(copy.Tamable);
+        Assert.True(copy.IsBonded);
+        Assert.Equal(240, copy.HitsMaxSeed);
+        Assert.Equal(1, copy.PetLevel);
+        Assert.InRange(copy.PetMaxLevel, 10, 30);
+        Assert.Equal(1, copy.PetGeneration);
+        Assert.Equal(0, copy.PetExperience);
+        Assert.Equal(0, copy.PetAbilityPoints);
+        Assert.Equal(DateTime.MinValue, copy.PetBreedingReadyAt);
+    }
+
+    [Fact]
+    public void V25PetStream_PreservesTrainingAndBreedingState()
+    {
+        const int controlled = 13;
+        const int master = 14;
+        const int tamable = 19;
+        const ulong progressionFields = 0x7FUL << 52;
+
+        var owner = NewMaster();
+        var donor = _harness.Track(new MobileStub());
+        var readyAt = new DateTime(2030, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+        var writer = new BufferWriter(true);
+        donor.Serialize(writer);
+
+        writer.Write(25);
+        writer.Write(1UL << controlled | 1UL << master | 1UL << tamable | progressionFields);
+        writer.WriteEncodedInt((int)AIType.AI_Melee);
+        writer.Write(owner);
+        writer.WriteEncodedInt(12);
+        writer.WriteEncodedInt(34);
+        writer.WriteEncodedInt(15);
+        writer.WriteEncodedInt(24);
+        writer.WriteEncodedInt(3);
+        writer.Write(readyAt);
+        writer.WriteEncodedInt(2);
+
+        var copy = Load(writer.Buffer.AsSpan(0, (int)writer.Position).ToArray());
+
+        Assert.Same(owner, copy.ControlMaster);
+        Assert.True(copy.Tamable);
+        Assert.Equal(12, copy.PetLevel);
+        Assert.Equal(34, copy.PetMaxLevel);
+        Assert.Equal(15, copy.PetExperience);
+        Assert.Equal(24, copy.PetAbilityPoints);
+        Assert.Equal(3, copy.PetGeneration);
+        Assert.Equal(readyAt, copy.PetBreedingReadyAt);
+        Assert.True(copy.PetFemale);
+    }
+
+    [Fact]
+    public void TrainingPauseAndRoleSurviveTheSameSave()
+    {
+        var owner = NewMaster();
+        var pet = NewCreature();
+        owner.MoveToWorld(new Point3D(1100, 1100, 0), Map.Felucca);
+        pet.MoveToWorld(new Point3D(1101, 1100, 0), owner.Map);
+        pet.Tamable = true;
+        pet.InitializePetProgression(3, 45);
+        Assert.True(pet.SetControlMaster(owner));
+        pet.AwardPetExperience(650);
+
+        Assert.True(pet.TrySetPetBreedingPause(owner, true));
+        Assert.True(pet.TryChoosePetCombatRole(owner, PetCombatRole.Guardian));
+        Assert.True(pet.PetBreedingPauseEnabled);
+        Assert.Equal(PetCombatRole.Guardian, pet.PetRole);
+
+        Assert.True(pet.TrySetPetBreedingPause(owner, false));
+        Assert.Equal(PetCombatRole.Guardian, pet.PetRole);
+        Assert.True(pet.TrySetPetBreedingPause(owner, true));
+
+        var copy = Load(Snapshot(pet));
+
+        Assert.Same(owner, copy.ControlMaster);
+        Assert.True(copy.PetBreedingPauseEnabled);
+        Assert.Equal(PetCombatRole.Guardian, copy.PetRole);
+    }
+
     // v23 bit positions: every save-flagged field in schema order (DefaultAI is not flagged).
     private const int V23Controlled = 13;
     private const int V23ControlMaster = 14;

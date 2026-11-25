@@ -1,5 +1,6 @@
 using Server.Gumps;
 using Server.Network;
+using Server.Mobiles;
 
 namespace Server.Engines.BulkOrders
 {
@@ -42,7 +43,14 @@ namespace Server.Engines.BulkOrders
                 var entry = entries[i];
                 var details = entry.Details;
 
-                builder.AddHtmlLocalized(75, y, 210, 20, details.Number, 0x7FFF);
+                if (_deed.Profession == BODType.Taming)
+                {
+                    builder.AddLabel(75, y, 1152, TamingBulkOrders.AnimalName(details.Type));
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(75, y, 210, 20, details.Number, 0x7FFF);
+                }
                 builder.AddLabel(275, y, 0x480, entry.Amount.ToString());
 
                 y += 24;
@@ -62,26 +70,34 @@ namespace Server.Engines.BulkOrders
 
             if (_deed.Material != BulkMaterialType.None)
             {
-                builder.AddHtmlLocalized(
-                    75,
-                    y,
-                    300,
-                    20,
-                    GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
-                    0x7FFF
-                );
+                if (BulkOrderMaterials.AdditionalName(_deed.Material) is { } material)
+                {
+                    builder.AddLabel(75, y, 1152, $"All items must be made with {material}.");
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(
+                        75,
+                        y,
+                        300,
+                        20,
+                        GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
+                        0x7FFF
+                    );
+                }
             }
 
-            builder.AddButton(125, 168 + entries.Length * 24, 4005, 4007, 2);
-
-            builder.AddHtmlLocalized(
-                160,
-                168 + entries.Length * 24,
-                300,
-                20,
-                1045155, // Combine this deed with another deed.
-                0x7FFF
-            );
+            var actionY = 168 + entries.Length * 24;
+            if (_deed.Complete)
+            {
+                builder.AddButton(125, actionY, 4005, 4007, 3);
+                builder.AddLabel(160, actionY, 1152, "Claim reward");
+            }
+            else
+            {
+                builder.AddButton(125, actionY, 4005, 4007, 2);
+                builder.AddHtmlLocalized(160, actionY, 300, 20, 1045155, 0x7FFF);
+            }
 
             builder.AddButton(125, 192 + entries.Length * 24, 4005, 4007, 1);
             builder.AddHtmlLocalized(160, 192 + entries.Length * 24, 120, 20, 1011441, 0x7FFF); // EXIT
@@ -101,6 +117,10 @@ namespace Server.Engines.BulkOrders
                 sender.SendGump(new LargeBODGump(_deed));
                 _deed.BeginCombine(from);
             }
+            else if (info.ButtonID == 3 && from is PlayerMobile player)
+            {
+                BulkOrderRedemption.TryClaim(player, _deed);
+            }
         }
 
         public static int GetMaterialNumberFor(BulkMaterialType material)
@@ -113,6 +133,11 @@ namespace Server.Engines.BulkOrders
             if (material >= BulkMaterialType.Spined && material <= BulkMaterialType.Barbed)
             {
                 return 1049348 + (material - BulkMaterialType.Spined);
+            }
+
+            if (material is >= BulkMaterialType.NaturalWood and <= BulkMaterialType.Frostwood)
+            {
+                return 1072643 + (material - BulkMaterialType.NaturalWood);
             }
 
             return 0;

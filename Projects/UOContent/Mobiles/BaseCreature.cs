@@ -4,16 +4,20 @@ using System.Runtime.CompilerServices;
 using ModernUO.Serialization;
 using Server.Collections;
 using Server.ContextMenus;
+using Server.Engines.BioEngineering;
 using Server.Engines.CannedEvil;
 using Server.Engines.ConPVP;
 using Server.Engines.MLQuests;
+using Server.Engines.PetProgression;
 using Server.Engines.Quests.Doom;
 using Server.Engines.Quests.Haven;
 using Server.Engines.Spawners;
 using Server.Engines.Virtues;
+using Server.Engines.WeaponLeveling;
 using Server.Ethics;
 using Server.Factions;
 using Server.Items;
+using Server.Engines.Harvest;
 using Server.Logging;
 using Server.Misc;
 using Server.Multis;
@@ -117,7 +121,14 @@ namespace Server.Mobiles
         Regular,
         Spined,
         Horned,
-        Barbed
+        Barbed,
+        Polar,
+        Synthetic,
+        Blaze,
+        Daemonic,
+        Shadow,
+        Frost,
+        Ethereal
     }
 
     public class DamageStore : IComparable<DamageStore>
@@ -135,7 +146,7 @@ namespace Server.Mobiles
         public int CompareTo(DamageStore ds) => (ds?.m_Damage ?? 0).CompareTo(m_Damage);
     }
 
-    [SerializationGenerator(24, false)]
+    [SerializationGenerator(27, false)]
     public abstract partial class BaseCreature : Mobile, IHonorTarget, IQuestGiver
     {
         private static readonly ILogger logger = LogFactory.GetLogger(typeof(BaseCreature));
@@ -770,6 +781,59 @@ namespace Server.Mobiles
         private string _corpseNameOverride;
 
         private bool ShouldSerializeCorpseNameOverride() => _corpseNameOverride != null;
+
+        [EncodedInt]
+        [SerializableField(53, setter: "private")]
+        [SaveFlag(nameof(HasProgressLevel))]
+        private int _petProgressLevel;
+
+        [EncodedInt]
+        [SerializableField(54, setter: "private")]
+        [SaveFlag(nameof(HasProgressMaxLevel))]
+        private int _petProgressMaxLevel;
+
+        [EncodedInt]
+        [SerializableField(55, setter: "private")]
+        [SaveFlag(nameof(HasPetExperience))]
+        private int _petExperience;
+
+        [EncodedInt]
+        [SerializableField(56, setter: "private")]
+        [SaveFlag(nameof(HasPetAbilityPoints))]
+        private int _petAbilityPoints;
+
+        [EncodedInt]
+        [SerializableField(57, setter: "private")]
+        [SaveFlag(nameof(HasProgressGeneration))]
+        private int _petProgressGeneration;
+
+        [SerializableField(58)]
+        [SaveFlag(nameof(HasPetBreedingCooldown))]
+        private DateTime _petBreedingReadyAt;
+
+        [EncodedInt]
+        [SerializableField(59, setter: "private")]
+        [SaveFlag(nameof(HasProgressSex))]
+        private int _petProgressSex;
+
+        [SerializableField(60, getter: "private", setter: "private")]
+        [SaveFlag(nameof(HasPetDeathStatLoss))]
+        private int[] _petDeathStatLoss;
+
+        [EncodedInt]
+        [SerializableField(61, getter: "private", setter: "private")]
+        [SaveFlag(nameof(HasPetTrainingOptions))]
+        private int _petTrainingOptions;
+
+        private bool HasProgressLevel() => _petProgressLevel > 0;
+        private bool HasProgressMaxLevel() => _petProgressMaxLevel > 0;
+        private bool HasPetExperience() => _petExperience > 0;
+        private bool HasPetAbilityPoints() => _petAbilityPoints > 0;
+        private bool HasProgressGeneration() => _petProgressGeneration > 0;
+        private bool HasPetBreedingCooldown() => _petBreedingReadyAt != DateTime.MinValue;
+        private bool HasProgressSex() => _petProgressSex > 0;
+        private bool HasPetDeathStatLoss() => _petDeathStatLoss != null;
+        private bool HasPetTrainingOptions() => _petTrainingOptions != 0;
 
         // --- Non-serialized state -------------------------------------------------------
 
@@ -2052,6 +2116,12 @@ namespace Server.Mobiles
             var meat = Meat;
             var hides = Hides;
             var scales = Scales;
+            var gargoyleKnife = with as GargoylesKnife;
+
+            if (gargoyleKnife != null && !gargoyleKnife.CheckSkin(from, corpse, this))
+            {
+                return;
+            }
 
             if (feathers == 0 && wool == 0 && meat == 0 && hides == 0 && scales == 0 || Summoned || IsBonded ||
                 corpse.Animated)
@@ -2067,7 +2137,7 @@ namespace Server.Mobiles
             }
             else
             {
-                if (Core.ML && from.Race == Race.Human)
+                if (Core.ML && from.Race == Race.Human && this is not LeatherElemental)
                 {
                     hides = (int)Math.Ceiling(hides * 1.1); // 10% bonus only applies to hides, ore & logs
                 }
@@ -2076,7 +2146,10 @@ namespace Server.Mobiles
                 {
                     feathers *= 2;
                     wool *= 2;
-                    hides *= 2;
+                    if (gargoyleKnife == null)
+                    {
+                        hides *= 2;
+                    }
 
                     if (Core.ML)
                     {
@@ -2117,56 +2190,37 @@ namespace Server.Mobiles
                     from.SendLocalizedMessage(500467); // You carve some meat, which remains on the corpse.
                 }
 
+                var knifeHideType = HideType;
                 if (hides != 0)
                 {
-                    var holding = from.Weapon as Item;
-
-                    if (Core.AOS && holding is SkinningKnife)
+                    var cut = gargoyleKnife != null || Core.AOS && from.Weapon is SkinningKnife;
+                    if (gargoyleKnife != null)
                     {
-                        var leather = HideType switch
-                        {
-                            HideType.Regular => (Item)new Leather(hides),
-                            HideType.Spined  => new SpinedLeather(hides),
-                            HideType.Horned  => new HornedLeather(hides),
-                            HideType.Barbed  => new BarbedLeather(hides),
-                            _                => null
-                        };
+                        knifeHideType = ResourceEncounters.GetKnifeHideType(this);
+                    }
 
-                        if (leather != null)
-                        {
-                            if (!from.PlaceInBackpack(leather))
-                            {
-                                corpse.DropItem(leather);
-                                from.SendLocalizedMessage(500471); // You skin it, and the hides are now in the corpse.
-                            }
-                            else
-                            {
-                                from.SendLocalizedMessage(
-                                    1073555
-                                ); // You skin it and place the cut-up hides in your backpack.
-                            }
-                        }
+                    var leather = ResourceEncounters.CreateHides(knifeHideType, hides, cut);
+                    if (cut && from.PlaceInBackpack(leather))
+                    {
+                        from.SendLocalizedMessage(1073555); // You skin it and place the cut-up hides in your backpack.
                     }
                     else
                     {
-                        if (HideType == HideType.Regular)
-                        {
-                            corpse.DropItem(new Hides(hides));
-                        }
-                        else if (HideType == HideType.Spined)
-                        {
-                            corpse.DropItem(new SpinedHides(hides));
-                        }
-                        else if (HideType == HideType.Horned)
-                        {
-                            corpse.DropItem(new HornedHides(hides));
-                        }
-                        else if (HideType == HideType.Barbed)
-                        {
-                            corpse.DropItem(new BarbedHides(hides));
-                        }
-
+                        corpse.DropItem(leather);
                         from.SendLocalizedMessage(500471); // You skin it, and the hides are now in the corpse.
+                    }
+
+                    if (gargoyleKnife == null)
+                    {
+                        // Specialty pelts accompany the familiar hides these creatures already yield.
+                        if (this is IceSerpent)
+                        {
+                            corpse.AddCarvedItem(ResourceEncounters.CreateHides(HideType.Polar, Math.Max(1, hides / 3), cut), from);
+                        }
+                        else if (this is ShadowWyrm)
+                        {
+                            corpse.AddCarvedItem(ResourceEncounters.CreateHides(HideType.Shadow, Math.Max(1, hides / 3), cut), from);
+                        }
                     }
                 }
 
@@ -2222,6 +2276,12 @@ namespace Server.Mobiles
                 }
 
                 corpse.Carved = true;
+
+                if (gargoyleKnife != null)
+                {
+                    gargoyleKnife.SpendUse(from);
+                    ResourceEncounters.TryAwakenLeatherElemental(from, this, knifeHideType, Utility.RandomDouble());
+                }
 
                 if (corpse.IsCriminalAction(from))
                 {
@@ -2292,6 +2352,207 @@ namespace Server.Mobiles
             }
 
             _corpseNameOverride = content.CorpseNameOverride;
+        }
+
+        private void MigrateFrom(V24Content content)
+        {
+            _defaultAI = content.DefaultAI;
+            _currentAI = content.CurrentAI ?? CurrentAIDefaultValue();
+            _rangePerception = content.RangePerception ?? RangePerceptionDefaultValue();
+            _rangeFight = content.RangeFight ?? RangeFightDefaultValue();
+            _rangeHome = content.RangeHome ?? RangeHomeDefaultValue();
+            _team = content.Team ?? 0;
+            _fightMode = content.FightMode ?? FightModeDefaultValue();
+            _activeSpeed = content.ActiveSpeed ?? ActiveSpeedDefaultValue();
+            _passiveSpeed = content.PassiveSpeed ?? PassiveSpeedDefaultValue();
+            _currentSpeed = content.CurrentSpeed ?? CurrentSpeedDefaultValue();
+            _activeMoveSpeed = content.ActiveMoveSpeed ?? ActiveMoveSpeedDefaultValue();
+            _passiveMoveSpeed = content.PassiveMoveSpeed ?? PassiveMoveSpeedDefaultValue();
+            _home = content.Home ?? Point3D.Zero;
+            _homeMap = content.HomeMap;
+            _controlled = content.Controlled;
+            _master = content.Master;
+            _controlTarget = content.ControlTarget;
+            _controlDest = content.ControlDest ?? Point3D.Zero;
+            _controlOrder = content.ControlOrder ?? OrderType.None;
+            _minTameSkill = content.MinTameSkill ?? 0;
+            _tamable = content.Tamable;
+            _summoned = content.Summoned;
+            _summonEnd = content.SummonEnd ?? DateTime.MinValue;
+            _controlSlots = content.ControlSlots ?? ControlSlotsDefaultValue();
+            _loyalty = content.Loyalty ?? LoyaltyDefaultValue();
+            _currentWayPoint = content.CurrentWayPoint;
+            _hitsMaxSeed = content.HitsMaxSeed ?? HitsMaxSeedDefaultValue();
+            _stamMaxSeed = content.StamMaxSeed ?? StamMaxSeedDefaultValue();
+            _manaMaxSeed = content.ManaMaxSeed ?? ManaMaxSeedDefaultValue();
+            _damageMin = content.DamageMin ?? DamageMinDefaultValue();
+            _damageMax = content.DamageMax ?? DamageMaxDefaultValue();
+            _physicalResistanceSeed = content.PhysicalResistanceSeed ?? 0;
+            _fireResistSeed = content.FireResistSeed ?? 0;
+            _coldResistSeed = content.ColdResistSeed ?? 0;
+            _poisonResistSeed = content.PoisonResistSeed ?? 0;
+            _energyResistSeed = content.EnergyResistSeed ?? 0;
+            _physicalDamage = content.PhysicalDamage ?? PhysicalDamageDefaultValue();
+            _fireDamage = content.FireDamage ?? 0;
+            _coldDamage = content.ColdDamage ?? 0;
+            _poisonDamage = content.PoisonDamage ?? 0;
+            _energyDamage = content.EnergyDamage ?? 0;
+            _owners = content.Owners ?? OwnersDefaultValue();
+            _isDeadPet = content.IsDeadPet;
+            _isBonded = content.IsBonded;
+            _bondingBegin = content.BondingBegin ?? DateTime.MinValue;
+            _ownerAbandonTime = content.OwnerAbandonTime ?? DateTime.MinValue;
+            _hasGeneratedLoot = content.HasGeneratedLoot;
+            _isParagon = content.IsParagon;
+            _friends = content.Friends;
+            _removeIfUntamed = content.RemoveIfUntamed;
+            _removeStep = content.RemoveStep ?? 0;
+
+            if (content.PendingDeleteTimerDelay != TimeSpan.MinValue)
+            {
+                DeserializePendingDeleteTimer(content.PendingDeleteTimerDelay);
+            }
+
+            _corpseNameOverride = content.CorpseNameOverride;
+        }
+
+        private void MigrateFrom(V25Content content)
+        {
+            _defaultAI = content.DefaultAI;
+            _currentAI = content.CurrentAI ?? CurrentAIDefaultValue();
+            _rangePerception = content.RangePerception ?? RangePerceptionDefaultValue();
+            _rangeFight = content.RangeFight ?? RangeFightDefaultValue();
+            _rangeHome = content.RangeHome ?? RangeHomeDefaultValue();
+            _team = content.Team ?? 0;
+            _fightMode = content.FightMode ?? FightModeDefaultValue();
+            _activeSpeed = content.ActiveSpeed ?? ActiveSpeedDefaultValue();
+            _passiveSpeed = content.PassiveSpeed ?? PassiveSpeedDefaultValue();
+            _currentSpeed = content.CurrentSpeed ?? CurrentSpeedDefaultValue();
+            _activeMoveSpeed = content.ActiveMoveSpeed ?? ActiveMoveSpeedDefaultValue();
+            _passiveMoveSpeed = content.PassiveMoveSpeed ?? PassiveMoveSpeedDefaultValue();
+            _home = content.Home ?? Point3D.Zero;
+            _homeMap = content.HomeMap;
+            _controlled = content.Controlled;
+            _master = content.Master;
+            _controlTarget = content.ControlTarget;
+            _controlDest = content.ControlDest ?? Point3D.Zero;
+            _controlOrder = content.ControlOrder ?? OrderType.None;
+            _minTameSkill = content.MinTameSkill ?? 0;
+            _tamable = content.Tamable;
+            _summoned = content.Summoned;
+            _summonEnd = content.SummonEnd ?? DateTime.MinValue;
+            _controlSlots = content.ControlSlots ?? ControlSlotsDefaultValue();
+            _loyalty = content.Loyalty ?? LoyaltyDefaultValue();
+            _currentWayPoint = content.CurrentWayPoint;
+            _hitsMaxSeed = content.HitsMaxSeed ?? HitsMaxSeedDefaultValue();
+            _stamMaxSeed = content.StamMaxSeed ?? StamMaxSeedDefaultValue();
+            _manaMaxSeed = content.ManaMaxSeed ?? ManaMaxSeedDefaultValue();
+            _damageMin = content.DamageMin ?? DamageMinDefaultValue();
+            _damageMax = content.DamageMax ?? DamageMaxDefaultValue();
+            _physicalResistanceSeed = content.PhysicalResistanceSeed ?? 0;
+            _fireResistSeed = content.FireResistSeed ?? 0;
+            _coldResistSeed = content.ColdResistSeed ?? 0;
+            _poisonResistSeed = content.PoisonResistSeed ?? 0;
+            _energyResistSeed = content.EnergyResistSeed ?? 0;
+            _physicalDamage = content.PhysicalDamage ?? PhysicalDamageDefaultValue();
+            _fireDamage = content.FireDamage ?? 0;
+            _coldDamage = content.ColdDamage ?? 0;
+            _poisonDamage = content.PoisonDamage ?? 0;
+            _energyDamage = content.EnergyDamage ?? 0;
+            _owners = content.Owners ?? OwnersDefaultValue();
+            _isDeadPet = content.IsDeadPet;
+            _isBonded = content.IsBonded;
+            _bondingBegin = content.BondingBegin ?? DateTime.MinValue;
+            _ownerAbandonTime = content.OwnerAbandonTime ?? DateTime.MinValue;
+            _hasGeneratedLoot = content.HasGeneratedLoot;
+            _isParagon = content.IsParagon;
+            _friends = content.Friends;
+            _removeIfUntamed = content.RemoveIfUntamed;
+            _removeStep = content.RemoveStep ?? 0;
+
+            if (content.PendingDeleteTimerDelay != TimeSpan.MinValue)
+            {
+                DeserializePendingDeleteTimer(content.PendingDeleteTimerDelay);
+            }
+
+            _corpseNameOverride = content.CorpseNameOverride;
+            _petProgressLevel = content.PetProgressLevel ?? 0;
+            _petProgressMaxLevel = content.PetProgressMaxLevel ?? 0;
+            _petExperience = content.PetExperience ?? 0;
+            _petAbilityPoints = content.PetAbilityPoints ?? 0;
+            _petProgressGeneration = content.PetProgressGeneration ?? 0;
+            _petBreedingReadyAt = content.PetBreedingReadyAt ?? DateTime.MinValue;
+            _petProgressSex = content.PetProgressSex ?? 0;
+        }
+
+        private void MigrateFrom(V26Content content)
+        {
+            _defaultAI = content.DefaultAI;
+            _currentAI = content.CurrentAI ?? CurrentAIDefaultValue();
+            _rangePerception = content.RangePerception ?? RangePerceptionDefaultValue();
+            _rangeFight = content.RangeFight ?? RangeFightDefaultValue();
+            _rangeHome = content.RangeHome ?? RangeHomeDefaultValue();
+            _team = content.Team ?? 0;
+            _fightMode = content.FightMode ?? FightModeDefaultValue();
+            _activeSpeed = content.ActiveSpeed ?? ActiveSpeedDefaultValue();
+            _passiveSpeed = content.PassiveSpeed ?? PassiveSpeedDefaultValue();
+            _currentSpeed = content.CurrentSpeed ?? CurrentSpeedDefaultValue();
+            _activeMoveSpeed = content.ActiveMoveSpeed ?? ActiveMoveSpeedDefaultValue();
+            _passiveMoveSpeed = content.PassiveMoveSpeed ?? PassiveMoveSpeedDefaultValue();
+            _home = content.Home ?? Point3D.Zero;
+            _homeMap = content.HomeMap;
+            _controlled = content.Controlled;
+            _master = content.Master;
+            _controlTarget = content.ControlTarget;
+            _controlDest = content.ControlDest ?? Point3D.Zero;
+            _controlOrder = content.ControlOrder ?? OrderType.None;
+            _minTameSkill = content.MinTameSkill ?? 0;
+            _tamable = content.Tamable;
+            _summoned = content.Summoned;
+            _summonEnd = content.SummonEnd ?? DateTime.MinValue;
+            _controlSlots = content.ControlSlots ?? ControlSlotsDefaultValue();
+            _loyalty = content.Loyalty ?? LoyaltyDefaultValue();
+            _currentWayPoint = content.CurrentWayPoint;
+            _hitsMaxSeed = content.HitsMaxSeed ?? HitsMaxSeedDefaultValue();
+            _stamMaxSeed = content.StamMaxSeed ?? StamMaxSeedDefaultValue();
+            _manaMaxSeed = content.ManaMaxSeed ?? ManaMaxSeedDefaultValue();
+            _damageMin = content.DamageMin ?? DamageMinDefaultValue();
+            _damageMax = content.DamageMax ?? DamageMaxDefaultValue();
+            _physicalResistanceSeed = content.PhysicalResistanceSeed ?? 0;
+            _fireResistSeed = content.FireResistSeed ?? 0;
+            _coldResistSeed = content.ColdResistSeed ?? 0;
+            _poisonResistSeed = content.PoisonResistSeed ?? 0;
+            _energyResistSeed = content.EnergyResistSeed ?? 0;
+            _physicalDamage = content.PhysicalDamage ?? PhysicalDamageDefaultValue();
+            _fireDamage = content.FireDamage ?? 0;
+            _coldDamage = content.ColdDamage ?? 0;
+            _poisonDamage = content.PoisonDamage ?? 0;
+            _energyDamage = content.EnergyDamage ?? 0;
+            _owners = content.Owners ?? OwnersDefaultValue();
+            _isDeadPet = content.IsDeadPet;
+            _isBonded = content.IsBonded;
+            _bondingBegin = content.BondingBegin ?? DateTime.MinValue;
+            _ownerAbandonTime = content.OwnerAbandonTime ?? DateTime.MinValue;
+            _hasGeneratedLoot = content.HasGeneratedLoot;
+            _isParagon = content.IsParagon;
+            _friends = content.Friends;
+            _removeIfUntamed = content.RemoveIfUntamed;
+            _removeStep = content.RemoveStep ?? 0;
+
+            if (content.PendingDeleteTimerDelay != TimeSpan.MinValue)
+            {
+                DeserializePendingDeleteTimer(content.PendingDeleteTimerDelay);
+            }
+
+            _corpseNameOverride = content.CorpseNameOverride;
+            _petProgressLevel = content.PetProgressLevel ?? 0;
+            _petProgressMaxLevel = content.PetProgressMaxLevel ?? 0;
+            _petExperience = content.PetExperience ?? 0;
+            _petAbilityPoints = content.PetAbilityPoints ?? 0;
+            _petProgressGeneration = content.PetProgressGeneration ?? 0;
+            _petBreedingReadyAt = content.PetBreedingReadyAt ?? DateTime.MinValue;
+            _petProgressSex = content.PetProgressSex ?? 0;
+            _petDeathStatLoss = content.PetDeathStatLoss;
         }
 
         // Pre-codegen loads only (versions 0-22); post-codegen bumps use MigrateFrom.
@@ -2891,6 +3152,11 @@ namespace Server.Mobiles
 
             AddCustomContextEntries(from, ref list);
 
+            if (CanManagePetProgression(from))
+            {
+                list.Add(new PetProgressionEntry());
+            }
+
             if (CanTeach && from.Alive)
             {
                 var ourSkills = Skills;
@@ -3330,6 +3596,7 @@ namespace Server.Mobiles
                 _hasGeneratedLoot = true;
                 this.MarkDirty();
                 GenerateLoot(false);
+                BioOrganicHarvest.AddLoot(this);
             }
 
             if (!NoKillAwards && Region.IsPartOf("Doom"))
@@ -3519,6 +3786,9 @@ namespace Server.Mobiles
 
         public override void OnDeath(Container c)
         {
+            WeaponLevelingCombat.OnCreatureDeath(this);
+            WeaponTrainingRewards.OnCreatureDeath(this);
+
             if (Spawner is BaseSpawner spawner)
             {
                 spawner.NotifySpawnedDeath(this, LastKiller);
@@ -3537,7 +3807,13 @@ namespace Server.Mobiles
                 Stam = 0;
                 Mana = 0;
 
+                var canLosePetProgress = CanProgressAsPet;
                 IsDeadPet = true;
+                if (canLosePetProgress)
+                {
+                    ApplyPetDeathPenalty(Utility.Random(12));
+                }
+
                 IssueOrder(OrderType.Follow, null, ControlMaster);
 
                 ProcessDelta();
@@ -3761,6 +4037,11 @@ namespace Server.Mobiles
 
         public override bool CanBeHarmful(Mobile target, bool message, bool ignoreOurBlessedness)
         {
+            if (target is PersonalPetTrainer trainer)
+            {
+                return trainer.CanSparWith(this) && base.CanBeHarmful(target, message, ignoreOurBlessedness);
+            }
+
             if (target is BaseFactionGuard)
             {
                 return false;

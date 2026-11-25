@@ -581,6 +581,11 @@ public class DefTinkering : CraftSystem
             SetNeededExpansion(index, Expansion.ML);
         }
 
+        TradeResourceStorage.AddRecipes(this);
+        index = AddCraft(typeof(MobileForge), "Trade Tools", "mobile forge", 80.0, 120.0,
+            typeof(IronIngot), 1044036, 80, 1044037);
+        ForceNonExceptional(index);
+
         // Set the overridable material
         SetSubRes(typeof(IronIngot), 1044022);
 
@@ -595,6 +600,7 @@ public class DefTinkering : CraftSystem
         AddSubRes(typeof(AgapiteIngot), 1044028, 90.0, 1044036, 1044268);
         AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044268);
         AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044268);
+        ExcelsiorMaterials.AddCraftResources(this, CraftResourceType.Metal, 1044268);
 
         MarkOption = true;
         Repair = true;

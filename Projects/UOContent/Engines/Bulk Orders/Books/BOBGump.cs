@@ -199,13 +199,20 @@ public class BOBGump : DynamicGump
                     builder.AddLabel(495, y, 1152, entry.Price.ToString());
                 }
 
-                builder.AddHtmlLocalized(61, y, 50, 32, 1062225, LabelColor); // Large
+                if (entry.DeedType is BODType.ExcelsiorSmith or BODType.ExcelsiorTailor)
+                {
+                    builder.AddLabel(61, y, 1152, "Ex. large");
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(61, y, 50, 32, 1062225, LabelColor); // Large
+                }
 
                 for (var j = 0; j < largeEntry.Entries.Length; ++j)
                 {
                     var sub = largeEntry.Entries[j];
 
-                    builder.AddHtmlLocalized(103, y, 130, 32, sub.Number, LabelColor);
+                    AddRequestedName(ref builder, y, entry.DeedType, sub.ItemType, sub.Number);
 
                     builder.AddHtmlLocalized(
                         235,
@@ -255,9 +262,16 @@ public class BOBGump : DynamicGump
                     builder.AddLabel(495, y, 1152, $"{smallEntry.Price}");
                 }
 
-                builder.AddHtmlLocalized(61, y, 50, 32, 1062224, LabelColor); // Small
+                if (entry.DeedType is BODType.ExcelsiorSmith or BODType.ExcelsiorTailor)
+                {
+                    builder.AddLabel(61, y, 1152, "Ex. small");
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(61, y, 50, 32, 1062224, LabelColor); // Small
+                }
 
-                builder.AddHtmlLocalized(103, y, 130, 32, smallEntry.Number, LabelColor);
+                AddRequestedName(ref builder, y, smallEntry.DeedType, smallEntry.ItemType, smallEntry.Number);
 
                 builder.AddHtmlLocalized(
                     235,
@@ -323,6 +337,8 @@ public class BOBGump : DynamicGump
         Type itemType
     )
     {
+        deedType = ExcelsiorOrderRules.Profession(deedType);
+
         var f = _from.UseOwnFilter ? _from.BOBFilter : Book.Filter;
 
         if (f.IsDefault)
@@ -330,12 +346,12 @@ public class BOBGump : DynamicGump
             return true;
         }
 
-        if (f.Quality == 1 && reqExc)
+        if (deedType != BODType.Taming && f.Quality == 1 && reqExc)
         {
             return false;
         }
 
-        if (f.Quality == 2 && !reqExc)
+        if (deedType != BODType.Taming && f.Quality == 2 && !reqExc)
         {
             return false;
         }
@@ -365,6 +381,12 @@ public class BOBGump : DynamicGump
             return false;
         }
 
+        // Taming books contain only animal orders. A player's craft-material filter does not apply here.
+        if (deedType == BODType.Taming)
+        {
+            return true;
+        }
+
         return f.Material switch
         {
             1  => deedType == BODType.Smith,
@@ -383,6 +405,11 @@ public class BOBGump : DynamicGump
             14 => mat == BulkMaterialType.Spined,
             15 => mat == BulkMaterialType.Horned,
             16 => mat == BulkMaterialType.Barbed,
+            17 => deedType == BODType.Carpentry,
+            18 => deedType == BODType.Fletching,
+            19 => WoodworkBulkOrders.IsWoodwork(deedType) && mat == BulkMaterialType.None,
+            >= 20 and <= 26 => mat == BulkMaterialType.NaturalWood + (f.Material - 20),
+            >= 27 and <= 46 => mat == BulkMaterialType.Blaze + (f.Material - 27),
             _  => true
         };
     }
@@ -489,8 +516,22 @@ public class BOBGump : DynamicGump
         return page;
     }
 
+    private static void AddRequestedName(ref DynamicGumpBuilder builder, int y, BODType profession, Type itemType, int number)
+    {
+        if (profession == BODType.Taming)
+        {
+            builder.AddLabelCropped(103, y, 130, 22, 1152, TamingBulkOrders.AnimalName(itemType));
+        }
+        else
+        {
+            builder.AddHtmlLocalized(103, y, 130, 32, number, LabelColor);
+        }
+    }
+
     public static TextDefinition GetMaterialName(BulkMaterialType mat, BODType type, Type itemType) =>
-        type switch
+        BulkOrderMaterials.AdditionalName(mat) is { } extra
+            ? extra
+            : ExcelsiorOrderRules.Profession(type) switch
         {
             BODType.Smith => mat switch
             {
@@ -513,6 +554,9 @@ public class BOBGump : DynamicGump
                 _ when BGTClassifier.Classify(type, itemType) == BulkGenericType.Leather => 1062235,
                 _                                                                         => 1044286
             },
+            BODType.Carpentry or BODType.Fletching => mat is >= BulkMaterialType.NaturalWood and <= BulkMaterialType.Frostwood
+                ? 1072643 + (mat - BulkMaterialType.NaturalWood)
+                : "Any wood",
             _ => TextDefinition.Empty
         };
 

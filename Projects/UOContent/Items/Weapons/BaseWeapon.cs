@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ModernUO.Serialization;
 using Server.Collections;
+using Server.Engines.BioEngineering;
 using Server.Engines.Craft;
 using Server.Engines.Virtues;
+using Server.Engines.WeaponLeveling;
 using Server.Ethics;
 using Server.Factions;
 using Server.Mobiles;
@@ -27,7 +29,7 @@ public interface ISlayer
     SlayerName Slayer2 { get; set; }
 }
 
-[SerializationGenerator(11, false)]
+[SerializationGenerator(13, false)]
 public abstract partial class BaseWeapon
     : Item, IWeapon, IFactionItem, ICraftable, ISlayer, IDurability, IAosItem, IIdentifiable
 {
@@ -178,6 +180,55 @@ public abstract partial class BaseWeapon
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private bool ShouldSerializeEngravedText() => !string.IsNullOrEmpty(_engravedText);
+
+    [InvalidateProperties]
+    [EncodedInt]
+    [SerializableField(30, getter: "private", setter: "private")]
+    [SaveFlag(nameof(HasWeaponLevelExperience))]
+    private int _weaponLevelExperience;
+
+    [InvalidateProperties]
+    [EncodedInt]
+    [SerializableField(31, getter: "private", setter: "private")]
+    [SaveFlag(nameof(HasWeaponLevelSpent))]
+    private int _weaponLevelSpent;
+
+    [InvalidateProperties]
+    [SerializableField(32, getter: "private", setter: "private")]
+    [SaveFlag(nameof(HasWeaponLevelKind))]
+    private WeaponLevelingClass _weaponLevelKind;
+
+    [InvalidateProperties]
+    [SerializableField(33, getter: "private", setter: "private")]
+    [SaveFlag(nameof(HasArtifactTagRemovedForLeveling))]
+    private bool _artifactTagRemovedForLeveling;
+
+    [InvalidateProperties]
+    [EncodedInt]
+    [SerializableField(34, getter: "private", setter: "private")]
+    [SaveFlag(nameof(HasWeaponLevelBoostUses))]
+    private int _weaponLevelBoostUses;
+
+    [SerializedIgnoreDupe]
+    [SerializableField(35, getter: "internal", setter: "private")]
+    [SaveFlag(nameof(ShouldSerializeEquippedOffHand))]
+    private bool _equippedOffHand;
+
+    private bool ShouldSerializeEquippedOffHand() => _equippedOffHand;
+
+    internal bool CanUseEitherHand => Layer == Layer.OneHanded && this is not (BaseRanged or Fists);
+
+    internal void SetOffHand(bool equipped)
+    {
+        EquippedOffHand = equipped;
+        Layer = equipped ? Layer.TwoHanded : Layer.OneHanded;
+    }
+
+    private bool HasWeaponLevelBoostUses() => _weaponLevelBoostUses != 0;
+    private bool HasWeaponLevelExperience() => _weaponLevelExperience != 0;
+    private bool HasWeaponLevelSpent() => _weaponLevelSpent != 0;
+    private bool HasWeaponLevelKind() => _weaponLevelKind != WeaponLevelingClass.None;
+    private bool HasArtifactTagRemovedForLeveling() => _artifactTagRemovedForLeveling;
 
     private FactionItem m_FactionState;
     private SkillMod m_SkillMod, m_MageMod;
@@ -636,6 +687,21 @@ public abstract partial class BaseWeapon
 
     private CraftResource ResourceDefaultValue() => CraftResource.Iron;
 
+    public static int GetExceptionalArmsLoreDamageBonus(double armsLoreValue)
+    {
+        if (armsLoreValue <= 0)
+        {
+            return 0;
+        }
+
+        if (armsLoreValue <= 100.0)
+        {
+            return (int)(armsLoreValue / 10.0);
+        }
+
+        return 10 + (int)((armsLoreValue - 100.0) / 4.0);
+    }
+
     public virtual int OnCraft(
         int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool,
         CraftItem craftItem, int resHue
@@ -674,12 +740,7 @@ public abstract partial class BaseWeapon
 
                 if (Core.ML)
                 {
-                    Attributes.WeaponDamage += (int)(from.Skills.ArmsLore.Value / 20);
-
-                    if (Attributes.WeaponDamage > 50)
-                    {
-                        Attributes.WeaponDamage = 50;
-                    }
+                    Attributes.WeaponDamage += GetExceptionalArmsLoreDamageBonus(from.Skills.ArmsLore.Value);
 
                     from.CheckSkill(SkillName.ArmsLore, 0, 100);
                 }
@@ -905,6 +966,11 @@ public abstract partial class BaseWeapon
             return;
         }
 
+        if (EquippedOffHand && weap.Layer == Layer.TwoHanded && weap.GetType() == GetType())
+        {
+            weap.SetOffHand(false);
+        }
+
         weap.Attributes = new AosAttributes(newItem, Attributes);
         weap.AosElementDamages = new AosElementAttributes(newItem, AosElementDamages);
         weap.SkillBonuses = new AosSkillBonuses(newItem, SkillBonuses);
@@ -980,6 +1046,12 @@ public abstract partial class BaseWeapon
         if (base.CheckConflictingLayer(m, item, layer))
         {
             return true;
+        }
+
+        if (m is PlayerMobile && item is BaseWeapon other &&
+            (EquippedOffHand && other.CanUseEitherHand || other.EquippedOffHand && CanUseEitherHand))
+        {
+            return false;
         }
 
         if (Layer == Layer.TwoHanded && layer == Layer.OneHanded)
@@ -1066,7 +1138,7 @@ public abstract partial class BaseWeapon
             }
         }
 
-        if (!_enableInstaHit)
+        if (!_enableInstaHit && !EquippedOffHand)
         {
             from.NextCombatTime = Core.TickCount + (int)GetDelay(from).TotalMilliseconds;
         }
@@ -1113,13 +1185,19 @@ public abstract partial class BaseWeapon
             return;
         }
 
+        var wasOffHand = EquippedOffHand;
+        if (wasOffHand)
+        {
+            SetOffHand(false);
+        }
+
         var serial = Serial;
 
         m.RemoveStatMod($"{serial}Str");
         m.RemoveStatMod($"{serial}Dex");
         m.RemoveStatMod($"{serial}Int");
 
-        if (!_enableInstaHit && m.Weapon is BaseWeapon weapon)
+        if (!_enableInstaHit && !wasOffHand && m.Weapon is BaseWeapon weapon)
         {
             m.NextCombatTime = Core.TickCount + (long)weapon.GetDelay(m).TotalMilliseconds;
         }
@@ -1531,7 +1609,8 @@ public abstract partial class BaseWeapon
 
         var weapon = defender.Weapon as BaseWeapon;
 
-        var divisor = weapon?.Layer == Layer.OneHanded ? 48000.0 : 41140.0;
+        var oneHanded = weapon?.Layer == Layer.OneHanded || weapon?.EquippedOffHand == true;
+        var divisor = oneHanded ? 48000.0 : 41140.0;
 
         chance = parry * bushido / divisor;
 
@@ -1963,10 +2042,14 @@ public abstract partial class BaseWeapon
             ImmolatingWeaponSpell.DoEffect(this, defender);
         }
 
-        if (a?.OnBeforeDamage(attacker, defender) == false)
+        if (a != null)
         {
-            WeaponAbility.ClearCurrentAbility(attacker);
-            a = null;
+            using var ability = WeaponLevelingCombat.BeginWeaponAbility(this);
+            if (!a.OnBeforeDamage(attacker, defender))
+            {
+                WeaponAbility.ClearCurrentAbility(attacker);
+                a = null;
+            }
         }
 
         if (move?.OnBeforeDamage(attacker, defender) == false)
@@ -1986,24 +2069,46 @@ public abstract partial class BaseWeapon
                           Bladeweave.BladeWeaving(attacker, out var bladeweavingAbi) &&
                           bladeweavingAbi is ArmorIgnore;
 
-        var damageGiven = AOS.Damage(
-            defender,
-            attacker,
-            damage,
-            ignoreArmor,
-            phys,
-            fire,
-            cold,
-            pois,
-            nrgy,
-            chaos,
-            direct,
-            false,
-            this is BaseRanged
-        );
+        var isMelee = this is not BaseRanged;
+        var petOpponentMaxHits = isMelee ? bcAtt?.GetPetMeleeOpponentMaxHits(bcDef) ?? 0 : 0;
+        var bioAttacker = isMelee ? bcAtt as BioConstruct : null;
+        var bioDefender = isMelee ? bcDef as BioConstruct : null;
+        var trackMeleeDamage = petOpponentMaxHits > 0 || bioAttacker != null || bioDefender != null ||
+                               bcDef?.HasPetTrainingContributions == true;
+        var hitsBeforeMelee = trackMeleeDamage ? defender.Hits : 0;
+        int damageGiven;
+        using (WeaponLevelingCombat.BeginWeaponHit(this, attacker, bcDef))
+        {
+            damageGiven = AOS.Damage(
+                defender,
+                attacker,
+                damage,
+                ignoreArmor,
+                phys,
+                fire,
+                cold,
+                pois,
+                nrgy,
+                chaos,
+                direct,
+                false,
+                !isMelee
+            );
+        }
+        var actualDamage = trackMeleeDamage && damageGiven > 0
+            ? Math.Max(0, Math.Min(damageGiven, hitsBeforeMelee - defender.Hits))
+            : 0;
+        var landedMelee = isMelee && actualDamage > 0;
 
         if (damageGiven > 0)
         {
+            if (petOpponentMaxHits > 0 && landedMelee)
+            {
+                bcAtt.TrackPetMeleeHit(bcDef, petOpponentMaxHits, actualDamage);
+            }
+
+            bcDef?.SettlePetTrainingDefeat();
+
             var propertyBonus = move?.GetPropertyBonus(attacker) ?? 1.0;
 
             // Leech abilities
@@ -2201,7 +2306,18 @@ public abstract partial class BaseWeapon
         bcAtt?.OnGaveMeleeAttack(defender, damage);
         bcDef?.OnGotMeleeAttack(attacker, damage);
 
-        a?.OnHit(attacker, defender, damage, defLoc);
+        if (landedMelee)
+        {
+            bioAttacker?.OnLandedMeleeAttack(defender);
+            bioDefender?.OnReceivedMeleeHit(attacker);
+        }
+
+        if (a != null)
+        {
+            using var ability = WeaponLevelingCombat.BeginWeaponAbility(this);
+            a.OnHit(attacker, defender, damage, defLoc);
+        }
+
         move?.OnHit(attacker, defender, damage);
 
         ForceOfNature.OnHit(attacker, defender);
@@ -2794,7 +2910,13 @@ public abstract partial class BaseWeapon
                 }
         }
 
-        from.Animate(action, 7, 1, true, false, 0);
+        // Repeat count is unused for a nonrepeating 0x6E animation. CrossUO uses
+        // this value to run the off-hand art on a separate animation track.
+        const int offHandSwingRepeatCount = 0x4001;
+        var repeatCount = from is PlayerMobile { IsSwingingOffHand: true } player && player.Weapon == this
+            ? offHandSwingRepeatCount
+            : 1;
+        from.Animate(action, 7, repeatCount, true, false, 0);
     }
 
     public int GetElementalDamageHue()
@@ -2906,6 +3028,7 @@ public abstract partial class BaseWeapon
     public override void GetProperties(IPropertyList list)
     {
         base.GetProperties(list);
+        CraftResources.AddExcelsiorGrade(Resource, list);
 
         if (_crafter != null)
         {
@@ -2934,7 +3057,7 @@ public abstract partial class BaseWeapon
             list.Add(1111709); // Gargoyles Only
         }
 
-        if (ArtifactRarity > 0)
+        if (HasWeaponLevelingArtifactTag)
         {
             list.Add(1061078, ArtifactRarity); // artifact rarity ~1_val~
         }
@@ -2965,6 +3088,11 @@ public abstract partial class BaseWeapon
             {
                 list.Add(entry.Title);
             }
+        }
+
+        if (IsWeaponLevelingEnabled)
+        {
+            list.Add($"{"Weapon level"}\t{WeaponLevel}");
         }
 
         AddResistanceProperties(list);
@@ -3548,6 +3676,11 @@ public abstract partial class BaseWeapon
     private void AfterDeserialization()
     {
         var parentMobile = Parent as Mobile;
+
+        if (EquippedOffHand && (parentMobile is not PlayerMobile || Layer != Layer.TwoHanded))
+        {
+            SetOffHand(false);
+        }
 
         if (UseSkillMod && _accuracyLevel != WeaponAccuracyLevel.Regular && parentMobile != null)
         {

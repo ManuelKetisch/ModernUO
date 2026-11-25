@@ -1,5 +1,6 @@
 using Server.Gumps;
 using Server.Network;
+using Server.Mobiles;
 
 namespace Server.Engines.BulkOrders
 {
@@ -32,9 +33,16 @@ namespace Server.Engines.BulkOrders
             builder.AddHtmlLocalized(275, 76, 200, 20, 1045153, 0x7FFF); // Amount finished:
             builder.AddHtmlLocalized(75, 72, 120, 20, 1045136, 0x7FFF);  // Item requested:
 
-            builder.AddItem(410, 72, _deed.Graphic);
+            if (_deed.Profession == BODType.Taming)
+            {
+                builder.AddLabel(75, 96, 1152, TamingBulkOrders.AnimalName(_deed.Type));
+            }
+            else
+            {
+                builder.AddItem(410, 72, _deed.Graphic);
+                builder.AddHtmlLocalized(75, 96, 210, 20, _deed.Number, 0x7FFF);
+            }
 
-            builder.AddHtmlLocalized(75, 96, 210, 20, _deed.Number, 0x7FFF);
             builder.AddLabel(275, 96, 0x480, _deed.AmountCur.ToString());
 
             if (_deed.RequireExceptional || _deed.Material != BulkMaterialType.None)
@@ -49,18 +57,40 @@ namespace Server.Engines.BulkOrders
 
             if (_deed.Material != BulkMaterialType.None)
             {
-                builder.AddHtmlLocalized(
-                    75,
-                    _deed.RequireExceptional ? 168 : 144,
-                    300,
-                    20,
-                    GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
-                    0x7FFF
-                );
+                if (BulkOrderMaterials.AdditionalName(_deed.Material) is { } material)
+                {
+                    builder.AddLabel(75, _deed.RequireExceptional ? 168 : 144, 1152, $"All items must be made with {material}.");
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(
+                        75,
+                        _deed.RequireExceptional ? 168 : 144,
+                        300,
+                        20,
+                        GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
+                        0x7FFF
+                    );
+                }
             }
 
-            builder.AddButton(125, 192, 4005, 4007, 2);
-            builder.AddHtmlLocalized(160, 192, 300, 20, 1045154, 0x7FFF); // Combine this deed with the item requested.
+            if (_deed.Complete)
+            {
+                builder.AddButton(125, 192, 4005, 4007, 3);
+                builder.AddLabel(160, 192, 1152, "Claim reward");
+            }
+            else
+            {
+                builder.AddButton(125, 192, 4005, 4007, 2);
+                if (_deed.Profession == BODType.Taming)
+                {
+                    builder.AddLabel(160, 192, 1152, "Surrender an animal");
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(160, 192, 300, 20, 1045154, 0x7FFF); // Combine this deed with the item requested.
+                }
+            }
 
             builder.AddButton(125, 216, 4005, 4007, 1);
             builder.AddHtmlLocalized(160, 216, 120, 20, 1011441, 0x7FFF); // EXIT
@@ -80,6 +110,10 @@ namespace Server.Engines.BulkOrders
                 from.SendGump(new SmallBODGump(_deed));
                 _deed.BeginCombine(from);
             }
+            else if (info.ButtonID == 3 && from is PlayerMobile player)
+            {
+                BulkOrderRedemption.TryClaim(player, _deed);
+            }
         }
 
         public static int GetMaterialNumberFor(BulkMaterialType material)
@@ -92,6 +126,11 @@ namespace Server.Engines.BulkOrders
             if (material >= BulkMaterialType.Spined && material <= BulkMaterialType.Barbed)
             {
                 return 1049348 + (material - BulkMaterialType.Spined);
+            }
+
+            if (material is >= BulkMaterialType.NaturalWood and <= BulkMaterialType.Frostwood)
+            {
+                return 1072643 + (material - BulkMaterialType.NaturalWood);
             }
 
             return 0;

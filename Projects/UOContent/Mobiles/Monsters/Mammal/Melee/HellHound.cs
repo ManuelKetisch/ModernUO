@@ -53,6 +53,11 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Average);
             AddLoot(LootPack.Meager);
+
+            if (!m_Spawning && !Controlled && !Summoned)
+            {
+                PackItem(new HellhoundRib());
+            }
         }
     }
 }

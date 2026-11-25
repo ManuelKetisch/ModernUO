@@ -52,7 +52,14 @@ namespace Server.Engines.BulkOrders
 
             if (Material != BulkMaterialType.None)
             {
-                list.Add(LargeBODGump.GetMaterialNumberFor(Material)); // All items must be made with x material.
+                if (BulkOrderMaterials.AdditionalName(Material) is { } material)
+                {
+                    list.Add($"{"Material"}\t{material}");
+                }
+                else
+                {
+                    list.Add(LargeBODGump.GetMaterialNumberFor(Material));
+                } // All items must be made with x material.
             }
 
             list.Add(1060656, AmountMax); // amount to make: ~1_val~
@@ -60,7 +67,14 @@ namespace Server.Engines.BulkOrders
             for (var i = 0; i < _entries.Length; ++i)
             {
                 var entry = _entries[i];
-                list.Add(1060658 + i, $"{entry.Details.Number:#}\t{entry.Amount}"); // ~1_val~: ~2_val~
+                if (Profession == BODType.Taming)
+                {
+                    list.Add($"{TamingBulkOrders.AnimalName(entry.Details.Type)}\t{entry.Amount}");
+                }
+                else
+                {
+                    list.Add(1060658 + i, $"{entry.Details.Number:#}\t{entry.Amount}"); // ~1_val~: ~2_val~
+                }
             }
         }
 
@@ -110,7 +124,7 @@ namespace Server.Engines.BulkOrders
                 }
             }
 
-            if (entry == null)
+            if (entry == null || small.Profession != Profession)
             {
                 from.SendLocalizedMessage(1045160); // That is not a bulk order for this large request.
             }
@@ -118,15 +132,19 @@ namespace Server.Engines.BulkOrders
             {
                 from.SendLocalizedMessage(1045161); // Both orders must be of exceptional quality.
             }
-            else if (Material >= BulkMaterialType.DullCopper && Material <= BulkMaterialType.Valorite &&
+            else if (BulkOrderMaterials.IsMetal(Material) &&
                      small.Material != Material)
             {
                 from.SendLocalizedMessage(1045162); // Both orders must use the same ore type.
             }
-            else if (Material >= BulkMaterialType.Spined && Material <= BulkMaterialType.Barbed &&
+            else if (BulkOrderMaterials.IsLeather(Material) &&
                      small.Material != Material)
             {
                 from.SendLocalizedMessage(1049351); // Both orders must use the same leather type.
+            }
+            else if (WoodworkBulkOrders.IsWoodwork(Profession) && Material != small.Material)
+            {
+                from.SendMessage("Both orders must request the same wood.");
             }
             else if (AmountMax != small.AmountMax)
             {

@@ -1,3 +1,4 @@
+using Server.Mobiles;
 using Server.Targeting;
 
 namespace Server.Engines.BulkOrders
@@ -12,6 +13,20 @@ namespace Server.Engines.BulkOrders
         {
             if (m_Deed.Deleted || !m_Deed.IsChildOf(from.Backpack))
             {
+                return;
+            }
+
+            if (m_Deed is TamingSmallBOD taming)
+            {
+                if (from is PlayerMobile player && targeted is BaseCreature pet)
+                {
+                    taming.ConfirmSurrender(player, pet);
+                }
+                else
+                {
+                    from.SendMessage("Choose a nearby animal you tamed.");
+                }
+
                 return;
             }
 

@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "type": "Server.Items.PetOintment",
+  "properties": [
+    {
+      "name": "Kind",
+      "type": "Server.Items.PetOintmentKind",
+      "rule": "EnumMigrationRule"
+    }
+  ]
+}

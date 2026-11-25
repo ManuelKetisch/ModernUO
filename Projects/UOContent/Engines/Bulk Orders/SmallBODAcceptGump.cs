@@ -32,8 +32,15 @@ namespace Server.Engines.BulkOrders
             builder.AddLabel(250, 72, 1152, _deed.AmountMax.ToString());
 
             builder.AddHtmlLocalized(40, 96, 120, 20, 1045136, 0x7FFF); // Item requested:
-            builder.AddItem(385, 96, _deed.Graphic);
-            builder.AddHtmlLocalized(40, 120, 210, 20, _deed.Number, 0x7FFF);
+            if (_deed.Profession == BODType.Taming)
+            {
+                builder.AddLabel(40, 120, 1152, TamingBulkOrders.AnimalName(_deed.Type));
+            }
+            else
+            {
+                builder.AddItem(385, 96, _deed.Graphic);
+                builder.AddHtmlLocalized(40, 120, 210, 20, _deed.Number, 0x7FFF);
+            }
 
             if (_deed.RequireExceptional || _deed.Material != BulkMaterialType.None)
             {
@@ -46,14 +53,21 @@ namespace Server.Engines.BulkOrders
 
                 if (_deed.Material != BulkMaterialType.None)
                 {
-                    builder.AddHtmlLocalized(
-                        40,
-                        _deed.RequireExceptional ? 192 : 168,
-                        350,
-                        20,
-                        GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
-                        0x7FFF
-                    );
+                    if (BulkOrderMaterials.AdditionalName(_deed.Material) is { } material)
+                    {
+                        builder.AddLabel(40, _deed.RequireExceptional ? 192 : 168, 1152, $"All items must be made with {material}.");
+                    }
+                    else
+                    {
+                        builder.AddHtmlLocalized(
+                            40,
+                            _deed.RequireExceptional ? 192 : 168,
+                            350,
+                            20,
+                            GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
+                            0x7FFF
+                        );
+                    }
                 }
             }
 
@@ -106,6 +120,11 @@ namespace Server.Engines.BulkOrders
             if (material >= BulkMaterialType.Spined && material <= BulkMaterialType.Barbed)
             {
                 return 1049348 + (material - BulkMaterialType.Spined);
+            }
+
+            if (material is >= BulkMaterialType.NaturalWood and <= BulkMaterialType.Frostwood)
+            {
+                return 1072643 + (material - BulkMaterialType.NaturalWood);
             }
 
             return 0;

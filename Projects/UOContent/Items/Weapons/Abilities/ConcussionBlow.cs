@@ -1,4 +1,5 @@
 using System;
+using Server.Engines.WeaponLeveling;
 
 namespace Server.Items
 {
@@ -60,7 +61,10 @@ namespace Server.Items
 
             // Total damage is 10 + (0~20) = 10~30, physical, non-resistable.
 
-            defender.Damage(damage, attacker);
+            using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+            {
+                defender.Damage(damage, attacker);
+            }
 
             return true;
         }

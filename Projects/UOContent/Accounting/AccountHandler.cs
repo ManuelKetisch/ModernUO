@@ -22,8 +22,8 @@ public static class AccountHandler
 
     private static int MaxAccountsPerIP;
     private static bool AutoAccountCreation;
-    private static readonly bool RestrictDeletion = !TestCenter.Enabled;
-    private static readonly TimeSpan DeleteDelay = TimeSpan.FromDays(7.0);
+    private static readonly TimeSpan _defaultDeletionDelay = TimeSpan.FromDays(7);
+    private static TimeSpan _characterDeletionDelay = _defaultDeletionDelay;
     private static bool PasswordCommandEnabled;
 
     private static Dictionary<UInt128, int> _accountCounts;
@@ -97,6 +97,8 @@ public static class AccountHandler
         MaxAccountsPerIP = ServerConfiguration.GetOrUpdateSetting("accountHandler.maxAccountsPerIP", 1);
         MaxLoginsPerIP = ServerConfiguration.GetOrUpdateSetting("accountHandler.maxLoginsPerIP", 0);
         AutoAccountCreation = ServerConfiguration.GetOrUpdateSetting("accountHandler.enableAutoAccountCreation", true);
+        var deletionDelay = ServerConfiguration.GetOrUpdateSetting("accountHandler.characterDeletionDelay", _defaultDeletionDelay);
+        _characterDeletionDelay = deletionDelay >= TimeSpan.Zero ? deletionDelay : _defaultDeletionDelay;
         PasswordCommandEnabled = ServerConfiguration.GetOrUpdateSetting(
             "accountHandler.enablePlayerPasswordCommand",
             false
@@ -259,7 +261,8 @@ public static class AccountHandler
             {
                 res = DeleteResultType.CharBeingPlayed;
             }
-            else if (acct.AccessLevel == AccessLevel.Player && RestrictDeletion && Core.Now < m.Created + DeleteDelay)
+            else if (acct.AccessLevel == AccessLevel.Player && !TestCenter.Enabled &&
+                     IsCharacterTooYoung(m.Created, Core.Now, _characterDeletionDelay))
             {
                 res = DeleteResultType.CharTooYoung;
             }
@@ -287,6 +290,9 @@ public static class AccountHandler
         state.SendCharacterDeleteResult(res);
         state.SendCharacterListUpdate(acct);
     }
+
+    internal static bool IsCharacterTooYoung(DateTime created, DateTime now, TimeSpan delay) =>
+        delay > TimeSpan.Zero && now - created < delay;
 
     public static bool CanCreate(IPAddress ip) => GetAccountCount(ip) < MaxAccountsPerIP;
 

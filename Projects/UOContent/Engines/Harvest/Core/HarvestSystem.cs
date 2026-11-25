@@ -143,6 +143,7 @@ namespace Server.Engines.Harvest
             // double skillValue = from.Skills[def.Skill].Value;
 
             Type type = null;
+            var delivered = false;
 
             if (skillBase >= resource.ReqSkill && from.CheckSkill(def.Skill, resource.MinSkill, resource.MaxSkill))
             {
@@ -198,6 +199,7 @@ namespace Server.Engines.Harvest
 
                         if (Give(from, item, def.PlaceAtFeetIfFull))
                         {
+                            delivered = true;
                             SendSuccessTo(from, item, resource);
                         }
                         else
@@ -247,7 +249,15 @@ namespace Server.Engines.Harvest
                 def.SendMessageTo(from, def.FailMessage);
             }
 
+            OnHarvestOutcome(from, tool, def, vein, resource, delivered ? type : null);
             OnHarvestFinished(from, tool, def, vein, bank, resource, toHarvest);
+        }
+
+        protected virtual void OnHarvestOutcome(
+            Mobile from, Item tool, HarvestDefinition definition, HarvestVein vein, HarvestResource resource,
+            Type deliveredType
+        )
+        {
         }
 
         public virtual void OnHarvestFinished(

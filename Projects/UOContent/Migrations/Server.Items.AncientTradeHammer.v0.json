@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "type": "Server.Items.AncientTradeHammer",
+  "properties": [
+    {
+      "name": "TradeSkill",
+      "type": "Server.SkillName",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "Bonus",
+      "type": "int",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

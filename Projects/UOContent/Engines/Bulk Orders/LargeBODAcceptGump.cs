@@ -40,7 +40,14 @@ namespace Server.Engines.BulkOrders
 
             for (var i = 0; i < entries.Length; ++i, y += 24)
             {
-                builder.AddHtmlLocalized(40, y, 210, 20, entries[i].Details.Number, 0x7FFF);
+                if (_deed.Profession == BODType.Taming)
+                {
+                    builder.AddLabel(40, y, 1152, TamingBulkOrders.AnimalName(entries[i].Details.Type));
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(40, y, 210, 20, entries[i].Details.Number, 0x7FFF);
+                }
             }
 
             if (_deed.RequireExceptional || _deed.Material != BulkMaterialType.None)
@@ -56,14 +63,21 @@ namespace Server.Engines.BulkOrders
 
                 if (_deed.Material != BulkMaterialType.None)
                 {
-                    builder.AddHtmlLocalized(
-                        40,
-                        y,
-                        350,
-                        20,
-                        GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
-                        0x7FFF
-                    );
+                    if (BulkOrderMaterials.AdditionalName(_deed.Material) is { } material)
+                    {
+                        builder.AddLabel(40, y, 1152, $"All items must be made with {material}.");
+                    }
+                    else
+                    {
+                        builder.AddHtmlLocalized(
+                            40,
+                            y,
+                            350,
+                            20,
+                            GetMaterialNumberFor(_deed.Material), // All items must be made with x material.
+                            0x7FFF
+                        );
+                    }
                 }
             }
 
@@ -119,6 +133,11 @@ namespace Server.Engines.BulkOrders
             if (material >= BulkMaterialType.Spined && material <= BulkMaterialType.Barbed)
             {
                 return 1049348 + (material - BulkMaterialType.Spined);
+            }
+
+            if (material is >= BulkMaterialType.NaturalWood and <= BulkMaterialType.Frostwood)
+            {
+                return 1072643 + (material - BulkMaterialType.NaturalWood);
             }
 
             return 0;

@@ -120,10 +120,18 @@ public partial class BulkOrderBook : Item, ISecurable
         }
     }
 
+    protected virtual bool AcceptsProfession(BODType profession) => profession != BODType.Taming;
+
     public override bool OnDragDrop(Mobile from, Item dropped)
     {
-        if (dropped is BaseBOD)
+        if (dropped is BaseBOD deed)
         {
+            if (!AcceptsProfession(deed.Profession))
+            {
+                from.SendMessage("This order belongs in a different bulk order book.");
+                return false;
+            }
+
             if (!IsChildOf(from.Backpack))
             {
                 from.SendLocalizedMessage(1062385); // You must have the book in your backpack to add deeds to it.

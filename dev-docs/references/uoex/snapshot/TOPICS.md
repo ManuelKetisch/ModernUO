@@ -21,3 +21,4 @@
 - [Gravedigging](<pages/gravedigging.md>) and [Maxxed NonCasting Human Bios](<pages/maxxed_noncasting_human_bios.md>) — [PDF visuals](PDF-REVIEW.md)
 - [Ointments](<pages/ointments.md>) — Wayback replay, 2021-11-28
 - [Horticulture (Plants)](<pages/horticulture_plants.md>) — Wayback replay, 2021-11-28
+- [Excelsior crafting and resource PDFs](PDF-REVIEW.md#crafting-and-resources-captures) — browser PDFs, 2026-11-24

@@ -12,12 +12,7 @@ public partial class BOBLargeEntry : BaseBOBEntry
     {
         RequireExceptional = bod.RequireExceptional;
 
-        DeedType = bod switch
-        {
-            LargeTailorBOD => BODType.Tailor,
-            LargeSmithBOD  => BODType.Smith,
-            _              => DeedType
-        };
+        DeedType = ExcelsiorOrderRules.BookKind(bod);
 
         Material = bod.Material;
         AmountMax = bod.AmountMax;
@@ -36,7 +31,12 @@ public partial class BOBLargeEntry : BaseBOBEntry
         {
             BODType.Smith  => new LargeSmithBOD(AmountMax, RequireExceptional, Material, ReconstructEntries()),
             BODType.Tailor => new LargeTailorBOD(AmountMax, RequireExceptional, Material, ReconstructEntries()),
-            _              => null
+            BODType.Carpentry or BODType.Fletching =>
+                new WoodworkLargeBOD(DeedType, AmountMax, RequireExceptional, Material, ReconstructEntries()),
+            BODType.ExcelsiorSmith or BODType.ExcelsiorTailor =>
+                ExcelsiorOrderRules.NewLarge(DeedType, AmountMax, RequireExceptional, Material, ReconstructEntries()),
+            BODType.Taming => new TamingLargeBOD(AmountMax, ReconstructEntries()),
+            _ => null
         };
 
         for (var i = 0; i < bod?.Entries.Length; ++i)

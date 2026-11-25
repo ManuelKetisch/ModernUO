@@ -59,6 +59,11 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 2);
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MedScrolls, 2);
+
+            if (SoloProgression.Enabled && !m_Spawning)
+            {
+                PackItem(new SwordsmanshipEssence());
+            }
         }
     }
 }

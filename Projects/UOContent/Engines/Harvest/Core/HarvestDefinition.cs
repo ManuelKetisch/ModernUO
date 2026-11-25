@@ -8,6 +8,8 @@ namespace Server.Engines.Harvest
     public class HarvestDefinition
     {
         private HarvestVein[] m_Veins;
+        private HarvestVein[] _regionalVeins;
+        private uint _regionalVeinWeights;
         public int BankWidth { get; set; }
 
         public int BankHeight { get; set; }
@@ -68,14 +70,30 @@ namespace Server.Engines.Harvest
             set
             {
                 m_Veins = value;
-                var totalWeight = 0u;
-                for (var i = 0; i < m_Veins.Length; i++)
-                {
-                    totalWeight += m_Veins[i].VeinChance;
-                }
-
-                VeinWeights = totalWeight;
+                VeinWeights = SumWeights(value);
             }
+        }
+
+        public Map RegionalVeinMap { get; init; }
+
+        public HarvestVein[] RegionalVeins
+        {
+            get => _regionalVeins;
+            set
+            {
+                _regionalVeins = value;
+                _regionalVeinWeights = SumWeights(value);
+            }
+        }
+
+        private static uint SumWeights(HarvestVein[] veins)
+        {
+            var totalWeight = 0u;
+            for (var i = 0; i < veins.Length; i++)
+            {
+                totalWeight += veins[i].VeinChance;
+            }
+            return totalWeight;
         }
 
         public BonusHarvestResource[] BonusResources { get; set; }
@@ -120,44 +138,60 @@ namespace Server.Engines.Harvest
 
             if (!banks.TryGetValue(key, out var bank))
             {
-                banks[key] = bank = new HarvestBank(this, GetVeinAt(map, x, y));
+                banks[key] = bank = new HarvestBank(this, GetVeinAt(map, x, y), map);
             }
 
             return bank;
         }
 
+        private bool UsesRegionalVeins(Map map) => map != null && map == RegionalVeinMap && _regionalVeins != null;
+
+        public HarvestVein[] GetVeins(Map map) => UsesRegionalVeins(map) ? _regionalVeins : Veins;
+
+        internal uint GetVeinWeights(Map map) => UsesRegionalVeins(map) ? _regionalVeinWeights : VeinWeights;
+
+        internal HarvestVein NextVein(Map map, HarvestVein vein)
+        {
+            var veins = GetVeins(map);
+            var index = Array.IndexOf(veins, vein);
+            return index >= 0 && index + 1 < veins.Length ? veins[index + 1] : null;
+        }
+
         public HarvestVein GetVeinAt(Map map, int x, int y)
         {
-            if (Veins.Length == 1)
+            var veins = GetVeins(map);
+            if (veins.Length == 1)
             {
-                return Veins[0];
+                return veins[0];
             }
 
+            var weight = GetVeinWeights(map);
             if (RandomizeVeins)
             {
-                return GetVeinFrom((uint)Utility.Random(1000));
+                return GetVeinFrom((uint)Utility.Random(weight), map);
             }
 
             // TODO: Introduce pulling primes from a config and writing them if they don't exist to the config
             var seed = (ulong)(x * 17 + y * 11 + map.MapID * 3);
-            return GetVeinFrom((uint)StableRandom.First(seed, VeinWeights));
+            return GetVeinFrom((uint)StableRandom.First(seed, weight), map);
         }
 
-        public HarvestVein GetVeinFrom(uint randomValue)
+        public HarvestVein GetVeinFrom(uint randomValue, Map map = null)
         {
-            if (Veins.Length == 1)
+            var veins = GetVeins(map);
+            if (veins.Length == 1)
             {
-                return Veins[0];
+                return veins[0];
             }
 
-            for (var i = 0; i < Veins.Length; ++i)
+            for (var i = 0; i < veins.Length; ++i)
             {
-                if (randomValue <= Veins[i].VeinChance)
+                if (veins[i].VeinChance != 0 && randomValue <= veins[i].VeinChance)
                 {
-                    return Veins[i];
+                    return veins[i];
                 }
 
-                randomValue -= Veins[i].VeinChance;
+                randomValue -= veins[i].VeinChance;
             }
 
             return null;

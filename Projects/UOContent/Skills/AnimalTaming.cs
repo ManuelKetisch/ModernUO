@@ -1,3 +1,4 @@
+using Server.Engines.BulkOrders;
 using System;
 using System.Collections.Generic;
 using Server.Engines.Virtues;
@@ -405,7 +406,8 @@ namespace Server.SkillHandlers
                         if (CheckMastery(m_Tamer, m_Creature) || alreadyOwned ||
                             m_Tamer.CheckTargetSkill(SkillName.AnimalTaming, m_Creature, minSkill - 25.0, minSkill + 25.0))
                         {
-                            if (m_Creature.Owners.Count == 0) // First tame
+                            var firstTame = m_Creature.Owners.Count == 0;
+                            if (firstTame)
                             {
                                 if (m_Creature is GreaterDragon)
                                 {
@@ -444,6 +446,11 @@ namespace Server.SkillHandlers
                             m_Creature.IsBonded = false;
                             m_Creature.ControlTarget = m_Tamer;
                             m_Creature.ControlOrder = OrderType.Follow;
+
+                            if (firstTame && m_Tamer is PlayerMobile owner)
+                            {
+                                TamingBulkOrders.RecordFirstTame(m_Creature, owner);
+                            }
                         }
                         else
                         {

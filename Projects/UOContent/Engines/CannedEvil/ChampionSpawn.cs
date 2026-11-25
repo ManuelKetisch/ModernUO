@@ -17,6 +17,7 @@ using System;
 using System.Net;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using ModernUO.Serialization;
 using Server.Collections;
 using Server.Engines.Virtues;
@@ -89,6 +90,7 @@ public partial class ChampionSpawn : Item
     }
 
     private static readonly ILogger logger = LogFactory.GetLogger(typeof(ChampionSpawn));
+    private static readonly ConditionalWeakTable<Mobile, ChampionSpawn> _spawnProvenance = new();
 
     [SerializableField(1)]
     [SerializedCommandProperty(AccessLevel.GameMaster)]
@@ -159,7 +161,7 @@ public partial class ChampionSpawn : Item
     [SerializedCommandProperty(AccessLevel.GameMaster)]
     private DateTime _expireTime;
 
-    [SerializableField(21)]
+    [SerializableField(21, fieldChanged: nameof(OnChampionChanged))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]
     private Mobile _champion;
 
@@ -343,7 +345,63 @@ public partial class ChampionSpawn : Item
             : null;
     }
 
-    public void AddMinion(Mobile minion) => AddToMinions(minion);
+    // Reward attribution follows the cohort even when a creature is led out of its region.
+    internal static bool HasSpawnProvenance(BaseCreature creature) =>
+        _spawnProvenance.TryGetValue(creature, out var spawn) && !spawn.Deleted;
+
+    internal void AddSpawnCreature(Mobile creature)
+    {
+        AddToCreatures(creature);
+        TrackSpawnProvenance(creature);
+    }
+
+    public void AddMinion(Mobile minion)
+    {
+        AddToMinions(minion);
+        TrackSpawnProvenance(minion);
+    }
+
+    private void OnChampionChanged(Mobile previous, Mobile next)
+    {
+        ForgetSpawnProvenance(previous);
+        TrackSpawnProvenance(next);
+    }
+
+    private void TrackSpawnProvenance(Mobile creature)
+    {
+        if (creature is { Deleted: false, Player: false })
+        {
+            _spawnProvenance.AddOrUpdate(creature, this);
+        }
+    }
+
+    private void ForgetSpawnProvenance(Mobile creature)
+    {
+        if (creature != null && _spawnProvenance.TryGetValue(creature, out var spawn) && spawn == this)
+        {
+            _spawnProvenance.Remove(creature);
+        }
+    }
+
+    private void RestoreSpawnProvenance()
+    {
+        TrackSpawnProvenance(Champion);
+        if (_creatures != null)
+        {
+            foreach (var creature in _creatures)
+            {
+                TrackSpawnProvenance(creature);
+            }
+        }
+
+        if (_minions != null)
+        {
+            foreach (var minion in _minions)
+            {
+                TrackSpawnProvenance(minion);
+            }
+        }
+    }
 
     [CommandProperty(AccessLevel.GameMaster)]
     public virtual int MaxKills
@@ -618,6 +676,7 @@ public partial class ChampionSpawn : Item
                 ((Corpse)m.Corpse).BeginDecay(TimeSpan.FromMinutes(1));
             }
 
+            ForgetSpawnProvenance(m);
             RemoveFromCreaturesAt(i);
             --i;
             ++_kills;
@@ -835,7 +894,7 @@ public partial class ChampionSpawn : Item
             // Allow creatures to turn into Paragons at Ilshenar champions.
             m.OnBeforeSpawn(loc, Map);
 
-            AddToCreatures(m);
+            AddSpawnCreature(m);
             m.MoveToWorld(loc, Map);
 
             if (m is BaseCreature bc)
@@ -1190,6 +1249,7 @@ public partial class ChampionSpawn : Item
 
         if (Champion is { Player: false })
         {
+            ForgetSpawnProvenance(Champion);
             Champion.Delete();
         }
 
@@ -1213,6 +1273,7 @@ public partial class ChampionSpawn : Item
             for (var i = 0; i < _creatures.Count; ++i)
             {
                 var mob = _creatures[i];
+                ForgetSpawnProvenance(mob);
 
                 if (!mob.Player)
                 {
@@ -1225,7 +1286,9 @@ public partial class ChampionSpawn : Item
 
         for (var i = 0; i < _minions.Count; ++i)
         {
-            _minions[i].Delete();
+            var minion = _minions[i];
+            ForgetSpawnProvenance(minion);
+            minion.Delete();
         }
 
         ClearMinions();
@@ -1407,14 +1470,18 @@ public partial class ChampionSpawn : Item
         {
             Delete();
         }
-        else if (_active)
+        else
         {
-            _active = false; // Set back to false so we can properly start
-            Start();
-        }
-        else if (AlwaysActive)
-        {
-            ReadyToActivate = true;
+            RestoreSpawnProvenance();
+            if (_active)
+            {
+                _active = false; // Set back to false so we can properly start
+                Start();
+            }
+            else if (AlwaysActive)
+            {
+                ReadyToActivate = true;
+            }
         }
 
         Timer.StartTimer(TimeSpan.Zero, UpdateRegion);

@@ -1,4 +1,5 @@
 using System;
+using Server.Engines.WeaponLeveling;
 using System.Collections.Generic;
 
 namespace Server.Items;
@@ -27,7 +28,10 @@ public class ForceOfNature : WeaponAbility
 
         if (Core.SA)
         {
-            AOS.Damage(defender, attacker, Utility.Random(15, 20), false, 0, 0, 0, 0, 0, 0, 100);
+            using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+            {
+                AOS.Damage(defender, attacker, Utility.Random(15, 20), false, 0, 0, 0, 0, 0, 0, 100);
+            }
         }
 
         var t = new ForceOfNatureTimer(attacker, defender);

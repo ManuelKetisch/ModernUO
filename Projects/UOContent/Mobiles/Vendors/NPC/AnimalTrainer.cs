@@ -1,7 +1,11 @@
 using ModernUO.Serialization;
+using System;
 using System.Collections.Generic;
 using Server.Collections;
 using Server.ContextMenus;
+using Server.Engines.BioEngineering;
+using Server.Engines.BulkOrders;
+using Server.Engines.PetBreeding;
 using Server.Gumps;
 using Server.Items;
 using Server.Network;
@@ -40,11 +44,27 @@ namespace Server.Mobiles
             AddItem(Utility.RandomBool() ? new QuarterStaff() : new ShepherdsCrook());
         }
 
+        public override bool SupportsBulkOrders(Mobile from) => TamingBulkOrders.Supports(from);
+
+        public override Item CreateBulkOrder(Mobile from, bool fromContextMenu) =>
+            TamingBulkOrders.CreateOffer(from, fromContextMenu);
+
+        public override bool IsValidBulkOrder(Item item) => item is TamingSmallBOD or TamingLargeBOD;
+
+        public override TimeSpan GetNextBulkOrder(Mobile from) => TamingBulkOrders.Remaining(from);
+
+        public override void OnSuccessfulBulkOrderReceive(Mobile from) => TamingBulkOrders.Clear(from);
+
         public override void AddCustomContextEntries(Mobile from, ref PooledRefList<ContextMenuEntry> list)
         {
             if (from is PlayerMobile { Alive: true } pm)
             {
                 list.Add(new StableEntry());
+
+                if (PetBreedingSystem.CanUseTrainer(pm, this))
+                {
+                    list.Add(new TrainerInfoEntry());
+                }
 
                 if (pm.Stabled?.Count > 0)
                 {
@@ -208,7 +228,7 @@ namespace Server.Mobiles
                 return;
             }
 
-            if (pet.Body.IsHuman)
+            if (pet.Body.IsHuman && pet is not BioConstruct { HasHumanForm: true })
             {
                 SayTo(from, 502672); // HA HA HA! Sorry, I am not an inn.
             }
@@ -219,6 +239,10 @@ namespace Server.Mobiles
             else if (pet.ControlMaster != from)
             {
                 SayTo(from, 1042562); // You do not own that pet!
+            }
+            else if (pet is BioConstruct { Mounted: true })
+            {
+                SayTo(from, "Dismount your construct before stabling it.");
             }
             else if (pet.IsDeadPet)
             {
@@ -374,7 +398,13 @@ namespace Server.Mobiles
 
         public override void OnSpeech(SpeechEventArgs e)
         {
-            if (!e.Handled && e.HasKeyword(0x0008)) // *stable*
+            if (!e.Handled && e.Mobile is PlayerMobile player && e.Speech.Trim().InsensitiveEquals("breed") &&
+                PetBreedingSystem.CanUseTrainer(player, this))
+            {
+                e.Handled = true;
+                PetBreedingSelection.Start(player, this);
+            }
+            else if (!e.Handled && e.HasKeyword(0x0008)) // *stable*
             {
                 e.Handled = true;
 
@@ -401,6 +431,41 @@ namespace Server.Mobiles
             else
             {
                 base.OnSpeech(e);
+            }
+        }
+
+        private sealed class TrainerInfoEntry() : ContextMenuEntry(3005031, 4)
+        {
+            public override void OnClick(Mobile from, IEntity target)
+            {
+                if (from is PlayerMobile player && target is AnimalTrainer trainer &&
+                    PetBreedingSystem.CanUseTrainer(player, trainer))
+                {
+                    player.SendGump(new TrainerServicesGump(trainer));
+                }
+            }
+        }
+
+        private sealed class TrainerServicesGump(AnimalTrainer trainer) : StaticGump<TrainerServicesGump>(65, 60)
+        {
+            public override bool Singleton => true;
+
+            protected override void BuildLayout(ref StaticGumpBuilder builder)
+            {
+                builder.AddPage();
+                builder.AddBackground(0, 0, 277, 105, 3500);
+                builder.AddLabel(22, 16, 0x34, "Animal trainer");
+                builder.AddButton(22, 55, 4005, 4007, 1);
+                builder.AddLabel(60, 55, 0x480, "Breed pets");
+            }
+
+            public override void OnResponse(NetState sender, in RelayInfo info)
+            {
+                if (info.ButtonID == 1 && sender.Mobile is PlayerMobile player &&
+                    PetBreedingSystem.CanUseTrainer(player, trainer))
+                {
+                    PetBreedingSelection.Start(player, trainer);
+                }
             }
         }
 

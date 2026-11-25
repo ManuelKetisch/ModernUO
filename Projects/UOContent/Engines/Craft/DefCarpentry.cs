@@ -1,5 +1,6 @@
 using System;
 using Server.Items;
+using Server.Multis;
 
 namespace Server.Engines.Craft;
 
@@ -427,6 +428,21 @@ public class DefCarpentry : CraftSystem
             SetNeededExpansion(index, Expansion.SE);
         }
 
+        index = AddCraft(typeof(BoneFlute), 1044293, "Bone Flute", 80.0, 105.0,
+            typeof(Bone), 1049064, 15, 1049063);
+        AddSkill(index, SkillName.Musicianship, 45.0, 50.0);
+
+        index = AddCraft(typeof(BoneScythe), "Bone Carving", "Bone Scythe", 80.0, 105.0,
+            typeof(Bone), 1049064, 100, 1049063);
+        AddSkill(index, SkillName.Necromancy, 105.0, 110.0);
+
+        index = AddCraft(typeof(SkullHeap), "Bone Carving", "Skull Heap", 80.0, 105.0,
+            typeof(Bone), 1049064, 200, 1049063);
+        AddSkill(index, SkillName.Necromancy, 105.0, 110.0);
+        AddRes(index, typeof(JinxedSkull), "Jinxed skulls", 10, 502925);
+        AddRes(index, typeof(HellhoundRib), "Hellhound ribs", 6, 502925);
+        ForceNonExceptional(index);
+
         // Misc
         if (Core.AOS)
         {
@@ -605,5 +621,10 @@ public class DefCarpentry : CraftSystem
         AddSubRes(typeof(HeartwoodLog), 1072647, 100.0, 1044041, 1072652);
         AddSubRes(typeof(BloodwoodLog), 1072648, 100.0, 1044041, 1072652);
         AddSubRes(typeof(FrostwoodLog), 1072649, 100.0, 1044041, 1072652);
+        ExcelsiorMaterials.AddCraftResources(this, CraftResourceType.Wood, 1072652);
+
+        index = AddCraft(typeof(SmallBoatDeed), "Boatbuilding", "small boat deed",
+            95.0, 120.0, typeof(GradeALog), "Grade A logs", 100, "You need Grade A logs.");
+        ForceNonExceptional(index);
     }
 }

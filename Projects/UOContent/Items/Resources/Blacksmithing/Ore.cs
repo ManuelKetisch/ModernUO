@@ -1,3 +1,4 @@
+using System;
 using ModernUO.Serialization;
 using Server.Engines.Craft;
 using Server.Mobiles;
@@ -163,6 +164,11 @@ public abstract partial class BaseOre : Item
                 return;
             }
 
+            if (targeted is MobileForge { Parent: not null } portable && !portable.CanSmelt(from, m_Ore))
+            {
+                return;
+            }
+
             if (IsForge(targeted))
             {
                 var difficulty = m_Ore._resource switch
@@ -175,7 +181,7 @@ public abstract partial class BaseOre : Item
                     CraftResource.Agapite    => 90.0,
                     CraftResource.Verite     => 95.0,
                     CraftResource.Valorite   => 99.0,
-                    _                        => 50.0
+                    _                        => Math.Max(50, ExcelsiorMaterials.RequiredSkill(m_Ore._resource))
                 };
 
                 var minSkill = difficulty - 25.0;

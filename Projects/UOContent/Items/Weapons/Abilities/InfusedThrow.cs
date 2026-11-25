@@ -1,5 +1,6 @@
 using Server.Mobiles;
 using System;
+using Server.Engines.WeaponLeveling;
 using Server.Spells.Ninjitsu;
 
 namespace Server.Items;
@@ -24,7 +25,10 @@ public class InfusedThrow : WeaponAbility
         attacker.SendLocalizedMessage(1149563); //The infused projectile strikes a target!
         defender.SendLocalizedMessage(1149564); //You are struck by the infused projectile and take damage!
 
-        AOS.Damage(defender, attacker, 15, false, 0, 0, 0, 0, 0, 100);
+        using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+        {
+            AOS.Damage(defender, attacker, 15, false, 0, 0, 0, 0, 0, 100);
+        }
 
         var mount = defender.Mount;
 

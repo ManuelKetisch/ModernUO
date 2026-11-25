@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Server.Engines.BioEngineering;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -32,6 +33,9 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(Lockpick), 12, 20, 0x14FC, 0));
 
                 Add(new GenericBuyInfo(typeof(TinkersTools), 7, 20, 0x1EBC, 0));
+                Add(new GenericBuyInfo("Bio engineering handbook", typeof(BioEngineeringBook), 50000, 5, 0x0FF4, 0x59));
+                Add(new GenericBuyInfo("Bio engineering tool", typeof(BioEngineeringTool), 12000, 10, 0x1EB8, 0x59));
+                Add(new GenericBuyInfo("Organic matter sack", typeof(BioOrganicMatterSack), 1000, 30, 0x0E76, 0x59));
                 Add(new GenericBuyInfo(typeof(Board), 3, 20, 0x1BD7, 0));
                 Add(new GenericBuyInfo(typeof(IronIngot), 5, 16, 0x1BF2, 0));
                 Add(new GenericBuyInfo(typeof(SewingKit), 3, 20, 0xF9D, 0));

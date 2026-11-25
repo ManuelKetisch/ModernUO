@@ -1,0 +1,46 @@
+{
+  "version": 0,
+  "type": "Server.Engines.BioEngineering.BioVialSet",
+  "properties": [
+    {
+      "name": "Prowess",
+      "type": "int[]",
+      "rule": "ArrayMigrationRule",
+      "ruleArguments": [
+        "int",
+        "PrimitiveTypeMigrationRule",
+        ""
+      ]
+    },
+    {
+      "name": "Environment",
+      "type": "int[]",
+      "rule": "ArrayMigrationRule",
+      "ruleArguments": [
+        "int",
+        "PrimitiveTypeMigrationRule",
+        ""
+      ]
+    },
+    {
+      "name": "Mental",
+      "type": "int[]",
+      "rule": "ArrayMigrationRule",
+      "ruleArguments": [
+        "int",
+        "PrimitiveTypeMigrationRule",
+        ""
+      ]
+    },
+    {
+      "name": "Mimic",
+      "type": "int[]",
+      "rule": "ArrayMigrationRule",
+      "ruleArguments": [
+        "int",
+        "PrimitiveTypeMigrationRule",
+        ""
+      ]
+    }
+  ]
+}

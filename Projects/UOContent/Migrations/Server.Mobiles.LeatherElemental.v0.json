@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "type": "Server.Mobiles.LeatherElemental",
+  "properties": [
+    {
+      "name": "Resource",
+      "type": "Server.Items.CraftResource",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "FollowUp",
+      "type": "bool",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Server.Engines.ConPVP;
 using Server.Items;
+using Server.Mobiles;
 using Server.Spells.Bushido;
 using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
@@ -194,7 +195,7 @@ namespace Server.Spells
 
         public static SpecialMove GetCurrentMove(Mobile m)
         {
-            if (m == null)
+            if (m == null || m is PlayerMobile { IsSwingingOffHand: true })
             {
                 return null;
             }

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "type": "Server.Engines.BioEngineering.BioVial",
+  "properties": [
+    {
+      "name": "Kind",
+      "type": "Server.Engines.BioEngineering.BioSampleKind",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "Sample",
+      "type": "int[]",
+      "rule": "ArrayMigrationRule",
+      "ruleArguments": [
+        "int",
+        "PrimitiveTypeMigrationRule",
+        ""
+      ]
+    },
+    {
+      "name": "DonorName",
+      "type": "string",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

@@ -84,6 +84,7 @@ namespace Server.Engines.Harvest
             OreAndStone = new HarvestDefinition
             {
                 BankWidth = 8,
+                RegionalVeinMap = Map.Ilshenar,
                 BankHeight = 8,
                 MinTotal = 10,
                 MaxTotal = 34,
@@ -200,8 +201,45 @@ namespace Server.Engines.Harvest
                 new(014, 0.5, res[8], res[0])  // Valorite
             };
 
-            OreAndStone.Resources = res;
-            OreAndStone.Veins = veins;
+            HarvestResource[] extra =
+            [
+                ExoticOre(CraftResource.Blaze),
+                ExoticOre(CraftResource.Ice),
+                ExoticOre(CraftResource.Toxic),
+                ExoticOre(CraftResource.Electrum),
+                ExoticOre(CraftResource.Platinum)
+            ];
+
+            OreAndStone.Resources = [.. res, .. extra];
+
+            // A prospector and a gargoyle pick can reach beyond the usual ore table.
+            OreAndStone.Veins =
+            [
+                .. veins,
+                new(0, 0.5, extra[0], res[0]),
+                new(0, 0.5, extra[1], res[0]),
+                new(0, 0.5, extra[2], res[0]),
+                new(0, 0.5, extra[3], res[0]),
+                new(0, 0.5, extra[4], res[0])
+            ];
+
+            OreAndStone.RegionalVeins =
+            [
+                new(460, 0.0, res[0], null),
+                new(110, 0.5, res[1], res[0]),
+                new(96, 0.5, res[2], res[0]),
+                new(80, 0.5, res[3], res[0]),
+                new(69, 0.5, res[4], res[0]),
+                new(55, 0.5, res[5], res[0]),
+                new(40, 0.5, res[6], res[0]),
+                new(27, 0.5, res[7], res[0]),
+                new(18, 0.5, res[8], res[0]),
+                new(14, 0.5, extra[0], res[0]),
+                new(12, 0.5, extra[1], res[0]),
+                new(9, 0.5, extra[2], res[0]),
+                new(6, 0.5, extra[3], res[0]),
+                new(4, 0.5, extra[4], res[0])
+            ];
 
             if (Core.ML)
             {
@@ -266,6 +304,16 @@ namespace Server.Engines.Harvest
         }
 
         public static Mining System => _system ??= new Mining();
+
+        private static HarvestResource ExoticOre(CraftResource metal)
+        {
+            var skill = ExcelsiorMaterials.RequiredSkill(metal);
+            var info = CraftResources.GetInfo(metal);
+            return new HarvestResource(
+                skill, skill - 40, skill + 40, $"You mine some {info.Name.ToLowerInvariant()} ore.",
+                info.ResourceTypes[1], info.ResourceTypes[2]
+            );
+        }
 
         public HarvestDefinition OreAndStone { get; }
 
@@ -360,80 +408,103 @@ namespace Server.Engines.Harvest
         {
             if (tool is GargoylesPickaxe && def == OreAndStone)
             {
-                var veinIndex = Array.IndexOf(def.Veins, vein);
-
-                if (veinIndex >= 0 && veinIndex < def.Veins.Length - 1)
-                {
-                    return def.Veins[veinIndex + 1];
-                }
+                return def.NextVein(from.Map, vein) ?? vein;
             }
 
             return base.MutateVein(from, tool, def, bank, toHarvest, vein);
         }
 
-        public override void OnHarvestFinished(
-            Mobile from, Item tool, HarvestDefinition def, HarvestVein vein,
-            HarvestBank bank, HarvestResource resource, object harvested
+        protected override void OnHarvestOutcome(
+            Mobile from, Item tool, HarvestDefinition definition, HarvestVein vein, HarvestResource resource,
+            Type deliveredType
         )
         {
-            if (tool is not GargoylesPickaxe || def != OreAndStone || !(Utility.RandomDouble() < 0.1))
+            if (tool is GargoylesPickaxe && definition == OreAndStone)
             {
-                return;
-            }
-
-            var res = vein.PrimaryResource;
-
-            if (res == resource && res.Types.Length >= 3)
-            {
-                var map = from.Map;
-
-                if (map == null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    var spawned = res.Types[2].CreateEntityInstance<BaseCreature>(25);
-                    if (spawned != null)
-                    {
-                        var offset = Utility.Random(8) * 2;
-
-                        for (var i = 0; i < _offsets.Length; i += 2)
-                        {
-                            var x = from.X + _offsets[(offset + i) % _offsets.Length];
-                            var y = from.Y + _offsets[(offset + i + 1) % _offsets.Length];
-
-                            if (map.CanSpawnMobile(x, y, from.Z))
-                            {
-                                spawned.OnBeforeSpawn(new Point3D(x, y, from.Z), map);
-                                spawned.MoveToWorld(new Point3D(x, y, from.Z), map);
-                                spawned.Combatant = from;
-                                return;
-                            }
-
-                            var z = map.GetAverageZ(x, y);
-
-                            if ((z - from.Z).Abs() < 10 && map.CanSpawnMobile(x, y, z))
-                            {
-                                spawned.OnBeforeSpawn(new Point3D(x, y, z), map);
-                                spawned.MoveToWorld(new Point3D(x, y, z), map);
-                                spawned.Combatant = from;
-                                return;
-                            }
-                        }
-
-                        spawned.OnBeforeSpawn(from.Location, from.Map);
-                        spawned.MoveToWorld(from.Location, from.Map);
-                        spawned.Combatant = from;
-                    }
-                }
-                catch
-                {
-                    // ignored
-                }
+                TryAwakenOreElemental(from, vein, resource, deliveredType, Utility.RandomDouble(), true);
             }
         }
+
+        internal static BaseCreature TryAwakenOreElemental(
+            Mobile from, HarvestVein vein, HarvestResource resource, Type harvestedType, double roll,
+            bool preserveOrdinaryEncounter = false
+        )
+        {
+            if (roll >= 0.10 || resource != vein.PrimaryResource ||
+                from is not PlayerMobile { Alive: true, Map: { } map } || map == Map.Internal)
+            {
+                return null;
+            }
+
+            var oreType = resource.Types[0];
+            var metal = CraftResources.GetFromType(oreType);
+            if (metal is < CraftResource.DullCopper or > CraftResource.Platinum)
+            {
+                return null;
+            }
+
+            var exotic = ExcelsiorMaterials.IsExtra(metal);
+            var deliveredOre = harvestedType == oreType;
+            if (!deliveredOre && (exotic || !preserveOrdinaryEncounter))
+            {
+                return null;
+            }
+
+            BaseCreature spawned;
+            try
+            {
+                spawned = exotic
+                    ? new ExcelsiorOreElemental(metal)
+                    : resource.Types.Length > 2 ? resource.Types[2].CreateEntityInstance<BaseCreature>(25) : null;
+            }
+            catch
+            {
+                return null;
+            }
+
+            if (spawned == null)
+            {
+                return null;
+            }
+
+            if (deliveredOre)
+            {
+                spawned.PackItem(CreateEncounterRunic(metal, exotic));
+            }
+            var offset = Utility.Random(8) * 2;
+
+            for (var i = 0; i < _offsets.Length; i += 2)
+            {
+                var x = from.X + _offsets[(offset + i) % _offsets.Length];
+                var y = from.Y + _offsets[(offset + i + 1) % _offsets.Length];
+                var z = from.Z;
+
+                if (!map.CanSpawnMobile(x, y, z))
+                {
+                    z = map.GetAverageZ(x, y);
+                    if ((z - from.Z).Abs() >= 10 || !map.CanSpawnMobile(x, y, z))
+                    {
+                        continue;
+                    }
+                }
+
+                PlaceOreElemental(spawned, from, map, new Point3D(x, y, z));
+                return spawned;
+            }
+
+            PlaceOreElemental(spawned, from, map, from.Location);
+            return spawned;
+        }
+
+        private static void PlaceOreElemental(BaseCreature elemental, Mobile miner, Map map, Point3D location)
+        {
+            elemental.OnBeforeSpawn(location, map);
+            elemental.MoveToWorld(location, map);
+            elemental.Combatant = miner;
+        }
+
+        private static BaseRunicTool CreateEncounterRunic(CraftResource metal, bool exotic) =>
+            exotic && Utility.RandomBool() ? new RunicTinkerTool(metal, 5) : new RunicHammer(metal, 5);
 
         public override object GetLock(Mobile from, Item tool, HarvestDefinition def, object toHarvest) => this;
 

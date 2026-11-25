@@ -1,4 +1,5 @@
 using System;
+using Server.Engines.WeaponLeveling;
 using Server.Mobiles;
 using Server.Spells.Ninjitsu;
 
@@ -56,7 +57,10 @@ public class Dismount : WeaponAbility
 
         if (!attacker.Mounted)
         {
-            AOS.Damage(defender, attacker, Utility.RandomMinMax(15, 25), 100, 0, 0, 0, 0);
+            using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+            {
+                AOS.Damage(defender, attacker, Utility.RandomMinMax(15, 25), 100, 0, 0, 0, 0);
+            }
         }
     }
 

@@ -5,6 +5,7 @@ using ModernUO.Serialization;
 using Server.Engines.Craft;
 using Server.Ethics;
 using Server.Factions;
+using Server.Mobiles;
 using Server.Network;
 using Server.Text;
 using AMA = Server.Items.ArmorMeditationAllowance;
@@ -644,9 +645,23 @@ namespace Server.Items
                 return false;
             }
 
-            var system = DefTailoring.CraftSystem;
+            var type = GetType();
+            var item = DefTailoring.CraftSystem.CraftItems.SearchFor(type);
 
-            var item = system.CraftItems.SearchFor(GetType());
+            if (type == typeof(BoneHelm) || type == typeof(BoneGloves) || type == typeof(BoneArms) ||
+                type == typeof(BoneLegs) || type == typeof(BoneChest))
+            {
+                var bones = item?.Resources.Find(static resource => resource.ItemType == typeof(Bone));
+                if (bones is not { Amount: >= 2 } || !Movable || Nontransferable || Insured ||
+                    BlessedFor != null || LootType is LootType.Blessed or LootType.Newbied)
+                {
+                    from.SendLocalizedMessage(502440);
+                    return false;
+                }
+
+                ScissorHelper(from, new Bone(), PlayerConstructed ? bones.Amount / 2 : 1, carryHue: false);
+                return true;
+            }
 
             if (item?.Resources.Count == 1 && item.Resources[0].Amount >= 2)
             {
@@ -1052,6 +1067,55 @@ namespace Server.Items
             return base.AllowSecureTrade(from, to, newOwner, accepted);
         }
 
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (from is not PlayerMobile { Alive: true, Holding: null, Backpack: { } pack } player ||
+                !IsChildOf(pack) || !VerifyMove(player) || InSecureTrade)
+            {
+                base.OnDoubleClick(from);
+                return;
+            }
+
+            var worn = player.FindItemOnLayer(Layer);
+            if (worn == null)
+            {
+                player.EquipItem(this);
+                return;
+            }
+
+            if (worn is not BaseArmor oldArmor || !oldArmor.VerifyMove(player))
+            {
+                player.SendMessage("That equipment slot is occupied.");
+                return;
+            }
+
+            if (!pack.CheckHold(player, oldArmor, true, true, -(TotalItems + 1), -(TotalWeight + PileWeight)))
+            {
+                return;
+            }
+
+            // Validate the replacement with the old armor's stat bonuses removed.
+            player.RemoveItem(oldArmor);
+            var equipped = false;
+            try
+            {
+                equipped = player.EquipItem(this);
+            }
+            finally
+            {
+                if (equipped)
+                {
+                    pack.DropItem(oldArmor);
+                }
+                else
+                {
+                    RemoveEquipStatMods(player);
+                    oldArmor.OnEquip(player);
+                    player.AddItem(oldArmor);
+                }
+            }
+        }
+
         public override bool CanEquip(Mobile from)
         {
             if (!from.Player || from.AccessLevel >= AccessLevel.GameMaster)
@@ -1168,15 +1232,19 @@ namespace Server.Items
             return base.OnEquip(from);
         }
 
+        private void RemoveEquipStatMods(Mobile mobile)
+        {
+            var serial = Serial;
+            mobile.RemoveStatMod($"{serial}Str");
+            mobile.RemoveStatMod($"{serial}Dex");
+            mobile.RemoveStatMod($"{serial}Int");
+        }
+
         public override void OnRemoved(IEntity parent)
         {
             if (parent is Mobile m)
             {
-                var serial = Serial;
-
-                m.RemoveStatMod($"{serial}Str");
-                m.RemoveStatMod($"{serial}Dex");
-                m.RemoveStatMod($"{serial}Int");
+                RemoveEquipStatMods(m);
 
                 if (Core.AOS)
                 {
@@ -1265,6 +1333,7 @@ namespace Server.Items
         public override void GetProperties(IPropertyList list)
         {
             base.GetProperties(list);
+            CraftResources.AddExcelsiorGrade(Resource, list);
 
             if (_crafter != null)
             {

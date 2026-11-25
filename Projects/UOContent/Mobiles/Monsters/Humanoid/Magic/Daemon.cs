@@ -54,6 +54,8 @@ namespace Server.Mobiles
         public override int TreasureMapLevel => 4;
 
         public override int Meat => 1;
+        public override int Hides => 10;
+        public override HideType HideType => HideType.Daemonic;
         
         public override bool CanFly => true;
 

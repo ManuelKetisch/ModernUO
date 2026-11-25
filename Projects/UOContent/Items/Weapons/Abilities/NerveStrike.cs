@@ -1,4 +1,5 @@
 using System;
+using Server.Engines.WeaponLeveling;
 
 namespace Server.Items
 {
@@ -51,17 +52,20 @@ namespace Server.Items
 
             if (Core.ML)
             {
-                AOS.Damage(
-                    defender,
-                    attacker,
-                    (int)(15.0 * (attacker.Skills.Bushido.Value - 50.0) / 70.0 + Utility.Random(10)),
-                    true,
-                    100,
-                    0,
-                    0,
-                    0,
-                    0
-                ); // 0-25
+                using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+                {
+                    AOS.Damage(
+                        defender,
+                        attacker,
+                        (int)(15.0 * (attacker.Skills.Bushido.Value - 50.0) / 70.0 + Utility.Random(10)),
+                        true,
+                        100,
+                        0,
+                        0,
+                        0,
+                        0
+                    ); // 0-25
+                }
 
                 if (!cantpara && (150.0 / 7.0 + 4.0 * attacker.Skills.Bushido.Value / 7.0) / 100.0 >
                     Utility.RandomDouble())
@@ -72,17 +76,20 @@ namespace Server.Items
             }
             else if (!cantpara)
             {
-                AOS.Damage(
-                    defender,
-                    attacker,
-                    (int)(15.0 * (attacker.Skills.Bushido.Value - 50.0) / 70.0 + 10),
-                    true,
-                    100,
-                    0,
-                    0,
-                    0,
-                    0
-                ); // 10-25
+                using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+                {
+                    AOS.Damage(
+                        defender,
+                        attacker,
+                        (int)(15.0 * (attacker.Skills.Bushido.Value - 50.0) / 70.0 + 10),
+                        true,
+                        100,
+                        0,
+                        0,
+                        0,
+                        0
+                    ); // 10-25
+                }
                 defender.Freeze(TimeSpan.FromSeconds(2.0));
                 Items.ParalyzingBlow.BeginImmunity(defender, Items.ParalyzingBlow.FreezeDelayDuration);
             }

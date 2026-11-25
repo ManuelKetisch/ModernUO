@@ -1106,46 +1106,38 @@ namespace Server.Mobiles
         {
             /* TODO: Thou art giving me? and fame/karma for gold gifts */
 
-            var smallBod = dropped as SmallBOD;
-            var largeBod = dropped as LargeBOD;
+            return ContentFeatureFlags.BulkOrders && dropped is BaseBOD deed
+                ? RedeemBulkOrder(from, deed, true)
+                : base.OnDragDrop(from, dropped);
+        }
 
-            if (!ContentFeatureFlags.BulkOrders || !(smallBod != null || largeBod != null))
+        internal bool RedeemBulkOrder(Mobile from, BaseBOD deed, bool resetClock)
+        {
+            if (!ContentFeatureFlags.BulkOrders || deed.Deleted)
             {
-                return base.OnDragDrop(from, dropped);
+                return false;
             }
 
             var pm = from as PlayerMobile;
-
             if (Core.ML && pm?.NextBODTurnInTime > Core.Now)
             {
                 SayTo(from, 1079976); // You'll have to wait a few seconds while I inspect the last order.
                 return false;
             }
 
-            if (!IsValidBulkOrder(dropped))
+            if (!IsValidBulkOrder(deed))
             {
                 SayTo(from, 1045130); // That order is for some other shopkeeper.
                 return false;
             }
 
-            if (smallBod?.Complete == false || largeBod?.Complete == false)
+            if (!deed.Complete)
             {
                 SayTo(from, 1045131); // You have not completed the order yet.
                 return false;
             }
 
-            Item reward;
-            int gold, fame;
-
-            if (smallBod != null)
-            {
-                smallBod.GetRewards(out reward, out gold, out fame);
-            }
-            else
-            {
-                largeBod.GetRewards(out reward, out gold, out fame);
-            }
-
+            deed.GetRewards(out var reward, out var gold, out var fame);
             from.SendSound(0x3D);
 
             SayTo(from, 1045132); // Thank you so much!  Here is a reward for your effort.
@@ -1166,14 +1158,17 @@ namespace Server.Mobiles
 
             Titles.AwardFame(from, fame, true);
 
-            OnSuccessfulBulkOrderReceive(from);
+            if (resetClock)
+            {
+                OnSuccessfulBulkOrderReceive(from);
+            }
 
             if (Core.ML && pm != null)
             {
                 pm.NextBODTurnInTime = Core.Now + TimeSpan.FromSeconds(10.0);
             }
 
-            dropped.Delete();
+            deed.Delete();
             return true;
         }
 

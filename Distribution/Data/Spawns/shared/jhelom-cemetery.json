@@ -1,0 +1,110 @@
+[
+  {
+    "$type": "Spawner", "guid": "0a178618-e4a2-5277-8b68-b242e8d5cad3", "name": "Jhelom Cemetery - Bone Knight",
+    "location": [1276, 3726, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BoneKnight", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d892d71a-2413-5a8a-8b33-942342393233", "name": "Jhelom Cemetery - Bone Knight",
+    "location": [1285, 3737, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BoneKnight", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ed72407c-437e-530f-a892-bc60eb0c473d", "name": "Jhelom Cemetery - Skeletal Mage",
+    "location": [1288, 3726, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "SkeletalMage", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "aaddd4de-3ef2-5361-94ff-e2166c0df20f", "name": "Jhelom Cemetery - Skeletal Mage",
+    "location": [1293, 3730, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "SkeletalMage", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d88207e8-9bd4-5068-b27f-2af2a2add78d", "name": "Jhelom Cemetery - Wraith",
+    "location": [1290, 3733, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Wraith", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e93d8d5f-1235-5311-a176-299065448986", "name": "Jhelom Cemetery - Bone Knight",
+    "location": [1276, 3726, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BoneKnight", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "150cd65e-afd7-58e9-ac38-b3995a9e7b53", "name": "Jhelom Cemetery - Bone Knight",
+    "location": [1285, 3737, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BoneKnight", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "3d80a5e6-0344-52ad-be4a-a566124da525", "name": "Jhelom Cemetery - Skeletal Mage",
+    "location": [1288, 3726, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "SkeletalMage", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "fbfea9e8-cc18-50a6-834d-d1c5633b302a", "name": "Jhelom Cemetery - Skeletal Mage",
+    "location": [1293, 3730, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "SkeletalMage", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "063395a5-49dd-5232-91eb-b2fc6eb07843", "name": "Jhelom Cemetery - Wraith",
+    "location": [1290, 3733, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Wraith", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "328524df-85a1-5de9-a23e-fa3c9242a079", "name": "Jhelom Cemetery - Zombie",
+    "location": [1277, 3724, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Zombie", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8162e354-0168-5a21-9b38-7331b33f2e63", "name": "Jhelom Cemetery - Zombie",
+    "location": [1286, 3735, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Zombie", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "206c1b84-6cd4-5d72-afd7-a63d359ea416", "name": "Jhelom Cemetery - Skeleton",
+    "location": [1284, 3727, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Skeleton", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "38ddc0dd-8a5b-553a-aee7-fe2d458502cf", "name": "Jhelom Cemetery - Skeleton",
+    "location": [1294, 3727, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Skeleton", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "25312f3f-c612-597e-a025-b02b13339204", "name": "Jhelom Cemetery - Zombie",
+    "location": [1277, 3724, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Zombie", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "396caee4-884a-5c48-8700-feba4156b6ca", "name": "Jhelom Cemetery - Zombie",
+    "location": [1286, 3735, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Zombie", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "9d6ab1a5-4e5c-5dcb-8bab-d4157fd72c94", "name": "Jhelom Cemetery - Skeleton",
+    "location": [1284, 3727, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Skeleton", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b04847f1-6dd4-51f9-b242-268388c525be", "name": "Jhelom Cemetery - Skeleton",
+    "location": [1294, 3727, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:03:00", "maxDelay": "00:05:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Skeleton", "maxCount": 1, "probability": 100 }]
+  }
+]

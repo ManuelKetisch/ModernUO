@@ -268,5 +268,6 @@ public class DefBowFletching : CraftSystem
         AddSubRes(typeof(HeartwoodLog), 1072647, 100.0, 1044041, 1072652);
         AddSubRes(typeof(BloodwoodLog), 1072648, 100.0, 1044041, 1072652);
         AddSubRes(typeof(FrostwoodLog), 1072649, 100.0, 1044041, 1072652);
+        ExcelsiorMaterials.AddCraftResources(this, CraftResourceType.Wood, 1072652);
     }
 }

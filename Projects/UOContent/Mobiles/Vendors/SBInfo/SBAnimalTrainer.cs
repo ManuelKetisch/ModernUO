@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using Server.Engines.BulkOrders;
+using Server.Engines.PetProgression;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -18,6 +21,13 @@ namespace Server.Mobiles
                 Add(new AnimalBuyInfo(1, "a pack horse", typeof(PackHorse), 631, 10, 291, 0));
                 Add(new AnimalBuyInfo(1, "a pack llama", typeof(PackLlama), 565, 10, 292, 0));
                 Add(new AnimalBuyInfo(1, "a rabbit", typeof(Rabbit), 106, 10, 205, 0));
+                Add(new GenericBuyInfo("Pet bonding deed", typeof(PetBondingDeed), 10000, 10, 0x14F0, 0x59));
+                Add(new GenericBuyInfo("Pet resurrection draught", typeof(PetResurrectionDraught), 500, 20, 0x0F0C, 0x59));
+                Add(new GenericBuyInfo("Restorative pet ointment", typeof(RestorativePetOintment), 1000, 20, 0x0E24, 0x59));
+                Add(new GenericBuyInfo("Pet ointment", typeof(PetOintment), 1000, 10, 0x0E24, 0x48E));
+                Add(new GenericBuyInfo("Taming bulk order book", typeof(TamingBulkOrderBook), 999, 10, 0x2259, 0x471));
+                Add(new GenericBuyInfo("Animal taming brush", typeof(PetResurrectionBrush), 250, 10, 0x0FC1, 0x59));
+                Add(new GenericBuyInfo("Personal pet trainer deed", typeof(PersonalPetTrainerDeed), 15000, 5, 0x14F0, 0x59));
 
                 if (!Core.AOS)
                 {

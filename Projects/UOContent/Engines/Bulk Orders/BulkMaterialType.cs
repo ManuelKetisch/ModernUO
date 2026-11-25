@@ -16,20 +16,54 @@ namespace Server.Engines.BulkOrders
         Valorite,
         Spined,
         Horned,
-        Barbed
+        Barbed,
+        NaturalWood,
+        Oak,
+        Ash,
+        Yew,
+        Heartwood,
+        Bloodwood,
+        Frostwood,
+        Blaze,
+        Ice,
+        Toxic,
+        Electrum,
+        Platinum,
+        PolarLeather,
+        SyntheticLeather,
+        BlazeLeather,
+        DaemonicLeather,
+        ShadowLeather,
+        FrostLeather,
+        EtherealLeather,
+        Pine,
+        Mahogany,
+        Zircote,
+        Ebony,
+        Bamboo,
+        PurpleHeart,
+        Redwood,
+        Petrified
     }
 
     public enum BulkGenericType
     {
         Iron,
         Cloth,
-        Leather
+        Leather,
+        Wood
     }
 
     public static class BGTClassifier
     {
         public static BulkGenericType Classify(BODType deedType, Type itemType)
         {
+            deedType = ExcelsiorOrderRules.Profession(deedType);
+            if (WoodworkBulkOrders.IsWoodwork(deedType))
+            {
+                return BulkGenericType.Wood;
+            }
+
             if (deedType != BODType.Tailor)
             {
                 return BulkGenericType.Iron;

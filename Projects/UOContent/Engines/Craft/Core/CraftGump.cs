@@ -7,6 +7,25 @@ namespace Server.Engines.Craft;
 
 public class CraftGump : DynamicGump
 {
+    private static int CountResource(Mobile owner, Type type)
+    {
+        var count = 0;
+        var grade = CraftResources.GetFromType(type);
+        var equivalents = CraftResources.IsExcelsiorGrade(grade) ? Server.Engines.Craft.CraftItem.GetEquivalentTypes(type) : null;
+        if (owner.Backpack != null)
+        {
+            foreach (var item in owner.Backpack.FindItems())
+            {
+                if (equivalents == null ? type.IsInstanceOfType(item) : Array.IndexOf(equivalents, item.GetType()) >= 0)
+                {
+                    count += item.Amount;
+                }
+            }
+        }
+
+        return count;
+    }
+
     public enum CraftPage
     {
         None,
@@ -131,18 +150,7 @@ public class CraftGump : DynamicGump
                 resourceType = subResource.ItemType;
             }
 
-            var resourceCount = 0;
-
-            if (_from.Backpack != null)
-            {
-                foreach (var item in _from.Backpack.FindItems())
-                {
-                    if (resourceType.IsInstanceOfType(item))
-                    {
-                        resourceCount += item.Amount;
-                    }
-                }
-            }
+            var resourceCount = CountResource(_from, resourceType);
 
             builder.AddButton(15, 362, 4005, 4007, GetButtonID(6, 0));
 
@@ -176,18 +184,7 @@ public class CraftGump : DynamicGump
                 resourceType = subResource.ItemType;
             }
 
-            var resourceCount = 0;
-
-            if (_from.Backpack != null)
-            {
-                foreach (var item in _from.Backpack.FindItems())
-                {
-                    if (resourceType.IsInstanceOfType(item))
-                    {
-                        resourceCount += item.Amount;
-                    }
-                }
-            }
+            var resourceCount = CountResource(_from, resourceType);
 
             builder.AddButton(15, 382, 4005, 4007, GetButtonID(6, 7));
 
@@ -255,19 +252,7 @@ public class CraftGump : DynamicGump
                 );
             }
 
-            var resourceCount = 0;
-
-            if (from.Backpack != null)
-            {
-                var type = subResource.ItemType;
-                foreach (var item in from.Backpack.FindItems())
-                {
-                    if (type.IsInstanceOfType(item))
-                    {
-                        resourceCount += item.Amount;
-                    }
-                }
-            }
+            var resourceCount = CountResource(from, subResource.ItemType);
 
             builder.AddButton(220, 60 + index * 20, 4005, 4007, GetButtonID(5, i));
 

@@ -73,11 +73,18 @@ namespace Server.Mobiles
             AddItem(new SmithHammer());
         }
 
-        public override Item CreateBulkOrder(Mobile from, bool fromContextMenu)
+        public override Item CreateBulkOrder(Mobile from, bool fromContextMenu) => CreateSmithOrder(from, fromContextMenu);
+
+        internal static Item CreateSmithOrder(Mobile from, bool fromContextMenu)
         {
             if (from is PlayerMobile pm && pm.NextSmithBulkOrder == TimeSpan.Zero &&
                 (fromContextMenu || Utility.RandomDouble() < 0.2))
             {
+                if (ExcelsiorOrderRules.Selected(pm))
+                {
+                    return ExcelsiorOrderRules.Offer(pm, BODType.Smith);
+                }
+
                 var theirSkill = pm.Skills.Blacksmith.Base;
 
                 if (theirSkill >= 70.1)
@@ -95,7 +102,7 @@ namespace Server.Mobiles
 
                 if (theirSkill >= 70.1 && (theirSkill - 40.0) / 300.0 > Utility.RandomDouble())
                 {
-                    return new LargeSmithBOD();
+                    return BulkOrderMaterials.UpgradeLargeOffer(from, new LargeSmithBOD());
                 }
 
                 return SmallSmithBOD.CreateRandomFor(from);

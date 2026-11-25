@@ -1,4 +1,3 @@
-using System;
 using ModernUO.Serialization;
 using Server.Engines.Harvest;
 using Server.Targeting;
@@ -59,6 +58,12 @@ public partial class ProspectorsTool : BaseBashing, IUsesRemaining
             return;
         }
 
+        if (Deleted || UsesRemaining <= 0)
+        {
+            from.SendLocalizedMessage(1044038); // You have worn out your tool!
+            return;
+        }
+
         var system = Mining.System;
 
         if (!system.GetHarvestDetails(from, this, toProspect, out var tileID, out var map, out var loc, out var isLand))
@@ -69,7 +74,7 @@ public partial class ProspectorsTool : BaseBashing, IUsesRemaining
 
         var def = system.GetDefinition(tileID, isLand);
 
-        if (def == null || def.Veins.Length <= 1)
+        if (def == null || def.GetVeins(map).Length <= 1)
         {
             from.SendLocalizedMessage(1049048); // You cannot use your prospector tool on that.
             return;
@@ -97,28 +102,28 @@ public partial class ProspectorsTool : BaseBashing, IUsesRemaining
             return;
         }
 
-        var veinIndex = Array.IndexOf(def.Veins, vein);
-
-        if (veinIndex < 0)
+        var next = def.NextVein(map, vein);
+        if (next == null)
         {
-            from.SendLocalizedMessage(1049048); // You cannot use your prospector tool on that.
+            from.SendMessage("This ore vein cannot be improved further.");
+            return;
         }
-        else if (veinIndex >= def.Veins.Length - 1)
+
+        var metal = CraftResources.GetFromType(next.PrimaryResource.Types[0]);
+        bank.Vein = next;
+        if (ExcelsiorMaterials.IsExtra(metal))
         {
-            from.SendLocalizedMessage(1049061); // You cannot improve valorite ore through prospecting.
+            from.SendMessage($"This vein can now yield {CraftResources.GetName(metal).ToLowerInvariant()} ore.");
         }
         else
         {
-            bank.Vein = def.Veins[veinIndex + 1];
-            from.SendLocalizedMessage(1049050 + veinIndex);
+            from.SendLocalizedMessage(1049049 + CraftResources.GetIndex(metal));
+        }
 
-            --UsesRemaining;
-
-            if (UsesRemaining <= 0)
-            {
-                from.SendLocalizedMessage(1049062); // You have used up your prospector's tool.
-                Delete();
-            }
+        if (--UsesRemaining <= 0)
+        {
+            from.SendLocalizedMessage(1049062); // You have used up your prospector's tool.
+            Delete();
         }
     }
 

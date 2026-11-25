@@ -61,11 +61,25 @@ public abstract partial class SmallBOD : BaseBOD
 
         if (Material != BulkMaterialType.None)
         {
-            list.Add(SmallBODGump.GetMaterialNumberFor(Material)); // All items must be made with x material.
+            if (BulkOrderMaterials.AdditionalName(Material) is { } material)
+            {
+                list.Add($"{"Material"}\t{material}");
+            }
+            else
+            {
+                list.Add(SmallBODGump.GetMaterialNumberFor(Material));
+            } // All items must be made with x material.
         }
 
         list.Add(1060656, AmountMax);                      // amount to make: ~1_val~
-        list.Add(1060658, $"{_number:#}\t{_amountCur}"); // ~1_val~: ~2_val~
+        if (Profession == BODType.Taming)
+        {
+            list.Add($"{TamingBulkOrders.AnimalName(Type)}\t{_amountCur}");
+        }
+        else
+        {
+            list.Add(1060658, $"{_number:#}\t{_amountCur}"); // ~1_val~: ~2_val~
+        }
     }
 
     public override void OnDoubleClick(Mobile from)
@@ -99,18 +113,26 @@ public abstract partial class SmallBOD : BaseBOD
     {
         return resource switch
         {
-            CraftResource.DullCopper    => BulkMaterialType.DullCopper,
-            CraftResource.ShadowIron    => BulkMaterialType.ShadowIron,
-            CraftResource.Copper        => BulkMaterialType.Copper,
-            CraftResource.Bronze        => BulkMaterialType.Bronze,
-            CraftResource.Gold          => BulkMaterialType.Gold,
-            CraftResource.Agapite       => BulkMaterialType.Agapite,
-            CraftResource.Verite        => BulkMaterialType.Verite,
-            CraftResource.Valorite      => BulkMaterialType.Valorite,
-            CraftResource.SpinedLeather => BulkMaterialType.Spined,
-            CraftResource.HornedLeather => BulkMaterialType.Horned,
-            CraftResource.BarbedLeather => BulkMaterialType.Barbed,
-            _                           => BulkMaterialType.None
+            CraftResource.ExcelsiorIron => BulkMaterialType.None,
+            CraftResource.DullCopper or CraftResource.ExcelsiorDullCopper => BulkMaterialType.DullCopper,
+            CraftResource.ShadowIron or CraftResource.ExcelsiorShadowIron => BulkMaterialType.ShadowIron,
+            CraftResource.Copper or CraftResource.ExcelsiorCopper => BulkMaterialType.Copper,
+            CraftResource.Bronze or CraftResource.ExcelsiorBronze => BulkMaterialType.Bronze,
+            CraftResource.Gold or CraftResource.ExcelsiorGold => BulkMaterialType.Gold,
+            CraftResource.Agapite or CraftResource.ExcelsiorAgapite => BulkMaterialType.Agapite,
+            CraftResource.Verite or CraftResource.ExcelsiorVerite => BulkMaterialType.Verite,
+            CraftResource.Valorite or CraftResource.ExcelsiorValorite => BulkMaterialType.Valorite,
+            CraftResource.SpinedLeather or CraftResource.ExcelsiorSpinedLeather => BulkMaterialType.Spined,
+            CraftResource.HornedLeather or CraftResource.ExcelsiorHornedLeather => BulkMaterialType.Horned,
+            CraftResource.BarbedLeather or CraftResource.ExcelsiorBarbedLeather => BulkMaterialType.Barbed,
+            CraftResource.RegularWood   => BulkMaterialType.NaturalWood,
+            CraftResource.OakWood or CraftResource.ExcelsiorOakWood => BulkMaterialType.Oak,
+            CraftResource.AshWood or CraftResource.ExcelsiorAshWood => BulkMaterialType.Ash,
+            CraftResource.YewWood or CraftResource.ExcelsiorYewWood => BulkMaterialType.Yew,
+            CraftResource.Heartwood     => BulkMaterialType.Heartwood,
+            CraftResource.Bloodwood     => BulkMaterialType.Bloodwood,
+            CraftResource.Frostwood     => BulkMaterialType.Frostwood,
+            _                           => BulkOrderMaterials.ForAdditionalResource(resource)
         };
     }
 
@@ -128,20 +150,29 @@ public abstract partial class SmallBOD : BaseBOD
         var clothing = item as BaseClothing;
         var weapon = item as BaseWeapon;
 
+        var woodwork = WoodworkBulkOrders.IsWoodwork(Profession);
+        var supported = armor != null || clothing != null || weapon != null ||
+                        woodwork && WoodworkBulkOrders.IsFurniture(objectType);
 
-        if (Type == null || objectType != Type && !objectType.IsSubclassOf(Type) || armor == null && clothing == null && weapon == null)
+        if (Type == null || !supported ||
+            (woodwork ? objectType != Type || !item.PlayerConstructed : objectType != Type && !objectType.IsSubclassOf(Type)))
         {
             from.SendLocalizedMessage(1045169); // The item is not in the request.
         }
         else
         {
-            var material = GetMaterial(armor?.Resource ?? clothing?.Resource ?? CraftResource.None);
+            var material = GetMaterial(armor?.Resource ?? clothing?.Resource ??
+                                       (woodwork ? weapon?.Resource : null) ?? CraftResource.None);
 
-            if (Material >= BulkMaterialType.DullCopper && Material <= BulkMaterialType.Valorite && material != Material)
+            if (BulkOrderMaterials.IsWood(Material) && material != Material)
+            {
+                from.SendMessage("This item is not made from the requested wood.");
+            }
+            else if (BulkOrderMaterials.IsMetal(Material) && material != Material)
             {
                 from.SendLocalizedMessage(1045168); // The item is not made from the requested ore.
             }
-            else if (Material >= BulkMaterialType.Spined && Material <= BulkMaterialType.Barbed && material != Material)
+            else if (BulkOrderMaterials.IsLeather(Material) && material != Material)
             {
                 from.SendLocalizedMessage(1049352); // The item is not made from the requested leather type.
             }

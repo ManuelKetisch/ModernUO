@@ -1,6 +1,7 @@
 using Server.Spells;
 using System;
 using Server.Collections;
+using Server.Engines.WeaponLeveling;
 
 namespace Server.Items
 {
@@ -39,7 +40,10 @@ namespace Server.Items
             if (defender is { Deleted: false, Alive: true })
             {
                 defender.BoltEffect(0);
-                AOS.Damage(defender, attacker, Utility.RandomMinMax(29, 40), 0, 0, 0, 0, 100);
+                using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+                {
+                    AOS.Damage(defender, attacker, Utility.RandomMinMax(29, 40), 0, 0, 0, 0, 100);
+                }
             }
             else
             {
@@ -55,7 +59,10 @@ namespace Server.Items
                 {
                     var m = list[i];
                     m.BoltEffect(0);
-                    AOS.Damage(m, attacker, Utility.RandomMinMax(29, 40), 0, 0, 0, 0, 100);
+                    using (WeaponLevelingCombat.BeginAbilityStrike(attacker, m))
+                    {
+                        AOS.Damage(m, attacker, Utility.RandomMinMax(29, 40), 0, 0, 0, 0, 100);
+                    }
                 }
             }
         }

@@ -439,6 +439,10 @@ namespace Server.Engines.BulkOrders
             {
                 points += 200 + 50 * (material - BulkMaterialType.DullCopper);
             }
+            else if (material is >= BulkMaterialType.Blaze and <= BulkMaterialType.Platinum)
+            {
+                points += 600 + 50 * (material - BulkMaterialType.Blaze);
+            }
 
             return points;
         }
@@ -485,7 +489,7 @@ namespace Server.Engines.BulkOrders
 
             var mtrlIndex = material >= BulkMaterialType.DullCopper && material <= BulkMaterialType.Valorite
                 ? 1 + (material - BulkMaterialType.DullCopper)
-                : 0;
+                : BulkOrderMaterials.IsMetal(material) ? 8 : 0;
 
             if (exceptional)
             {
@@ -758,6 +762,10 @@ namespace Server.Engines.BulkOrders
             {
                 points += 150;
             }
+            else if (material is >= BulkMaterialType.PolarLeather and <= BulkMaterialType.EtherealLeather)
+            {
+                points += 200 + 50 * (material - BulkMaterialType.PolarLeather);
+            }
 
             return points;
         }
@@ -786,7 +794,8 @@ namespace Server.Engines.BulkOrders
                 BulkMaterialType.Barbed => 3,
                 BulkMaterialType.Horned => 2,
                 BulkMaterialType.Spined => 1,
-                _                       => 0
+                _ when BulkOrderMaterials.IsLeather(material) => 3,
+                _ => 0
             };
 
             var gold = goldTable[typeIndex][quanIndex][mtrlIndex];

@@ -1,4 +1,6 @@
+using System;
 using ModernUO.Serialization;
+using Server.Engines.BulkOrders;
 using System.Collections.Generic;
 using Server.Items;
 
@@ -38,5 +40,16 @@ namespace Server.Mobiles
 
             AddItem(new HalfApron());
         }
+
+        public override bool SupportsBulkOrders(Mobile from) => WoodworkBulkOrders.Supports(from, BODType.Carpentry);
+
+        public override Item CreateBulkOrder(Mobile from, bool fromContextMenu) =>
+            WoodworkBulkOrders.CreateOffer(from, BODType.Carpentry, fromContextMenu);
+
+        public override bool IsValidBulkOrder(Item item) => WoodworkBulkOrders.Accepts(item, BODType.Carpentry);
+
+        public override TimeSpan GetNextBulkOrder(Mobile from) => WoodworkBulkOrders.Remaining(from, BODType.Carpentry);
+
+        public override void OnSuccessfulBulkOrderReceive(Mobile from) => WoodworkBulkOrders.Clear(from, BODType.Carpentry);
     }
 }

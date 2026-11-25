@@ -682,6 +682,7 @@ namespace Server.Items
         public override void GetProperties(IPropertyList list)
         {
             base.GetProperties(list);
+            CraftResources.AddExcelsiorGrade(Resource, list);
 
             if (_crafter != null)
             {

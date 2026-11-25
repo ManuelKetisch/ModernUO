@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Server.Collections;
 using Server.Items;
 using Server.Json;
+using Server.Logging;
 using Server.Network;
 
 namespace Server.Commands
@@ -25,6 +26,7 @@ namespace Server.Commands
 
     public static class GenTeleporter
     {
+        private static readonly ILogger _logger = LogFactory.GetLogger(typeof(GenTeleporter));
         private const int SuccessHue = 72, WarningHue = 53, ErrorHue = 33;
         private static readonly string TeleporterJsonDataPath = Path.Combine(Core.BaseDirectory, "Data/teleporters.json");
 
@@ -32,6 +34,49 @@ namespace Server.Commands
         {
             CommandSystem.Register("TelGen", AccessLevel.Developer, GenTeleporter_OnCommand);
             CommandSystem.Register("TelGenDelete", AccessLevel.Developer, TelGenDelete_OnCommand);
+        }
+
+        public static void Initialize()
+        {
+            if (!SoloProgression.Enabled)
+            {
+                return;
+            }
+
+            AlignSouthernJhelomReturn(Map.Trammel);
+            AlignSouthernJhelomReturn(Map.Felucca);
+        }
+
+        private static void AlignSouthernJhelomReturn(Map map)
+        {
+            var location = new Point3D(1406, 3996, 6);
+            var destination = new Point3D(1414, 3828, 5);
+            Teleporter legacy = null;
+            foreach (var portal in map.GetItemsAt<Teleporter>(location))
+            {
+                if (portal.GetType() != typeof(Teleporter) || portal.PointDest != destination ||
+                    portal.MapDest != map)
+                {
+                    continue;
+                }
+
+                if (portal.Z == location.Z)
+                {
+                    return;
+                }
+
+                if (portal.Z == 5)
+                {
+                    legacy = portal;
+                }
+            }
+
+            if (legacy != null)
+            {
+                // The southern bridge is one Z unit higher than the matching northern platform.
+                legacy.MoveToWorld(location, map);
+                _logger.Information("Aligned the southern Jhelom return teleporter on {Map}", map.Name);
+            }
         }
 
         [Usage("TelGenDelete")]

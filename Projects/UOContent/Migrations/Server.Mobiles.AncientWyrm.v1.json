@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "type": "Server.Mobiles.AncientWyrm",
+  "properties": [
+    {
+      "name": "ForgeDefeatId",
+      "type": "System.Guid",
+      "rule": "PrimitiveTypeMigrationRule"
+    }
+  ]
+}

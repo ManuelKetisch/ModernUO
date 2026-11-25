@@ -1,7 +1,9 @@
 using System;
+using Server.Engines.BioEngineering;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
+using Server.Network;
 using Server.Targeting;
 
 namespace Server.SkillHandlers
@@ -42,7 +44,8 @@ namespace Server.SkillHandlers
                 {
                     from.SendLocalizedMessage(500331); // The spirits of the dead are not the province of animal lore.
                 }
-                else if (!c.Body.IsAnimal && c.Body is { IsMonster: false, IsSea: false })
+                else if (!c.Body.IsAnimal && c.Body is { IsMonster: false, IsSea: false } &&
+                         !(c.Body.IsHuman && from is PlayerMobile engineer && BioDonorJournal.CanSurvey(engineer, c)))
                 {
                     from.SendLocalizedMessage(500329); // That's not an animal!
                 }
@@ -71,12 +74,18 @@ namespace Server.SkillHandlers
     public class AnimalLoreGump : DynamicGump
     {
         private const int LabelColor = 0x24E5;
+        private const int BioPreviewButton = 3;
 
         private readonly BaseCreature _creature;
+        private readonly PlayerMobile _engineer;
 
         public override bool Singleton => true;
 
-        private AnimalLoreGump(BaseCreature c) : base(250, 50) => _creature = c;
+        private AnimalLoreGump(BaseCreature c, PlayerMobile engineer) : base(250, 50)
+        {
+            _creature = c;
+            _engineer = engineer;
+        }
 
         public static void DisplayTo(Mobile from, BaseCreature c)
         {
@@ -85,7 +94,8 @@ namespace Server.SkillHandlers
                 return;
             }
 
-            from.SendGump(new AnimalLoreGump(c));
+            var engineer = from is PlayerMobile player && BioDonorJournal.CanSurvey(player, c) ? player : null;
+            from.SendGump(new AnimalLoreGump(c, engineer));
         }
 
         protected override void BuildLayout(ref DynamicGumpBuilder builder)
@@ -106,6 +116,12 @@ namespace Server.SkillHandlers
 
             builder.AddImage(140, 138, 2091);
             builder.AddImage(140, 335, 2091);
+
+            if (_engineer != null)
+            {
+                builder.AddButton(147, 358, 5601, 5605, BioPreviewButton);
+                builder.AddLabel(169, 357, 0x481, "Bio samples");
+            }
 
             var pages = Core.AOS ? 5 : 3;
             var page = 0;
@@ -375,6 +391,15 @@ namespace Server.SkillHandlers
 
             builder.AddButton(340, 358, 5601, 5605, 0, GumpButtonType.Page, 1);
             builder.AddButton(317, 358, 5603, 5607, 0, GumpButtonType.Page, page - 1);
+        }
+
+        public override void OnResponse(NetState sender, in RelayInfo info)
+        {
+            if (info.ButtonID == BioPreviewButton && sender.Mobile is PlayerMobile player && player == _engineer &&
+                !BioDonorJournal.TrySurvey(player, _creature))
+            {
+                player.SendMessage("Move closer to a living wild creature to view its samples.");
+            }
         }
 
         private static string FormatSkill(BaseCreature c, SkillName name)

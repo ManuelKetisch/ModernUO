@@ -663,6 +663,7 @@ public class DefTailoring : CraftSystem
         AddSubRes(typeof(SpinedLeather), 1049151, 65.0, 1044462, 1049311);
         AddSubRes(typeof(HornedLeather), 1049152, 80.0, 1044462, 1049311);
         AddSubRes(typeof(BarbedLeather), 1049153, 99.0, 1044462, 1049311);
+        ExcelsiorMaterials.AddCraftResources(this, CraftResourceType.Leather, 1049311);
 
         // Add Bolt of Cloth for pre-AOS expansions only
         if (!Core.AOS)

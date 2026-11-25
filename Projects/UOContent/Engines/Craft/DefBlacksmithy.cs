@@ -693,6 +693,7 @@ public class DefBlacksmithy : CraftSystem
         AddSubRes(typeof(AgapiteIngot), 1044028, 90.0, 1044036, 1044268);
         AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044268);
         AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044268);
+        ExcelsiorMaterials.AddCraftResources(this, CraftResourceType.Metal, 1044268);
 
         SetSubRes2(typeof(RedScales), 1060875);
 

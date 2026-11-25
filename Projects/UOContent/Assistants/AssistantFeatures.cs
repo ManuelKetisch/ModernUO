@@ -31,10 +31,10 @@ public enum AssistantFeatures : ulong
     BoneCutterAgent = 1ul << 18, // The bone cutter agent
     JScriptMacros = 1ul << 19,   // Javascript macro engine
     AutoRemount = 1ul << 20,     // Auto remount after dismount
-    AutoBandage = 1 << 21,       // Auto bandage friends, self, last and mount option
-    EnemyTargetShare = 1 << 22,  // Enemy target share on guild, party or alliance chat
-    FilterSeason = 1 << 23,      // Season Filter
-    SpellTargetShare = 1 << 24,  // Spell target share on guild, party or alliance chat
+    AutoBandage = 1ul << 21,       // Auto bandage friends, self, last and mount option
+    EnemyTargetShare = 1ul << 22,  // Enemy target share on guild, party or alliance chat
+    FilterSeason = 1ul << 23,      // Season Filter
+    SpellTargetShare = 1ul << 24,  // Spell target share on guild, party or alliance chat
 
     All = ~None // Every feature possible
 }

@@ -27,7 +27,37 @@ namespace Server.Engines.BulkOrders
             { 1062235, 13 }, // Leather
             { 1062236, 14 }, // Spined
             { 1062237, 15 }, // Horned
-            { 1062238, 16 }  // Barbed
+            { 1062238, 16 }, // Barbed
+            { -1, 17 },      // Carpentry
+            { -1, 18 },      // Fletching
+            { -1, 19 },      // Any wood
+            { 1072643, 20 }, // Natural wood
+            { 1072644, 21 }, // Oak
+            { 1072645, 22 }, // Ash
+            { 1072646, 23 }, // Yew
+            { 1072647, 24 }, // Heartwood
+            { 1072648, 25 }, // Bloodwood
+            { 1072649, 26 }, // Frostwood
+            { -1, 27 },
+            { -1, 28 },
+            { -1, 29 },
+            { -1, 30 },
+            { -1, 31 },
+            { -1, 32 },
+            { -1, 33 },
+            { -1, 34 },
+            { -1, 35 },
+            { -1, 36 },
+            { -1, 37 },
+            { -1, 38 },
+            { -1, 39 },
+            { -1, 40 },
+            { -1, 41 },
+            { -1, 42 },
+            { -1, 43 },
+            { -1, 44 },
+            { -1, 45 },
+            { -1, 46 }
         };
 
         private static readonly int[,] _typeFilters =
@@ -85,41 +115,44 @@ namespace Server.Engines.BulkOrders
 
             builder.AddPage();
 
-            builder.AddBackground(10, 10, 600, 439, 5054);
+            builder.AddBackground(10, 10, 600, 639, 5054);
 
-            builder.AddImageTiled(18, 20, 583, 420, 2624);
-            builder.AddAlphaRegion(18, 20, 583, 420);
+            builder.AddImageTiled(18, 20, 583, 620, 2624);
+            builder.AddAlphaRegion(18, 20, 583, 620);
 
             builder.AddImage(5, 5, 10460);
             builder.AddImage(585, 5, 10460);
-            builder.AddImage(5, 424, 10460);
-            builder.AddImage(585, 424, 10460);
+            builder.AddImage(5, 624, 10460);
+            builder.AddImage(585, 624, 10460);
 
             builder.AddHtmlLocalized(270, 32, 200, 32, 1062223, LabelColor); // Filter Preference
 
             builder.AddHtmlLocalized(26, 64, 120, 32, 1062228, LabelColor); // Bulk Order Type
             AddFilterList(ref builder, 25, 96, _xOffsets_Type, 40, _typeFilters, _xWidths_Small, f.Type, 0);
 
-            builder.AddHtmlLocalized(320, 64, 50, 32, 1062215, LabelColor); // Quality
-            AddFilterList(ref builder, 320, 96, _xOffsets_Quality, 40, _qualityFilters, _xWidths_Small, f.Quality, 1);
+            if (_book is not TamingBulkOrderBook)
+            {
+                builder.AddHtmlLocalized(320, 64, 50, 32, 1062215, LabelColor); // Quality
+                AddFilterList(ref builder, 320, 96, _xOffsets_Quality, 40, _qualityFilters, _xWidths_Small, f.Quality, 1);
 
-            builder.AddHtmlLocalized(26, 160, 120, 32, 1062232, LabelColor); // Material Type
-            AddFilterList(ref builder, 25, 192, _xOffsets_Material, 40, _materialFilters, _xWidths_Large, f.Material, 2);
+                builder.AddHtmlLocalized(26, 160, 120, 32, 1062232, LabelColor); // Material Type
+                AddFilterList(ref builder, 25, 192, _xOffsets_Material, 40, _materialFilters, _xWidths_Large, f.Material, 2);
+            }
 
-            builder.AddHtmlLocalized(26, 320, 120, 32, 1062217, LabelColor); // Amount
-            AddFilterList(ref builder, 25, 352, _xOffsets_Amount, 40, _amountFilters, _xWidths_Small, f.Quantity, 3);
+            builder.AddHtmlLocalized(26, 520, 120, 32, 1062217, LabelColor); // Amount
+            AddFilterList(ref builder, 25, 552, _xOffsets_Amount, 40, _amountFilters, _xWidths_Small, f.Quantity, 3);
 
-            builder.AddHtmlLocalized(75, 416, 120, 32, 1062477, _from.UseOwnFilter ? LabelColor : 16927); // Set Book Filter
-            builder.AddButton(40, 416, 4005, 4007, 1);
+            builder.AddHtmlLocalized(75, 616, 120, 32, 1062477, _from.UseOwnFilter ? LabelColor : 16927); // Set Book Filter
+            builder.AddButton(40, 616, 4005, 4007, 1);
 
-            builder.AddHtmlLocalized(235, 416, 120, 32, 1062478, _from.UseOwnFilter ? 16927 : LabelColor); // Set Your Filter
-            builder.AddButton(200, 416, 4005, 4007, 2);
+            builder.AddHtmlLocalized(235, 616, 120, 32, 1062478, _from.UseOwnFilter ? 16927 : LabelColor); // Set Your Filter
+            builder.AddButton(200, 616, 4005, 4007, 2);
 
-            builder.AddHtmlLocalized(405, 416, 120, 32, 1062231, LabelColor); // Clear Filter
-            builder.AddButton(370, 416, 4005, 4007, 3);
+            builder.AddHtmlLocalized(405, 616, 120, 32, 1062231, LabelColor); // Clear Filter
+            builder.AddButton(370, 616, 4005, 4007, 3);
 
-            builder.AddHtmlLocalized(540, 416, 50, 32, 1011046, LabelColor); // APPLY
-            builder.AddButton(505, 416, 4017, 4018, 0);
+            builder.AddHtmlLocalized(540, 616, 50, 32, 1011046, LabelColor); // APPLY
+            builder.AddButton(505, 616, 4017, 4018, 0);
         }
 
         private void AddFilterList(ref DynamicGumpBuilder builder,
@@ -139,14 +172,31 @@ namespace Server.Engines.BulkOrders
                 var isSelected = filters[i, 1] == filterValue ||
                                  i % xOffsets.Length == 0 && filterValue == 0;
 
-                builder.AddHtmlLocalized(
-                    x + 35 + xOffsets[i % xOffsets.Length],
-                    y + i / xOffsets.Length * yOffset,
-                    xWidths[i % xOffsets.Length],
-                    32,
-                    number,
-                    isSelected ? 16927 : LabelColor
-                );
+                var labelX = x + 35 + xOffsets[i % xOffsets.Length];
+                var labelY = y + i / xOffsets.Length * yOffset;
+                if (number == -1)
+                {
+                    var label = filters[i, 1] switch
+                    {
+                        17 => "Carpentry",
+                        18 => "Fletching",
+                        19 => "Any wood",
+                        _  => BulkOrderMaterials.AdditionalName(BulkMaterialType.Blaze + (filters[i, 1] - 27))
+                    };
+
+                    builder.AddLabelCropped(labelX, labelY, 65, 22, isSelected ? 0x487 : 0x481, label);
+                }
+                else
+                {
+                    builder.AddHtmlLocalized(
+                        labelX,
+                        labelY,
+                        xWidths[i % xOffsets.Length],
+                        32,
+                        number,
+                        isSelected ? 16927 : LabelColor
+                    );
+                }
 
                 builder.AddButton(
                     x + xOffsets[i % xOffsets.Length],
@@ -200,7 +250,8 @@ namespace Server.Engines.BulkOrders
                         var type = index % 4;
                         index /= 4;
 
-                        if (type >= 0 && type < _filters.Length)
+                        if (type >= 0 && type < _filters.Length &&
+                            (_book is not TamingBulkOrderBook || type is 0 or 3))
                         {
                             var filters = _filters[type];
 

@@ -1,5 +1,6 @@
 using System;
 using Server.Items;
+using Server.Mobiles;
 using Server.Targeting;
 
 namespace Server.Engines.Harvest
@@ -41,6 +42,7 @@ namespace Server.Engines.Harvest
             var lumber = new HarvestDefinition
             {
                 BankWidth = 4,
+                RegionalVeinMap = Map.Ilshenar,
                 BankHeight = 3,
                 MinTotal = 20,
                 MaxTotal = 45,
@@ -88,6 +90,8 @@ namespace Server.Engines.Harvest
                     new HarvestVein(010, 0.5, res[6], res[0])  // Frostwood
                 };
 
+                lumber.RegionalVeins = CreateIlshenarVeins(res[0]);
+
                 lumber.BonusResources = new[]
                 {
                     new BonusHarvestResource(0, 83.9, null, null), // Nothing
@@ -118,6 +122,35 @@ namespace Server.Engines.Harvest
             lumber.RandomizeVeins = Core.ML;
 
             Definitions = new[] { lumber };
+        }
+
+        private static HarvestVein[] CreateIlshenarVeins(HarvestResource ordinary) =>
+        [
+            new(446, 0.0, ordinary, null),
+            IlshenarVein(CraftResource.PineWood, 150, ordinary),
+            IlshenarVein(CraftResource.AshWood, 100, ordinary, 30),
+            IlshenarVein(CraftResource.MahoganyWood, 75, ordinary),
+            IlshenarVein(CraftResource.YewWood, 60, ordinary, 50),
+            IlshenarVein(CraftResource.OakWood, 50, ordinary, 60),
+            IlshenarVein(CraftResource.ZircoteWood, 40, ordinary),
+            IlshenarVein(CraftResource.EbonyWood, 32, ordinary),
+            IlshenarVein(CraftResource.BambooWood, 22, ordinary),
+            IlshenarVein(CraftResource.PurpleHeartWood, 15, ordinary),
+            IlshenarVein(CraftResource.Redwood, 8, ordinary),
+            IlshenarVein(CraftResource.PetrifiedWood, 2, ordinary)
+        ];
+
+        private static HarvestVein IlshenarVein(
+            CraftResource wood, uint weight, HarvestResource ordinary, int? requiredSkill = null
+        )
+        {
+            var skill = requiredSkill ?? ExcelsiorMaterials.RequiredSkill(wood);
+            var info = CraftResources.GetInfo(wood);
+            var resource = new HarvestResource(
+                skill, Math.Max(0, skill - 40), skill + 40,
+                $"You cut some {info.Name.ToLowerInvariant()} logs.", info.ResourceTypes[0]
+            );
+            return new HarvestVein(weight, 0.5, resource, ordinary);
         }
 
         public static Lumberjacking System => m_System ??= new Lumberjacking();
@@ -152,6 +185,58 @@ namespace Server.Engines.Harvest
             }
 
             return true;
+        }
+
+        public override HarvestVein MutateVein(
+            Mobile from, Item tool, HarvestDefinition def, HarvestBank bank, object toHarvest, HarvestVein vein
+        )
+        {
+            if (tool is GargoylesAxe)
+            {
+                return def.NextVein(from.Map, vein) ?? vein;
+            }
+
+            return base.MutateVein(from, tool, def, bank, toHarvest, vein);
+        }
+
+        public override Type MutateType(
+            Type type, Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestResource resource
+        )
+        {
+            type = base.MutateType(type, from, tool, def, map, loc, resource);
+            return tool is SturdyAxe && (typeof(Log).IsAssignableFrom(type) || typeof(ExcelsiorLog).IsAssignableFrom(type))
+                ? typeof(GradeALog)
+                : type;
+        }
+
+        protected override void OnHarvestOutcome(
+            Mobile from, Item tool, HarvestDefinition definition, HarvestVein vein, HarvestResource resource,
+            Type deliveredType
+        )
+        {
+            if (tool is GargoylesAxe && deliveredType != null)
+            {
+                TryAwakenWoodElemental(from, vein, resource, deliveredType, Utility.RandomDouble());
+            }
+        }
+
+        internal static WoodElemental TryAwakenWoodElemental(
+            Mobile from, HarvestVein vein, HarvestResource resource, Type harvestedType, double roll
+        )
+        {
+            if (roll >= 0.10 || resource != vein.PrimaryResource || resource.Types[0] != harvestedType)
+            {
+                return null;
+            }
+
+            var wood = CraftResources.GetFromType(harvestedType);
+            if (CraftResources.GetType(wood) != CraftResourceType.Wood || wood == CraftResource.RegularWood ||
+                !ResourceEncounters.TryFindNearbySpawn(from, out var locationMap, out var point))
+            {
+                return null;
+            }
+
+            return ResourceEncounters.Spawn(new WoodElemental(wood), from, locationMap, point);
         }
 
         public override void OnBadHarvestTarget(Mobile from, Item tool, object toHarvest)

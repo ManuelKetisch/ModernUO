@@ -1,6 +1,7 @@
 using System;
 using ModernUO.Serialization;
 using Server.Engines.Craft;
+using Server.Mobiles;
 
 namespace Server.Items;
 
@@ -209,6 +210,11 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
             context.PendingGemCount = 0;
         }
 
+        if (tool is RunicTinkerTool runic)
+        {
+            runic.ApplyToJewelry(this);
+        }
+
         return 1;
     }
 
@@ -357,6 +363,40 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
         }
     }
 
+    public override void OnDoubleClick(Mobile from)
+    {
+        if (from is not PlayerMobile { Alive: true, Holding: null, Backpack: { } pack } player ||
+            !IsChildOf(pack) || !VerifyMove(player) || InSecureTrade)
+        {
+            base.OnDoubleClick(from);
+            return;
+        }
+
+        if (JewelrySlots.IsMultiSlotJewelry(this))
+        {
+            if (!JewelrySlots.HasFreeSlot(player, this))
+            {
+                player.SendMessage(
+                    JewelrySlots.IsRingItem(this)
+                        ? "All six ring slots are occupied."
+                        : "Both earring slots are occupied."
+                );
+                return;
+            }
+
+            player.EquipItem(this);
+            return;
+        }
+
+        if (player.FindItemOnLayer(Layer) == null)
+        {
+            player.EquipItem(this);
+            return;
+        }
+
+        base.OnDoubleClick(from);
+    }
+
     public override void OnRemoved(IEntity parent)
     {
         if (Core.AOS && parent is Mobile from)
@@ -371,11 +411,17 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
 
             from.CheckStatTimers();
         }
+
+        if (parent is Mobile)
+        {
+            JewelrySlots.ResetToCanonicalLayer(this);
+        }
     }
 
     public override void GetProperties(IPropertyList list)
     {
         base.GetProperties(list);
+        CraftResources.AddExcelsiorGrade(Resource, list);
 
         SkillBonuses.GetProperties(list);
 
@@ -426,6 +472,11 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
     private void AfterDeserialization()
     {
         var m = Parent as Mobile;
+
+        if (m is not PlayerMobile)
+        {
+            JewelrySlots.ResetToCanonicalLayer(this);
+        }
 
         if (Core.AOS && m != null)
         {

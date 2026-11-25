@@ -78,6 +78,10 @@ namespace Server.Engines.Harvest
             {
                 map.OnBeginDig(from);
             }
+            else if (m_System is Mining && targeted is DeepOreSeam seam)
+            {
+                seam.TryMine(from, m_Tool);
+            }
             else
             {
                 m_System.StartHarvesting(from, m_Tool, targeted);

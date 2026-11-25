@@ -1,0 +1,20 @@
+{
+  "version": 0,
+  "type": "Server.Items.TradeResourceStorage",
+  "properties": [
+    {
+      "name": "Kind",
+      "type": "Server.Items.TradeSupplyKind",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "Supplies",
+      "type": "System.Collections.Generic.List\u003CServer.Item\u003E",
+      "rule": "ListMigrationRule",
+      "ruleArguments": [
+        "Server.Item",
+        "SerializableInterfaceMigrationRule"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 using System;
 using Server.Collections;
+using Server.Engines.WeaponLeveling;
 
 namespace Server.Items;
 
@@ -48,7 +49,10 @@ public class MysticArc : WeaponAbility
             _target = queue.PeekRandom();
         }
 
-        AOS.Damage(defender, attacker, Damage, 0, 0, 0, 0, 0, 100);
+        using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+        {
+            AOS.Damage(defender, attacker, Damage, 0, 0, 0, 0, 0, 100);
+        }
 
         if (_target != null)
         {
@@ -81,6 +85,7 @@ public class MysticArc : WeaponAbility
         if (weapon.CheckHit(_mobile, _target))
         {
             weapon.OnHit(_mobile, _target, 0.0);
+            // The delayed arc's extra damage is separate from the immediate weapon strike.
             AOS.Damage(_target, _mobile, Damage, 0, 0, 0, 0, 100);
         }
     }

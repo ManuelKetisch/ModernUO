@@ -39,6 +39,11 @@ namespace Server.Mobiles
             {
                 PackItem(new GargoylesPickaxe());
             }
+
+            if (Utility.RandomDouble() < 0.2)
+            {
+                PackItem(new GargoylesAxe());
+            }
         }
 
         public override string CorpseName => "an enslaved gargoyle corpse";

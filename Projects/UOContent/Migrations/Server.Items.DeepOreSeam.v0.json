@@ -1,0 +1,27 @@
+{
+  "version": 0,
+  "type": "Server.Items.DeepOreSeam",
+  "properties": [
+    {
+      "name": "Kind",
+      "type": "Server.Items.DeepOreKind",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "Units",
+      "type": "int",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    },
+    {
+      "name": "RefillAt",
+      "type": "System.DateTime",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

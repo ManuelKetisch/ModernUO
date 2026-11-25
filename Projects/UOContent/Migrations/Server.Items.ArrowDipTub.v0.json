@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "type": "Server.Items.ArrowDipTub",
+  "properties": [
+    {
+      "name": "Kind",
+      "type": "Server.Items.ArrowDipKind",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "UsesRemaining",
+      "type": "int",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

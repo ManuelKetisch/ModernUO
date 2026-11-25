@@ -15,11 +15,36 @@ namespace Server.Items
         Agapite,
         Verite,
         Valorite,
+        Blaze,
+        Ice,
+        Toxic,
+        Electrum,
+        Platinum,
+        ExcelsiorIron,
+        ExcelsiorDullCopper,
+        ExcelsiorShadowIron,
+        ExcelsiorCopper,
+        ExcelsiorBronze,
+        ExcelsiorGold,
+        ExcelsiorAgapite,
+        ExcelsiorVerite,
+        ExcelsiorValorite,
 
         RegularLeather = 101,
         SpinedLeather,
         HornedLeather,
         BarbedLeather,
+        PolarLeather,
+        SyntheticLeather,
+        BlazeLeather,
+        DaemonicLeather,
+        ShadowLeather,
+        FrostLeather,
+        EtherealLeather,
+        ExcelsiorRegularLeather,
+        ExcelsiorSpinedLeather,
+        ExcelsiorHornedLeather,
+        ExcelsiorBarbedLeather,
 
         RedScales = 201,
         YellowScales,
@@ -34,7 +59,18 @@ namespace Server.Items
         YewWood,
         Heartwood,
         Bloodwood,
-        Frostwood
+        Frostwood,
+        PineWood,
+        MahoganyWood,
+        ZircoteWood,
+        EbonyWood,
+        BambooWood,
+        PurpleHeartWood,
+        Redwood,
+        PetrifiedWood,
+        ExcelsiorAshWood,
+        ExcelsiorYewWood,
+        ExcelsiorOakWood,
     }
 
     public enum CraftResourceType
@@ -318,20 +354,22 @@ namespace Server.Items
             blue.ArmorPoisonResist = -3;
             blue.ArmorEnergyResist = 10;
 
-            // public static readonly CraftAttributeInfo OakWood, AshWood, YewWood, Heartwood, Bloodwood, Frostwood;
-
-            var oak = OakWood = new CraftAttributeInfo();
-
-            var ash = AshWood = new CraftAttributeInfo();
-
-            var yew = YewWood = new CraftAttributeInfo();
-
-            var heart = Heartwood = new CraftAttributeInfo();
-
-            var blood = Bloodwood = new CraftAttributeInfo();
-
-            var frost = Frostwood = new CraftAttributeInfo();
+            OakWood = WoodRunic(1, 2, 30, 60);
+            AshWood = WoodRunic(2, 2, 35, 65);
+            YewWood = WoodRunic(2, 3, 40, 70);
+            Heartwood = WoodRunic(3, 3, 45, 75);
+            Bloodwood = WoodRunic(3, 4, 50, 80);
+            Frostwood = WoodRunic(4, 4, 55, 85);
         }
+
+        private static CraftAttributeInfo WoodRunic(int minCount, int maxCount, int minIntensity, int maxIntensity) =>
+            new()
+            {
+                RunicMinAttributes = minCount,
+                RunicMaxAttributes = maxCount,
+                RunicMinIntensity = minIntensity,
+                RunicMaxIntensity = maxIntensity
+            };
 
         public int WeaponFireDamage { get; set; }
 
@@ -710,6 +748,34 @@ namespace Server.Items
 
         private static Dictionary<Type, CraftResource> m_TypeTable;
 
+        private static readonly ExcelsiorMaterial[] _excelsiorGrades =
+            [.. ExcelsiorMaterials.CreateCatalog(), .. ExcelsiorMaterialVariants.CreateCatalog()];
+
+        private static readonly Dictionary<CraftResource, CraftResourceInfo> _extraInfo = CreateExtraInfo();
+
+        internal static IReadOnlyList<ExcelsiorMaterial> ExcelsiorGrades => _excelsiorGrades;
+
+        internal static bool IsExcelsiorGrade(CraftResource resource) => _extraInfo.ContainsKey(resource);
+
+        internal static void AddExcelsiorGrade(CraftResource resource, IPropertyList list)
+        {
+            if (_extraInfo.TryGetValue(resource, out var grade))
+            {
+                list.Add($"{"Material"}\t{grade.Name}");
+            }
+        }
+
+        private static Dictionary<CraftResource, CraftResourceInfo> CreateExtraInfo()
+        {
+            var entries = new Dictionary<CraftResource, CraftResourceInfo>(_excelsiorGrades.Length);
+            foreach (var grade in _excelsiorGrades)
+            {
+                entries.Add(grade.Info.Resource, grade.Info);
+            }
+
+            return entries;
+        }
+
         /// <summary>
         ///     Returns true if '<paramref name="resource" />' is None, Iron, RegularLeather or RegularWood. False if otherwise.
         /// </summary>
@@ -769,7 +835,7 @@ namespace Server.Items
                 }
             }
 
-            return null;
+            return _extraInfo.GetValueOrDefault(resource);
         }
 
         /// <summary>
@@ -778,10 +844,10 @@ namespace Server.Items
         public static CraftResourceType GetType(CraftResource resource) =>
             resource switch
             {
-                >= CraftResource.Iron and <= CraftResource.Valorite                => CraftResourceType.Metal,
-                >= CraftResource.RegularLeather and <= CraftResource.BarbedLeather => CraftResourceType.Leather,
+                >= CraftResource.Iron and <= CraftResource.ExcelsiorValorite                => CraftResourceType.Metal,
+                >= CraftResource.RegularLeather and <= CraftResource.ExcelsiorBarbedLeather => CraftResourceType.Leather,
                 >= CraftResource.RedScales and <= CraftResource.BlueScales         => CraftResourceType.Scales,
-                >= CraftResource.RegularWood and <= CraftResource.Frostwood        => CraftResourceType.Wood,
+                >= CraftResource.RegularWood and <= CraftResource.ExcelsiorOakWood        => CraftResourceType.Wood,
                 _                                                                  => CraftResourceType.None
             };
 

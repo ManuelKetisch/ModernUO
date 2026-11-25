@@ -95,7 +95,7 @@
     "back": false
   },
   {
-    "src": { "map": "Felucca", "loc": [1406, 3996, 5] },
+    "src": { "map": "Felucca", "loc": [1406, 3996, 6] },
     "dst": { "map": "Felucca", "loc": [1414, 3828, 5] },
     "back": false
   },
@@ -2265,7 +2265,7 @@
     "back": false
   },
   {
-    "src": { "map": "Trammel", "loc": [1406, 3996, 5] },
+    "src": { "map": "Trammel", "loc": [1406, 3996, 6] },
     "dst": { "map": "Trammel", "loc": [1414, 3828, 5] },
     "back": false
   },

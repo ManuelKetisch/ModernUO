@@ -65,12 +65,19 @@ namespace Server.Engines.BulkOrders
         {
         }
 
+        public override BODType Profession => BODType.Smith;
+
         public override int ComputeFame() => SmithRewardCalculator.Instance.ComputeFame(this);
 
         public override int ComputeGold() => SmithRewardCalculator.Instance.ComputeGold(this);
 
-        public override RewardGroup GetRewardGroup() =>
-            SmithRewardCalculator.Instance.LookupRewards(SmithRewardCalculator.Instance.ComputePoints(this));
+        public override RewardGroup GetRewardGroup()
+        {
+            var calculator = SmithRewardCalculator.Instance;
+            var points = calculator.ComputePoints(this);
+            return (BulkOrderMaterials.IsAdditional(Material) ? ExcelsiorBodRewardGroups.Smith(points) : null) ??
+                   calculator.LookupRewards(points);
+        }
 
         public static SmallSmithBOD CreateRandomFor(Mobile m)
         {
@@ -122,6 +129,11 @@ namespace Server.Engines.BulkOrders
                         break;
                     }
                 }
+            }
+
+            if (useMaterials)
+            {
+                material = BulkOrderMaterials.SelectAdditional(m, BODType.Smith, material);
             }
 
             var excChance = theirSkill >= 70.1 ? (theirSkill + 80.0) / 200.0 : 0.0;

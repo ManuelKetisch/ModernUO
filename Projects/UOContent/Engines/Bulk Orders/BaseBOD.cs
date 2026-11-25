@@ -20,6 +20,8 @@ namespace Server.Engines.BulkOrders
 
         public abstract bool Complete { get; }
 
+        public abstract BODType Profession { get; }
+
         [SerializableField(0)]
         [InvalidateProperties]
         [SerializedCommandProperty(AccessLevel.GameMaster)]

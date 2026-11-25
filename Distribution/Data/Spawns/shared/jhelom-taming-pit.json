@@ -1,0 +1,1058 @@
+[
+  {
+    "$type": "Spawner", "guid": "f980f057-f99e-5d21-9e81-09cb00ac46d3", "name": "Jhelom Taming Pit - Bull",
+    "location": [1171, 3603, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "dfe66ea1-1116-5dfe-b2b3-7ea97aef0b95", "name": "Jhelom Taming Pit - Bull",
+    "location": [1175, 3603, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d04ceb47-ecdc-5e10-ac36-449a528adf41", "name": "Jhelom Taming Pit - Bull",
+    "location": [1179, 3603, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6c169ed1-af2e-59fa-9b32-972e8d354dfd", "name": "Jhelom Taming Pit - Bull",
+    "location": [1183, 3603, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e4b0670d-9d5c-5cc5-8f89-90139a0d052b", "name": "Jhelom Taming Pit - Bull",
+    "location": [1187, 3603, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ca5990a2-48c2-582e-bdbc-02938cc30ede", "name": "Jhelom Taming Pit - Bull",
+    "location": [1191, 3603, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "bf0bd53b-efae-5f0c-aaf9-f0a1d5d689e7", "name": "Jhelom Taming Pit - Bull",
+    "location": [1171, 3606, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "430d280b-1876-5a68-a37a-8f40bb525051", "name": "Jhelom Taming Pit - Bull",
+    "location": [1175, 3606, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6dbc9d91-b88c-5f8c-97d9-5fac0f9e6306", "name": "Jhelom Taming Pit - Bull",
+    "location": [1179, 3606, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "44f24405-05ed-5ffb-9044-88eaa1e372ca", "name": "Jhelom Taming Pit - Bull",
+    "location": [1183, 3606, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d94210ec-1754-5520-9649-45778a190397", "name": "Jhelom Taming Pit - Bull",
+    "location": [1187, 3606, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "2ee3aa19-3888-5966-a00c-edb75f0877fa", "name": "Jhelom Taming Pit - Bull",
+    "location": [1191, 3606, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d90fc10d-7605-541b-a70a-499784693dd7", "name": "Jhelom Taming Pit - Horse",
+    "location": [1171, 3609, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "caa5d0c9-aea5-5e27-9b6c-a88144c106c2", "name": "Jhelom Taming Pit - Horse",
+    "location": [1175, 3609, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "da57c8cc-77f8-5d02-b419-19dd6e1ba8d7", "name": "Jhelom Taming Pit - Horse",
+    "location": [1179, 3609, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "515fd593-c491-5736-be9d-c3337b638046", "name": "Jhelom Taming Pit - Horse",
+    "location": [1183, 3609, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "761eb62f-53d0-5f8b-99e6-5fd0cf1f2d2a", "name": "Jhelom Taming Pit - Horse",
+    "location": [1187, 3609, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a0bc106b-235d-5db4-a2d7-e776c110b467", "name": "Jhelom Taming Pit - Horse",
+    "location": [1191, 3609, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "946b61f8-071a-5560-b4b8-9bf3e9e24947", "name": "Jhelom Taming Pit - Horse",
+    "location": [1171, 3612, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "22c67b4d-2d38-5b72-ad01-87de6c096b76", "name": "Jhelom Taming Pit - Horse",
+    "location": [1175, 3612, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ce8f4e09-a274-5712-8d19-5fd328bdd923", "name": "Jhelom Taming Pit - Horse",
+    "location": [1179, 3612, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "3c13dc8d-b23a-5d83-b7b1-68a3745276c9", "name": "Jhelom Taming Pit - Horse",
+    "location": [1183, 3612, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b4600ec2-cec1-5012-a3d3-2bb10a33a927", "name": "Jhelom Taming Pit - Horse",
+    "location": [1187, 3612, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e2991890-6394-518b-ae54-5b7c23a97651", "name": "Jhelom Taming Pit - Horse",
+    "location": [1191, 3612, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b3a33b04-f7b0-56a3-bb9a-a1b0a858b5c2", "name": "Jhelom Taming Pit - Goat",
+    "location": [1171, 3615, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a4b8da19-e8e8-5ebc-83c0-b26069bf1cbd", "name": "Jhelom Taming Pit - Goat",
+    "location": [1175, 3615, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6f3ce427-2fd2-5998-baaa-2545c2807ce1", "name": "Jhelom Taming Pit - Goat",
+    "location": [1179, 3615, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6492acab-e023-5f41-b6ec-eeeb0936b01e", "name": "Jhelom Taming Pit - Goat",
+    "location": [1183, 3615, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ac6e31b0-8aea-51fe-aeff-0ecea565be6a", "name": "Jhelom Taming Pit - Goat",
+    "location": [1187, 3615, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "348ec965-d957-5b75-8f18-ad73c800de56", "name": "Jhelom Taming Pit - Goat",
+    "location": [1191, 3615, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "166dc7fa-79cc-5945-9cdc-d47b3e5019a3", "name": "Jhelom Taming Pit - Goat",
+    "location": [1171, 3618, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "f7edc858-2d2d-50a5-9742-155332680fb8", "name": "Jhelom Taming Pit - Goat",
+    "location": [1175, 3618, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ea29045b-200f-5ae6-821f-a76246a23eaf", "name": "Jhelom Taming Pit - Goat",
+    "location": [1179, 3618, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "71836be8-fd6e-54cc-90cf-b179104dc603", "name": "Jhelom Taming Pit - Goat",
+    "location": [1183, 3618, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "876edc96-e1c6-55b2-8133-c3385dc0eb4b", "name": "Jhelom Taming Pit - Goat",
+    "location": [1187, 3618, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "0128db24-aaef-54a5-9f12-f27ae55f6b4f", "name": "Jhelom Taming Pit - Goat",
+    "location": [1191, 3618, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "4775612c-2bc6-560c-8eb6-2d3118d58f52", "name": "Jhelom Taming Pit - Bull",
+    "location": [1171, 3603, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "df94369d-3b2c-5951-99d8-e6f4347afa81", "name": "Jhelom Taming Pit - Bull",
+    "location": [1175, 3603, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "768a4ed9-2656-5ac3-a251-86673ac4a861", "name": "Jhelom Taming Pit - Bull",
+    "location": [1179, 3603, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "9486fdfd-7c54-5024-852d-f9dab5e3a318", "name": "Jhelom Taming Pit - Bull",
+    "location": [1183, 3603, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "4e54929a-275a-5835-a422-f1bdd8323a25", "name": "Jhelom Taming Pit - Bull",
+    "location": [1187, 3603, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8b9b66d9-e6bd-5aed-81ce-ab5d21580056", "name": "Jhelom Taming Pit - Bull",
+    "location": [1191, 3603, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d13b9e47-7f68-504e-95c8-14ea66ab5efb", "name": "Jhelom Taming Pit - Bull",
+    "location": [1171, 3606, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e7ecb5df-5632-5968-9cbf-831e05509d71", "name": "Jhelom Taming Pit - Bull",
+    "location": [1175, 3606, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "f0ef30a5-ee37-5d3a-b5b2-a6a66fac570e", "name": "Jhelom Taming Pit - Bull",
+    "location": [1179, 3606, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a813a419-58c4-5fce-85cc-46c9e6753eeb", "name": "Jhelom Taming Pit - Bull",
+    "location": [1183, 3606, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "16807c65-4dd8-560d-8ee6-4d9569222bb7", "name": "Jhelom Taming Pit - Bull",
+    "location": [1187, 3606, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e3eb24e1-218e-5ac6-a6a7-c54ae11f3ee7", "name": "Jhelom Taming Pit - Bull",
+    "location": [1191, 3606, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Bull", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ac9f8c51-3e11-5824-84a6-d7f81af99938", "name": "Jhelom Taming Pit - Horse",
+    "location": [1171, 3609, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "4d4892d0-c5a2-5b1a-a3e9-0977abe41983", "name": "Jhelom Taming Pit - Horse",
+    "location": [1175, 3609, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b8784637-b689-50f4-a79d-6447475e2363", "name": "Jhelom Taming Pit - Horse",
+    "location": [1179, 3609, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "5413f527-db86-5fac-8f16-4b78e0254c7f", "name": "Jhelom Taming Pit - Horse",
+    "location": [1183, 3609, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "be587e33-669b-5331-b9fa-353d7cc00f49", "name": "Jhelom Taming Pit - Horse",
+    "location": [1187, 3609, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "88ef8a8f-190b-5da1-9641-a46207c34144", "name": "Jhelom Taming Pit - Horse",
+    "location": [1191, 3609, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "5fc6acb0-7879-5f24-a5d9-41906b5c54fb", "name": "Jhelom Taming Pit - Horse",
+    "location": [1171, 3612, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a25bea12-6003-5830-a436-e95b5be4f865", "name": "Jhelom Taming Pit - Horse",
+    "location": [1175, 3612, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d258754b-a649-573d-b3e0-4ddc5e909fee", "name": "Jhelom Taming Pit - Horse",
+    "location": [1179, 3612, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "81e9a3ce-a09a-546e-a9ff-e03e2ae40dd5", "name": "Jhelom Taming Pit - Horse",
+    "location": [1183, 3612, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "10d20aff-0c43-532d-b134-fa573abbda1a", "name": "Jhelom Taming Pit - Horse",
+    "location": [1187, 3612, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "9add598a-8db5-5aaa-ab54-5a84cfb55e24", "name": "Jhelom Taming Pit - Horse",
+    "location": [1191, 3612, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Horse", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8677eed1-bf6d-5439-917e-372a87036c91", "name": "Jhelom Taming Pit - Goat",
+    "location": [1171, 3615, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b89a26d8-ef5f-5d09-9127-9cfaf0a62bec", "name": "Jhelom Taming Pit - Goat",
+    "location": [1175, 3615, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6a4fed3b-d200-5840-8778-2a48c3c6f721", "name": "Jhelom Taming Pit - Goat",
+    "location": [1179, 3615, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8c0dea6b-cb26-56e4-881c-17876eefa3de", "name": "Jhelom Taming Pit - Goat",
+    "location": [1183, 3615, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8887497f-77e7-5c5d-adce-e845dd3c35bc", "name": "Jhelom Taming Pit - Goat",
+    "location": [1187, 3615, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "3ab6c4b2-6b71-590f-a9d8-90b89ab0a6be", "name": "Jhelom Taming Pit - Goat",
+    "location": [1191, 3615, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "98eed85b-808b-5ac3-bb2d-87ea77edfb4f", "name": "Jhelom Taming Pit - Goat",
+    "location": [1171, 3618, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "99790c49-ec4a-54f4-84dd-be907a1e00cf", "name": "Jhelom Taming Pit - Goat",
+    "location": [1175, 3618, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b50a4142-ac1c-50f5-b873-fd1927022e77", "name": "Jhelom Taming Pit - Goat",
+    "location": [1179, 3618, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6b889e0a-eaa0-51fe-ad79-03183a9c50a0", "name": "Jhelom Taming Pit - Goat",
+    "location": [1183, 3618, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a5298cb9-b26b-53df-8ee6-29b1a6e1d6e7", "name": "Jhelom Taming Pit - Goat",
+    "location": [1187, 3618, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "fcd50ac4-0756-5be0-971d-fb6602f1aa56", "name": "Jhelom Taming Pit - Goat",
+    "location": [1191, 3618, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "01aad831-4c13-58cc-b968-b7423996f6a0", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1116, 3572, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "fa03f250-3093-59b6-8bdc-a7de1cab1071", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1121, 3572, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8eee1d08-8faa-5509-a6fe-4f321737f533", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1124, 3572, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "f1732b5d-7938-52e7-898f-1bad819255d2", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1128, 3572, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a63b5f6d-6d80-5e17-ab74-0176b4f8b56f", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1132, 3572, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "c4c561c1-0659-56da-80ce-dbbef951d786", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1136, 3572, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "160b7999-02f5-55ee-9051-9b977f59c07d", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1116, 3576, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "7ce700b7-4057-5ffd-bc78-ec76e8fddba1", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1120, 3576, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "c0c79fb7-ece9-5b70-894f-a8a3e5c456ab", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1124, 3576, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a2a8664d-2e46-55cd-8883-1d88825509b9", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1128, 3576, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "499a1ccc-a5ba-53c2-b753-f47a91f7d275", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1132, 3576, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e1b0853f-f09d-5286-9748-7a2598a51fa2", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1136, 3576, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e0abfd5f-d411-5f9a-88f4-d52382496dd9", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1116, 3580, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "66e31afb-23d6-510e-a3e2-6ce7828c817c", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1120, 3580, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "99965562-7bf2-5759-977d-39e15263d827", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1124, 3580, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d724542d-a855-5ab3-b48c-9834b04806bc", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1128, 3580, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "5373b198-b3ce-5c0f-956e-a9de5693b935", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1132, 3580, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ddd2ef87-b336-5c05-a4e8-f89a864eaa39", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1136, 3580, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "acb5a02d-d793-5e1c-a118-3b074576258e", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1116, 3584, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "0841afd0-7e08-5cce-958a-2607dc066c38", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1120, 3584, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "dadcb6b1-749b-543c-8a09-3154e999526d", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1124, 3584, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "aa59e5af-ed52-5e5b-9178-96408b83541d", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1129, 3584, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a4a1a649-26d5-5dc5-b2cc-00dc1494dd23", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1132, 3584, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e837c84a-f545-5cf2-a011-482bad2d32c0", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1136, 3584, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "f77d4153-ec5b-56e2-8c20-2439066ac7ab", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1116, 3588, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "23813e97-a14b-55da-b79f-b58f11da2044", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1120, 3588, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8d2d911d-8769-5bbd-b13c-8913179b2457", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1124, 3588, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "eb0e729a-1179-596c-91f5-0e16eea013e5", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1128, 3588, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "353e501d-d4ee-55a8-a232-eb7a1bd873ee", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1132, 3588, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d3fdec62-1a6f-5930-8eb7-14b1a63638e1", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1136, 3588, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d629b451-55b1-5185-882f-5bf5225161bc", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1116, 3592, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "5d8aa3ba-48b3-5944-a57f-9256ea10871b", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1120, 3592, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "3fb79569-4d12-5a82-83c2-93740ce62455", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1124, 3592, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b6d0af38-b997-5a83-89cb-89026f9d3173", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1128, 3592, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "562a593a-2a57-55aa-9a1c-57dba38c45bc", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1132, 3592, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "35043067-fc05-53eb-a50f-54d65c2f5e53", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1137, 3592, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a5d69c40-f5ad-5229-b21d-cd4907144671", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1116, 3572, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "61b3abec-6bc5-5d71-bbf1-42ffd2b4a307", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1121, 3572, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "cc44fe18-608e-5235-80b0-03a304210151", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1124, 3572, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ec7d73ce-da16-52ed-b66e-db21a6dc564b", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1128, 3572, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b349abca-3351-5479-a2ae-68a3c389bec3", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1132, 3572, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d5fe2125-ce7c-5a11-89de-764d96e87778", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1136, 3572, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8aa325e1-339b-5724-9409-a24e963dc99a", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1116, 3576, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b362bcbf-9096-513c-9ff9-2c70a439267b", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1120, 3576, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "4bddfdec-0a97-5ee2-950d-00d5bfecb2ae", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1124, 3576, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "8e59c4a3-e39f-5ee7-89b2-6685905d321c", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1128, 3576, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "e231b6fb-70fb-5959-9125-986528e966d7", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1132, 3576, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "1da51608-eda1-56ed-81f0-75a2bd36bb12", "name": "Jhelom Beginner Pen - Goat",
+    "location": [1136, 3576, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Goat", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "7d53fb31-78fe-5f7c-ba1a-e90e63354106", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1116, 3580, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "5b985e1f-5981-5868-849b-19b7affb28fd", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1120, 3580, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a72a1310-aea4-55f5-9ffb-0f2978382466", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1124, 3580, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a7923a36-59e2-59f0-8582-82361ce7e940", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1128, 3580, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "fe764ed5-06f0-55ed-bd18-40b2f0f33e42", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1132, 3580, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "717b4a89-0e7a-5d49-82a3-a46d234c7f84", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1136, 3580, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a6530e3c-20db-59ec-9ccd-e0484dbb541b", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1116, 3584, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "1b9b80c7-1977-53b3-911c-41e267461496", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1120, 3584, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "7f4634bf-7a0a-5284-ae01-01359e687326", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1124, 3584, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "48bfb6d3-7d2e-53a8-bfa3-a95e849a0ba0", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1129, 3584, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "78be22f5-8f2a-573c-bebb-e9531d2f879d", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1132, 3584, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a66938e3-af85-5c85-a52c-824ba79882e7", "name": "Jhelom Beginner Pen - Sheep",
+    "location": [1136, 3584, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Sheep", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "9ee39723-0157-5165-8804-fc87b36ca4b3", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1116, 3588, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6c571a3c-5a9e-5625-ab36-6d9c361395b7", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1120, 3588, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "65f77f04-393f-542a-a1ea-6f8c176a175a", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1124, 3588, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "0072bd7b-1492-5234-a92b-0cd12e145e5e", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1128, 3588, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "58ca766e-3495-5863-8c4c-c78449de0947", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1132, 3588, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b137ee7f-9059-55db-9634-6e32cf09ab55", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1136, 3588, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d4eeaec8-6f1c-58d7-a79d-a37e876e963c", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1116, 3592, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "f535e4db-cf4b-5320-9798-9e386c11b3f0", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1120, 3592, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "63442aa4-b593-59fc-a483-b2f26013f9c5", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1124, 3592, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "6a78f25b-d960-5ec6-84d1-c26eb64fd975", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1128, 3592, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "c9ec4b3a-b1ac-5e98-bd13-1dcf0570d43b", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1132, 3592, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "127d89a1-7d58-5393-ae2d-90f0c0fb313d", "name": "Jhelom Beginner Pen - Cow",
+    "location": [1137, 3592, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "Cow", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "7a4b799d-8d81-5e20-844c-bf276d79b328", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1173, 3604, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "94ad8c29-ae51-588d-b285-c88046fa49a6", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1177, 3604, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "9a3e42e6-7b2e-5706-844b-8d49dfe04f30", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1185, 3604, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "1f11bd92-6dbf-52f1-b291-e5f284bff48b", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1189, 3604, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d6c8c402-6dbd-5924-92b8-e537a5953de6", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1173, 3608, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "7df0d3e8-efbd-501c-b2d6-254de70c1549", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1177, 3608, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "bed04065-7223-55c5-a2fc-72c9ec10ae1e", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1185, 3608, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "7027fbd7-e44a-5f9b-8c25-9f1a14f05bcd", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1189, 3608, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "ec5de58d-4691-53da-836f-3075ba650af7", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1173, 3613, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "460b8b81-784e-592f-8df5-1d39765fc707", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1177, 3613, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "3e1f235c-dc3d-5f72-b626-1cf1597b3e82", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1186, 3613, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "cd379954-51a8-5283-afd2-92459817e8a6", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1189, 3613, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "2f1e98c1-e630-58e3-9411-97252909764e", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1173, 3617, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "d2bb8f17-2cc2-5c5b-aca7-af0012f77315", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1178, 3617, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "2eabe98a-4c49-5f65-8500-9f5fc8fc1ff3", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1185, 3617, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "99000683-91b2-554c-b899-3752e69f693e", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1189, 3617, 0], "map": "Trammel", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a9096c0f-6175-5c12-89c5-2c8f08c8bcc4", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1173, 3604, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "4dbd08a6-852f-545a-8e19-5716caddc1a2", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1177, 3604, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "a224407e-1e78-5034-b503-361118a8e872", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1185, 3604, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "89551fb1-77ff-5af7-8fc2-c2721b20e0c3", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1189, 3604, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "f0f2853b-d74a-5be1-a272-3c9ce0de0999", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1173, 3608, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "74701790-6e43-5053-b980-2103183ad5c0", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1177, 3608, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "c3787da5-5447-5490-b2cb-e1f46d00d664", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1185, 3608, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "94700240-e633-52f1-85e8-a2c2c7102d89", "name": "Jhelom Taming Pit - Brown Bear",
+    "location": [1189, 3608, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "BrownBear", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "43a9cb6f-8888-5675-aae1-fb9a66fb4296", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1173, 3613, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "db8bdd10-29c0-5d85-8645-171253371030", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1177, 3613, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "23d31b75-0f46-5e02-a117-dbcc60248c72", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1186, 3613, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "23b502ad-0223-5297-a10a-7d931165c2c8", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1189, 3613, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "40299ce3-01da-5d49-bb2e-e1dec2fd4bb4", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1173, 3617, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "136a4055-db18-5536-8147-30dee6b247b4", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1178, 3617, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "b629ca08-ab71-582f-8c3d-d1986ffc5fa4", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1185, 3617, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  },
+  {
+    "$type": "Spawner", "guid": "04833cd6-5b8a-5ff7-8489-586c9d07c894", "name": "Jhelom Taming Pit - Great Hart",
+    "location": [1189, 3617, 0], "map": "Felucca", "count": 1,
+    "minDelay": "00:02:00", "maxDelay": "00:03:00", "homeRange": 1, "walkingRange": 3,
+    "entries": [{ "name": "GreatHart", "maxCount": 1, "probability": 100 }]
+  }
+]

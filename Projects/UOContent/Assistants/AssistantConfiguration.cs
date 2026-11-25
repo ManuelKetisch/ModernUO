@@ -12,12 +12,22 @@ public static class AssistantConfiguration
 
     public static AssistantSettings Settings { get; private set; }
 
-    private const string _defaultWarningMessage = "The server was unable to negotiate features with your assistant. "
+    internal const string DefaultWarningMessage = "The server was unable to negotiate features with your assistant. "
                                                   + "You must download and run an updated version of <A HREF=\"https://uosteam.com\">UOSteam</A>"
                                                   + " or <A HREF=\"https://github.com/markdwags/Razor/releases/latest\">Razor</A>."
                                                   + "<BR><BR>Make sure you've checked the option <B>Negotiate features with server</B>, "
                                                   + "once you have this box checked you may log in and play normally."
                                                   + "<BR><BR>You will be disconnected shortly.";
+
+    public static AssistantSettings CreateDefaultSettings() =>
+        new()
+        {
+            WarnOnFailure = true,
+            KickOnFailure = true,
+            DisallowedFeatures = AssistantFeatures.None,
+            DisconnectDelay = TimeSpan.FromSeconds(15.0),
+            WarningMessage = DefaultWarningMessage
+        };
 
     public static void Configure()
     {
@@ -25,21 +35,18 @@ public static class AssistantConfiguration
 
         if (File.Exists(path))
         {
-            Settings = JsonConfig.Deserialize<AssistantSettings>(path);
+            Settings = JsonConfig.Deserialize<AssistantSettings>(path) ?? CreateDefaultSettings();
         }
         else
         {
-            Settings = new AssistantSettings
-            {
-                WarnOnFailure = true,
-                KickOnFailure = true,
-                DisallowedFeatures = AssistantFeatures.None,
-                DisconnectDelay = TimeSpan.FromSeconds(15.0),
-                WarningMessage = _defaultWarningMessage
-            };
-
+            Settings = CreateDefaultSettings();
             Save();
         }
+    }
+
+    internal static void SetSettingsForTesting(AssistantSettings settings)
+    {
+        Settings = settings;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -50,6 +57,8 @@ public static class AssistantConfiguration
 
     public static void SetDisallowed(AssistantFeatures feature, bool value)
     {
+        Settings ??= CreateDefaultSettings();
+
         if (value)
         {
             Settings.DisallowedFeatures |= feature;

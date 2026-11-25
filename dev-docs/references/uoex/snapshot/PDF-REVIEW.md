@@ -1,6 +1,6 @@
 # UO Excelsior PDF review
 
-All 18 files are browser prints saved on November 23, 2026. Each shows the wiki article and its revision link. Seventeen have the same revision as the local mirror. Treasure Hunting adds one article. Its PDF is the source for the transcription. Two matching revisions are worth keeping for the inline visuals.
+The initial 18 files are browser prints saved on November 23, 2026. Each shows the wiki article and its revision link. Seventeen have the same revision as the local mirror. Treasure Hunting adds one article. Its PDF is the source for the transcription. Two matching revisions are worth keeping for the inline visuals.
 
 “Discard candidate” means the existing Markdown covers the mechanics. Keep the small item and crafting screenshots too if you want those as art or interface references. All original PDFs are still in the capture folder.
 
@@ -24,3 +24,18 @@ All 18 files are browser prints saved on November 23, 2026. Each shows the wiki 
 | [Slayer Weapons](<pages/PDFs/Slayer Weapons - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 1157 | Discard candidate | [Markdown](<pages/slayer_weapons.md>) | Same slayer groups and opposing groups. |
 | [The Butcher's Resolve](<pages/PDFs/The Butcher's Resolve - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 2707 | Discard candidate | [Markdown](<pages/the_butcher_s_resolve.md>) | Same item stats, recipe, and source markup. The PDF also shows the item and crafting menu. |
 | [Treasure Hunting](<pages/PDFs/Treasure Hunting - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 4243 | Converted to Markdown and keep source PDF | [Markdown](<pages/treasure_hunting.md>) | Missing from the mirror. The conversion records chest rules and collectible lists for all eight chest levels. |
+
+## Crafting and resources captures
+
+These five browser prints were saved on November 24, 2026. Their printed
+revision IDs match the local mirror. Keep the exact local PDFs for the
+resource tables, tool illustrations, and crafting-order references. The
+mirror remains searchable and each PDF remains a local reference copy.
+
+| PDF | Revision | Local text |
+| --- | --- | --- |
+| [Bulk order deeds](<pages/PDFs/Bulk order deeds - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 3169 | [Markdown](pages/bulk_order_deeds.md) |
+| [Tools of the Trades](<pages/PDFs/Tools of the Trades - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 3674 | [Markdown](pages/tools_of_the_trades.md) |
+| [Resource Elementals](<pages/PDFs/Resource Elementals - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 561 | [Markdown](pages/resource_elementals.md) |
+| [Resource Properties](<pages/PDFs/Resource Properties - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 3319 | [Markdown](pages/resource_properties.md) |
+| [Resources](<pages/PDFs/Resources - UO Excelsior Wiki - Ultima Online Free Shard.pdf>) | 1115 | [Markdown](pages/resources.md) |

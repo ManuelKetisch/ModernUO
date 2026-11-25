@@ -1,10 +1,16 @@
+using System;
 using ModernUO.Serialization;
+using Server.Engines.HybridForge;
+using Server.Items;
 
 namespace Server.Mobiles
 {
-    [SerializationGenerator(0, false)]
+    [SerializationGenerator(1, false)]
     public partial class AncientWyrm : BaseCreature
     {
+        [SerializableField(0)]
+        private Guid _forgeDefeatId;
+
         [Constructible]
         public AncientWyrm() : base(AIType.AI_Mage)
         {
@@ -63,6 +69,16 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.FilthyRich, 3);
             AddLoot(LootPack.Gems, 5);
+        }
+
+        public override void OnDeath(Container c)
+        {
+            WyrmForgeRewards.OnDeath(this);
+            base.OnDeath(c);
+        }
+
+        private void MigrateFrom(V0Content content)
+        {
         }
 
         public override int GetIdleSound() => 0x2D3;

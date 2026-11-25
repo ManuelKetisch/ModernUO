@@ -32,6 +32,11 @@ namespace Server.Mobiles
             if (from is PlayerMobile pm && pm.NextTailorBulkOrder == TimeSpan.Zero &&
                 (fromContextMenu || Utility.RandomDouble() < 0.2))
             {
+                if (ExcelsiorOrderRules.Selected(pm))
+                {
+                    return ExcelsiorOrderRules.Offer(pm, BODType.Tailor);
+                }
+
                 var theirSkill = pm.Skills.Tailoring.Base;
 
                 if (theirSkill >= 70.1)
@@ -49,7 +54,7 @@ namespace Server.Mobiles
 
                 if (theirSkill >= 70.1 && (theirSkill - 40.0) / 300.0 > Utility.RandomDouble())
                 {
-                    return new LargeTailorBOD();
+                    return BulkOrderMaterials.UpgradeLargeOffer(from, new LargeTailorBOD());
                 }
 
                 return SmallTailorBOD.CreateRandomFor(from);

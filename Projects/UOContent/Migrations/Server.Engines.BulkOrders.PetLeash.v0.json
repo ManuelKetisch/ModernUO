@@ -1,0 +1,16 @@
+{
+  "version": 0,
+  "type": "Server.Engines.BulkOrders.PetLeash",
+  "properties": [
+    {
+      "name": "Pet",
+      "type": "Server.Mobiles.BaseCreature",
+      "rule": "SerializableInterfaceMigrationRule"
+    },
+    {
+      "name": "Owner",
+      "type": "Server.Mobiles.PlayerMobile",
+      "rule": "SerializableInterfaceMigrationRule"
+    }
+  ]
+}

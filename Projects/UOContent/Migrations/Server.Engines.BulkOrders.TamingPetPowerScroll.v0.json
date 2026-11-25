@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "type": "Server.Engines.BulkOrders.TamingPetPowerScroll",
+  "properties": [
+    {
+      "name": "SkillName",
+      "type": "Server.SkillName",
+      "rule": "EnumMigrationRule"
+    },
+    {
+      "name": "Cap",
+      "type": "int",
+      "rule": "PrimitiveTypeMigrationRule",
+      "ruleArguments": [
+        ""
+      ]
+    }
+  ]
+}

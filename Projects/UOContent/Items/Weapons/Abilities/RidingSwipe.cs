@@ -1,4 +1,5 @@
 using System;
+using Server.Engines.WeaponLeveling;
 using Server.Mobiles;
 
 namespace Server.Items
@@ -59,7 +60,10 @@ namespace Server.Items
             {
                 var amount = 10 + (int)(10.0 * (attacker.Skills.Bushido.Value - 50.0) / 70.0 + 5);
 
-                AOS.Damage(defender, attacker, amount, 100, 0, 0, 0, 0);
+                using (WeaponLevelingCombat.BeginAbilityStrike(attacker, defender))
+                {
+                    AOS.Damage(defender, attacker, amount, 100, 0, 0, 0, 0);
+                }
 
                 if (Items.ParalyzingBlow.IsImmune(defender)) // Does it still do damage?
                 {

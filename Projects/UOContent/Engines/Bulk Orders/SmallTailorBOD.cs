@@ -57,12 +57,19 @@ namespace Server.Engines.BulkOrders
         {
         }
 
+        public override BODType Profession => BODType.Tailor;
+
         public override int ComputeFame() => TailorRewardCalculator.Instance.ComputeFame(this);
 
         public override int ComputeGold() => TailorRewardCalculator.Instance.ComputeGold(this);
 
-        public override RewardGroup GetRewardGroup() =>
-            TailorRewardCalculator.Instance.LookupRewards(TailorRewardCalculator.Instance.ComputePoints(this));
+        public override RewardGroup GetRewardGroup()
+        {
+            var calculator = TailorRewardCalculator.Instance;
+            var points = calculator.ComputePoints(this);
+            return (BulkOrderMaterials.IsAdditional(Material) ? ExcelsiorBodRewardGroups.Tailor(points) : null) ??
+                   calculator.LookupRewards(points);
+        }
 
         public static SmallTailorBOD CreateRandomFor(Mobile m)
         {
@@ -118,6 +125,11 @@ namespace Server.Engines.BulkOrders
                             break;
                         }
                     }
+                }
+
+                if (useMaterials)
+                {
+                    material = BulkOrderMaterials.SelectAdditional(m, BODType.Tailor, material);
                 }
 
                 var excChance = 0.0;
