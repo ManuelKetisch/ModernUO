@@ -66,6 +66,7 @@ public static class ImportSpawnersCommand
             }
         }
 
+        var importedGuids = new HashSet<Guid>();
         var totalGenerated = 0;
         var totalFailures = 0;
 
@@ -79,7 +80,7 @@ public static class ImportSpawnersCommand
 
             if (file.Extension == ".json")
             {
-                ImportJsonSpawners(from, file, allSpawners, ref totalGenerated, ref totalFailures);
+                ImportJsonSpawners(from, file, allSpawners, importedGuids, ref totalGenerated, ref totalFailures);
             }
             else if (file.Extension == ".xml")
             {
@@ -192,17 +193,22 @@ public static class ImportSpawnersCommand
 
     // Test seam: wraps ImportJsonSpawners without requiring a live Mobile (from = null is safe
     // because from is only used in the JsonException path, which won't be hit for valid files).
-    internal static void ImportFile(FileInfo file, Dictionary<Guid, ISpawner> allSpawners)
+    internal static void ImportFile(
+        FileInfo file,
+        Dictionary<Guid, ISpawner> allSpawners,
+        HashSet<Guid> importedGuids = null
+    )
     {
         var generated = 0;
         var failures = 0;
-        ImportJsonSpawners(null, file, allSpawners, ref generated, ref failures);
+        ImportJsonSpawners(null, file, allSpawners, importedGuids ?? [], ref generated, ref failures);
     }
 
     private static void ImportJsonSpawners(
         Mobile from,
         FileInfo file,
         Dictionary<Guid, ISpawner> allSpawners,
+        HashSet<Guid> importedGuids,
         ref int totalGenerated,
         ref int totalFailures
     )
@@ -256,10 +262,17 @@ public static class ImportSpawnersCommand
 
             var type = spawner.GetType();
 
-            // Delete all existing spawners of the same concrete type at this location.
+            // Delete pre-existing spawners of the same concrete type at the exact same 3D location.
+            // Preserve distinct-GUID spawners already imported in this run and spawners at other Z levels
+            // (Map.GetItemsAt queries 2D X/Y tiles without filtering Z).
             foreach (var existing in map.GetItemsAt<BaseSpawner>(location))
             {
-                if (existing.GetType() == type && existing != spawner)
+                if (
+                    existing.GetType() == type &&
+                    existing != spawner &&
+                    existing.Z == location.Z &&
+                    !importedGuids.Contains(existing.Guid)
+                )
                 {
                     queue.Enqueue(existing);
                     allSpawners.Remove(existing.Guid);
@@ -282,6 +295,7 @@ public static class ImportSpawnersCommand
                 }
 
                 allSpawners.Add(spawner.Guid, spawner);
+                importedGuids.Add(spawner.Guid);
                 totalGenerated++;
             }
             catch (Exception ex)

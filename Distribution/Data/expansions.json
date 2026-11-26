@@ -36,7 +36,7 @@
       "Ilshenar": false,
       "Malas": false,
       "Tokuno": false,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -109,7 +109,7 @@
       "Ilshenar": false,
       "Malas": false,
       "Tokuno": false,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -182,7 +182,7 @@
       "Ilshenar": false,
       "Malas": false,
       "Tokuno": false,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -255,7 +255,7 @@
       "Ilshenar": true,
       "Malas": false,
       "Tokuno": false,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -328,7 +328,7 @@
       "Ilshenar": true,
       "Malas": false,
       "Tokuno": false,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -401,7 +401,7 @@
       "Ilshenar": true,
       "Malas": true,
       "Tokuno": false,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -474,7 +474,7 @@
       "Ilshenar": true,
       "Malas": true,
       "Tokuno": true,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -547,7 +547,7 @@
       "Ilshenar": true,
       "Malas": true,
       "Tokuno": true,
-      "TerMer": false
+      "TerMur": false
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -620,7 +620,7 @@
       "Ilshenar": true,
       "Malas": true,
       "Tokuno": true,
-      "TerMer": true
+      "TerMur": true
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -693,7 +693,7 @@
       "Ilshenar": true,
       "Malas": true,
       "Tokuno": true,
-      "TerMer": true
+      "TerMur": true
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -766,7 +766,7 @@
       "Ilshenar": true,
       "Malas": true,
       "Tokuno": true,
-      "TerMer": true
+      "TerMur": true
     },
     "CharacterListFlags": {
       "Unk1": false,
@@ -839,7 +839,7 @@
       "Ilshenar": true,
       "Malas": true,
       "Tokuno": true,
-      "TerMer": true
+      "TerMur": true
     },
     "CharacterListFlags": {
       "Unk1": false,
