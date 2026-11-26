@@ -95,6 +95,13 @@ public partial class Corpse : Container, ICarvable
 
     private static TimeSpan _defaultDecayTime = TimeSpan.FromMinutes(7.0);
     private static TimeSpan _boneDecayTime = TimeSpan.FromMinutes(7.0);
+    private static TimeSpan _playerDecayTime = TimeSpan.FromMinutes(30.0);
+    private static TimeSpan _playerBoneDecayTime = TimeSpan.FromMinutes(30.0);
+
+    private TimeSpan GetDecayTime(bool bones) =>
+        _owner?.Player == true
+            ? (bones ? _playerBoneDecayTime : _playerDecayTime)
+            : (bones ? _boneDecayTime : _defaultDecayTime);
 
     private IDevourer _devourer; // The creature that devoured this corpse
 
@@ -123,6 +130,15 @@ public partial class Corpse : Container, ICarvable
     private Timer _decayTimer;
 
     private void DeserializeDecayTimer(TimeSpan delay) => BeginDecay(delay);
+
+    [AfterDeserialization]
+    private void AfterDeserialization()
+    {
+        if (_owner?.Player == true && _decayTimer != null)
+        {
+            BeginDecay(GetDecayTime(IsBones));
+        }
+    }
 
     [SerializableField(5, setter: "private")]
     private HashSet<Mobile> _looters;
@@ -322,7 +338,7 @@ public partial class Corpse : Container, ICarvable
             }
         }
 
-        BeginDecay(_defaultDecayTime);
+        BeginDecay(GetDecayTime(false));
 
         DevourCorpse();
     }
@@ -583,7 +599,7 @@ public partial class Corpse : Container, ICarvable
         SetFlag(CorpseFlag.NoBones, true);
         SetFlag(CorpseFlag.IsBones, true);
 
-        BeginDecay(_boneDecayTime);
+        BeginDecay(GetDecayTime(true));
     }
 
     public void BeginDecay(TimeSpan delay)

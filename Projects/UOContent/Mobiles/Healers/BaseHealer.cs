@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ModernUO.Serialization;
+using Server.Collections;
+using Server.ContextMenus;
 using Server.Gumps;
 using Server.Items;
 
@@ -124,26 +126,110 @@ public abstract partial class BaseHealer : BaseVendor
         }
     }
 
+    public virtual bool TryOfferResurrection(Mobile m)
+    {
+        if (m == null || m.Deleted || m.Alive || m.Frozen)
+        {
+            return false;
+        }
+
+        if (!InRange(m, 4))
+        {
+            m.SendLocalizedMessage(500446); // That is too far away.
+            return false;
+        }
+
+        if (!InLOS(m))
+        {
+            m.SendLocalizedMessage(500237); // Target can not be seen.
+            return false;
+        }
+
+        if (m.Map?.CanFit(m.Location, 16, false, false) != true)
+        {
+            m.SendLocalizedMessage(502391); // Thou can not be resurrected there!
+            return false;
+        }
+
+        if (!CheckResurrect(m))
+        {
+            return false;
+        }
+
+        _nextResurrect = Core.Now + ResurrectDelay;
+        OfferResurrection(m);
+        return true;
+    }
+
+    public override void OnDoubleClickDead(Mobile from)
+    {
+        TryOfferResurrection(from);
+    }
+
+    public override void GetContextMenuEntries(Mobile from, ref PooledRefList<ContextMenuEntry> list)
+    {
+        base.GetContextMenuEntries(from, ref list);
+
+        if (!from.Alive)
+        {
+            list.Add(new ResurrectEntry());
+        }
+    }
+
     public override void OnMovement(Mobile m, Point3D oldLocation)
     {
-        if (!m.Frozen && Core.Now >= _nextResurrect && InRange(m, 4) && !InRange(oldLocation, 4) && InLOS(m))
+        if (m.Frozen || Core.Now < _nextResurrect || !InRange(m, 4) || !InLOS(m))
         {
-            if (!m.Alive)
+            return;
+        }
+
+        if (!m.Alive)
+        {
+            if (m.NetState?.GetGumps().Has<ResurrectGump>() == true)
+            {
+                return;
+            }
+
+            // Ghosts phase through closed healer-shop doors and walls, often crossing
+            // range 4 before entering line of sight or stepping onto a door tile where
+            // CanFit is false. Trigger whenever the ghost enters range 4, enters LOS,
+            // or steps off an unresurrectable tile onto a valid one.
+            var enteredRange = !InRange(oldLocation, 4);
+            var enteredSight = !InLOS(new Point3D(oldLocation.X, oldLocation.Y, oldLocation.Z + 14));
+            var leftBlockedTile = m.Map?.CanFit(oldLocation, 16, false, false) != true;
+
+            if (!enteredRange && !enteredSight && !leftBlockedTile)
+            {
+                return;
+            }
+
+            if (m.Map?.CanFit(m.Location, 16, false, false) != true)
+            {
+                m.SendLocalizedMessage(502391); // Thou can not be resurrected there!
+            }
+            else if (CheckResurrect(m))
             {
                 _nextResurrect = Core.Now + ResurrectDelay;
-
-                if (m.Map?.CanFit(m.Location, 16, false, false) != true)
-                {
-                    m.SendLocalizedMessage(502391); // Thou can not be resurrected there!
-                }
-                else if (CheckResurrect(m))
-                {
-                    OfferResurrection(m);
-                }
+                OfferResurrection(m);
             }
-            else if (HealsYoungPlayers && m.Hits < m.HitsMax && m is PlayerMobile mobile && mobile.Young)
+        }
+        else if (HealsYoungPlayers && !InRange(oldLocation, 4) && m.Hits < m.HitsMax && m is PlayerMobile mobile && mobile.Young)
+        {
+            OfferHeal(mobile);
+        }
+    }
+
+    private sealed class ResurrectEntry : ContextMenuEntry
+    {
+        public ResurrectEntry() : base(6195, 4)
+        {
+        }
+
+        public override void OnClick(Mobile from, IEntity target)
+        {
+            if (target is BaseHealer healer)
             {
-                OfferHeal(mobile);
+                healer.TryOfferResurrection(from);
             }
         }
     }
