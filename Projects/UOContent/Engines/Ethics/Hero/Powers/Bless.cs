@@ -1,4 +1,5 @@
 using System;
+using Server.Engines.BuffIcons;
 using Server.Spells;
 using Server.Targeting;
 
@@ -55,7 +56,7 @@ public sealed class Bless : Power
 
             from.Mobile.DoBeneficial(mob);
 
-            mob.AddStatMod(new StatMod(StatType.All, "Holy Bless", 10, TimeSpan.FromMinutes(30.0)));
+            PlayerBuffPersistence.AddTimedStatMod(mob, StatType.All, "Holy Bless", 10, TimeSpan.FromMinutes(30.0));
 
             mob.FixedParticles(0x373A, 10, 15, 5018, EffectLayer.Waist);
             mob.PlaySound(0x1EA);

@@ -3351,6 +3351,17 @@ namespace Server.Mobiles
         public override void OnAfterDelete()
         {
             _offHandCombatTimer.Cancel();
+
+            if (m_BuffTable != null)
+            {
+                foreach (var buff in m_BuffTable.Values)
+                {
+                    buff.StopTimer();
+                }
+
+                m_BuffTable = null;
+            }
+
             base.OnAfterDelete();
 
             var faction = Faction.Find(this);
@@ -4281,6 +4292,39 @@ namespace Server.Mobiles
 
         public void ResetRecipes() => _acquiredRecipes = null;
 
+        public override void OnConnected()
+        {
+            base.OnConnected();
+            ResumeOfflineBuffs();
+        }
+
+        public override void OnDisconnected()
+        {
+            base.OnDisconnected();
+            PauseOfflineBuffs();
+        }
+
+        public override void RemoveStatMod(StatMod mod)
+        {
+            var modName = mod?.Name;
+            base.RemoveStatMod(mod);
+
+            if (modName != null && GetStatMod(modName, true) == null)
+            {
+                PlayerBuffPersistence.CancelStatModTimer(this, modName);
+            }
+        }
+
+        public override void RemoveStatMod(string name)
+        {
+            if (name != null)
+            {
+                PlayerBuffPersistence.CancelStatModTimer(this, name);
+            }
+
+            base.RemoveStatMod(name);
+        }
+
         public void SendAddBuffPacket(BuffInfo buffInfo)
         {
             if (buffInfo == null || NetState?.BuffIcon != true)
@@ -4288,7 +4332,7 @@ namespace Server.Mobiles
                 return;
             }
 
-            var duration = Utility.Max(buffInfo.Duration - (Core.Now - buffInfo.StartTime), TimeSpan.Zero);
+            var duration = buffInfo.RemainingDuration;
             if (duration == TimeSpan.Zero)
             {
                 SendAddBuffPacket(buffInfo, 0);
@@ -4340,6 +4384,42 @@ namespace Server.Mobiles
             }
         }
 
+        public void PauseOfflineBuffs()
+        {
+            if (m_BuffTable != null)
+            {
+                foreach (var buff in m_BuffTable.Values)
+                {
+                    buff.PauseTimer();
+                }
+            }
+
+            PlayerBuffPersistence.Pause(this);
+        }
+
+        public void ResumeOfflineBuffs()
+        {
+            if (m_BuffTable != null)
+            {
+                using var expired = PooledRefQueue<BuffIcon>.Create();
+
+                foreach (var buff in m_BuffTable.Values)
+                {
+                    if (!buff.ResumeTimer(this))
+                    {
+                        expired.Enqueue(buff.ID);
+                    }
+                }
+
+                while (expired.Count > 0)
+                {
+                    RemoveBuff(expired.Dequeue());
+                }
+            }
+
+            PlayerBuffPersistence.Resume(this);
+        }
+
         public void AddBuff(BuffInfo b)
         {
             if (!BuffInfo.Enabled || b == null)
@@ -4353,7 +4433,67 @@ namespace Server.Mobiles
             m_BuffTable ??= new Dictionary<BuffIcon, BuffInfo>();
             m_BuffTable.Add(b.ID, b);
 
+            if (b.PersistAcrossRestart && b.Duration > TimeSpan.Zero)
+            {
+                PlayerBuffPersistence.TrackPersistedBuffOwner(this);
+            }
+
             SendAddBuffPacket(b);
+        }
+
+        internal void RestorePersistedBuff(BuffInfo b, TimeSpan remaining)
+        {
+            if (!BuffInfo.Enabled || b == null || remaining <= TimeSpan.Zero)
+            {
+                return;
+            }
+
+            RemoveBuff(b.ID);
+            b.StartTimer(this, remaining);
+
+            m_BuffTable ??= new Dictionary<BuffIcon, BuffInfo>();
+            m_BuffTable.Add(b.ID, b);
+
+            if (b.PersistAcrossRestart && b.Duration > TimeSpan.Zero)
+            {
+                PlayerBuffPersistence.TrackPersistedBuffOwner(this);
+            }
+        }
+
+        internal BuffInfo GetBuff(BuffIcon id) => m_BuffTable?.GetValueOrDefault(id);
+
+        internal void CollectPersistedBuffs(ref PooledRefList<BuffInfo> list)
+        {
+            if (m_BuffTable == null)
+            {
+                return;
+            }
+
+            foreach (var buff in m_BuffTable.Values)
+            {
+                if (buff.PersistAcrossRestart && buff.Duration > TimeSpan.Zero)
+                {
+                    list.Add(buff);
+                }
+            }
+        }
+
+        private bool HasPersistedBuffs()
+        {
+            if (m_BuffTable == null)
+            {
+                return false;
+            }
+
+            foreach (var buff in m_BuffTable.Values)
+            {
+                if (buff.PersistAcrossRestart && buff.Duration > TimeSpan.Zero)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void RemoveBuff(BuffIcon b)
@@ -4373,6 +4513,11 @@ namespace Server.Mobiles
             if (m_BuffTable.Count <= 0)
             {
                 m_BuffTable = null;
+                PlayerBuffPersistence.UntrackPersistedBuffOwner(this);
+            }
+            else if (buffInfo.PersistAcrossRestart && !HasPersistedBuffs())
+            {
+                PlayerBuffPersistence.UntrackPersistedBuffOwner(this);
             }
         }
 

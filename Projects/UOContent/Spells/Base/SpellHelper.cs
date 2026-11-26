@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Server.Engines.BuffIcons;
 using Server.Engines.CannedEvil;
 using Server.Engines.ConPVP;
 using Server.Engines.PartySystem;
@@ -323,7 +324,7 @@ namespace Server.Spells
                 caster.CheckSkill(SkillName.EvalInt, 0.0, 120.0);
             }
 
-            target.AddStatMod(new StatMod(type, name, bonus, duration));
+            PlayerBuffPersistence.AddTimedStatMod(target, type, name, bonus, duration);
             return true;
         }
 
@@ -371,7 +372,7 @@ namespace Server.Spells
                 target.CheckSkill(SkillName.MagicResist, 0.0, 120.0);
             }
 
-            target.AddStatMod(new StatMod(type, name, malus, duration));
+            PlayerBuffPersistence.AddTimedStatMod(target, type, name, malus, duration);
             return true;
         }
 

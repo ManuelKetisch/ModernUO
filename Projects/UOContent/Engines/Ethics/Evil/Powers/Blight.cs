@@ -1,4 +1,5 @@
 using System;
+using Server.Engines.BuffIcons;
 using Server.Spells;
 using Server.Targeting;
 
@@ -55,7 +56,7 @@ public sealed class Blight : Power
 
             from.Mobile.DoHarmful(mob, true);
 
-            mob.AddStatMod(new StatMod(StatType.All, "Holy Curse", -10, TimeSpan.FromMinutes(30.0)));
+            PlayerBuffPersistence.AddTimedStatMod(mob, StatType.All, "Holy Curse", -10, TimeSpan.FromMinutes(30.0));
 
             mob.FixedParticles(0x374A, 10, 15, 5028, EffectLayer.Waist);
             mob.PlaySound(0x1FB);

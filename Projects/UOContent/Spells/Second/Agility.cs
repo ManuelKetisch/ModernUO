@@ -36,7 +36,16 @@ namespace Server.Spells.Second
 
                 var percentage = (int)(SpellHelper.GetOffsetScalar(Caster, m, false) * 100);
 
-                (m as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.Agility, 1075841, length, percentage.ToString()));
+                (m as PlayerMobile)?.AddBuff(
+                    new BuffInfo(
+                        BuffIcon.Agility,
+                        1075841,
+                        length,
+                        percentage.ToString(),
+                        pauseWhileOffline: true,
+                        persistAcrossRestart: true
+                    )
+                );
             }
         }
 

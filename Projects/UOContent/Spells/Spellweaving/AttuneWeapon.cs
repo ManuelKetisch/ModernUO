@@ -58,14 +58,19 @@ namespace Server.Spells.Spellweaving
                 var duration = TimeSpan.FromSeconds(60 + FocusLevel * 12);
 
                 var t = new ExpireTimer(Caster, duration);
-                t.Start();
 
                 _table[Caster] = t;
 
                 Caster.BeginAction<AttuneWeaponSpell>();
 
                 (Caster as PlayerMobile)?.AddBuff(
-                    new BuffInfo(BuffIcon.AttuneWeapon, 1075798, duration, damageAbsorb.ToString())
+                    new BuffInfo(
+                        BuffIcon.AttuneWeapon,
+                        1075798,
+                        duration,
+                        damageAbsorb.ToString(),
+                        pauseWhileOffline: true
+                    )
                 );
             }
 
@@ -103,22 +108,20 @@ namespace Server.Spells.Spellweaving
             }
         }
 
-        private class ExpireTimer : Timer
+        private sealed class ExpireTimer
         {
             private readonly Mobile m_Mobile;
+            private readonly OfflinePausableTimer _timer;
 
             public ExpireTimer(Mobile m, TimeSpan delay)
-                : base(delay) =>
-                m_Mobile = m;
-
-            protected override void OnTick()
             {
-                DoExpire(true);
+                m_Mobile = m;
+                _timer = OfflinePausableTimer.Start(m, delay, () => DoExpire(true));
             }
 
             public void DoExpire(bool message)
             {
-                Stop();
+                _timer.Stop();
 
                 m_Mobile.MeleeDamageAbsorb = 0;
 
@@ -130,7 +133,7 @@ namespace Server.Spells.Spellweaving
 
                 _table.Remove(m_Mobile);
 
-                StartTimer(TimeSpan.FromSeconds(120), m_Mobile.EndAction<AttuneWeaponSpell>);
+                Timer.StartTimer(TimeSpan.FromSeconds(120), m_Mobile.EndAction<AttuneWeaponSpell>);
                 (m_Mobile as PlayerMobile)?.RemoveBuff(BuffIcon.AttuneWeapon);
             }
         }

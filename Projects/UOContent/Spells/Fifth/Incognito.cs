@@ -21,7 +21,7 @@ namespace Server.Spells.Fifth
             Reagent.Nightshade
         );
 
-        private static readonly Dictionary<Mobile, TimerExecutionToken> _table = new();
+        private static readonly Dictionary<Mobile, OfflinePausableTimer> _table = new();
 
         public IncognitoSpell(Mobile caster, Item scroll = null) : base(caster, scroll, _info)
         {
@@ -112,10 +112,9 @@ namespace Server.Spells.Fifth
 
                     var duration = TimeSpan.FromSeconds(Math.Min(6 * Caster.Skills.Magery.Value / 5.0, 144));
 
-                    Timer.StartTimer(duration, () => EndIncognito(Caster), out var timerToken);
-                    _table[Caster] = timerToken;
+                    _table[Caster] = OfflinePausableTimer.Start(Caster, duration, () => EndIncognito(Caster));
 
-                    pm?.AddBuff(new BuffInfo(BuffIcon.Incognito, 1075819, duration));
+                    pm?.AddBuff(new BuffInfo(BuffIcon.Incognito, 1075819, duration, pauseWhileOffline: true));
                 }
                 else
                 {
@@ -135,9 +134,9 @@ namespace Server.Spells.Fifth
 
         public static void StopTimer(Mobile m)
         {
-            if (_table.Remove(m, out var timerToken))
+            if (_table.Remove(m, out var timer))
             {
-                timerToken.Cancel();
+                timer.Stop();
             }
 
             (m as PlayerMobile)?.RemoveBuff(BuffIcon.Incognito);

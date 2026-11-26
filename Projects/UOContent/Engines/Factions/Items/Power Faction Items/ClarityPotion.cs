@@ -1,5 +1,6 @@
 using System;
 using ModernUO.Serialization;
+using Server.Engines.BuffIcons;
 
 namespace Server;
 
@@ -39,9 +40,10 @@ public sealed partial class ClarityPotion : PowerFactionItem
         }
 
         from.PlaySound(0x1EE);
-        from.AddStatMod(new StatMod(StatType.Int, "clarity-potion", amount, TimeSpan.FromMinutes(time)));
+        var duration = TimeSpan.FromMinutes(time);
+        PlayerBuffPersistence.AddTimedStatMod(from, StatType.Int, "clarity-potion", amount, duration);
 
-        Timer.StartTimer(TimeSpan.FromMinutes(time), from.EndAction<ClarityPotion>);
+        OfflinePausableTimer.Start(from, duration, from.EndAction<ClarityPotion>);
 
         return true;
     }

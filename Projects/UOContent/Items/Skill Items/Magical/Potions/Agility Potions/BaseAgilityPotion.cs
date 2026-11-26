@@ -33,7 +33,16 @@ public abstract partial class BaseAgilityPotion : BasePotion
         }
 
         var percent = from.RawDex > 0 ? (int)Math.Round(offset * 100.0 / from.RawDex) : offset;
-        (from as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.Agility, 1075841, duration, percent.ToString()));
+        (from as PlayerMobile)?.AddBuff(
+            new BuffInfo(
+                BuffIcon.Agility,
+                1075841,
+                duration,
+                percent.ToString(),
+                pauseWhileOffline: true,
+                persistAcrossRestart: true
+            )
+        );
 
         from.FixedEffect(0x375A, 10, 15);
         from.PlaySound(0x1E7);

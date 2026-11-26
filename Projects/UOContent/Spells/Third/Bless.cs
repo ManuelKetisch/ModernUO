@@ -40,7 +40,17 @@ namespace Server.Spells.Third
 
                 var args = $"{percentage}\t{percentage}\t{percentage}";
 
-                (m as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.Bless, 1075847, 1075848, length, args));
+                (m as PlayerMobile)?.AddBuff(
+                    new BuffInfo(
+                        BuffIcon.Bless,
+                        1075847,
+                        1075848,
+                        length,
+                        args,
+                        pauseWhileOffline: true,
+                        persistAcrossRestart: true
+                    )
+                );
             }
         }
 

@@ -18,7 +18,7 @@ namespace Server.Spells.Fourth
             Reagent.SulfurousAsh
         );
 
-        private static readonly Dictionary<Mobile, Timer> _table = new();
+        private static readonly Dictionary<Mobile, OfflinePausableTimer> _table = new();
 
         public CurseSpell(Mobile caster, Item scroll = null) : base(caster, scroll, _info)
         {
@@ -36,7 +36,7 @@ namespace Server.Spells.Fourth
             }
 
             // Allow curse duration to refresh if the new curse is longer
-            if (_table.TryGetValue(m, out var existingTimer) && existingTimer.Next - Core.Now > duration && Core.AOS)
+            if (_table.TryGetValue(m, out var existingTimer) && existingTimer.Remaining > duration && Core.AOS)
             {
                 return false;
             }
@@ -70,7 +70,7 @@ namespace Server.Spells.Fourth
 
             existingTimer?.Stop();
             m.UpdateResistances();
-            _table[m] = Timer.DelayCall(duration, mob => RemoveEffect(mob), m);
+            _table[m] = OfflinePausableTimer.Start(m, duration, () => RemoveEffect(m));
 
             m.Spell?.OnCasterHurt();
 
@@ -82,7 +82,9 @@ namespace Server.Spells.Fourth
             var percentage = (int)(SpellHelper.GetOffsetScalar(caster, m, true) * 100);
             var args = $"{percentage}\t{percentage}\t{percentage}\t{10}\t{10}\t{10}\t{10}";
 
-            (m as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.Curse, 1075835, 1075836, duration, args));
+            (m as PlayerMobile)?.AddBuff(
+                new BuffInfo(BuffIcon.Curse, 1075835, 1075836, duration, args, pauseWhileOffline: true)
+            );
             return true;
         }
 

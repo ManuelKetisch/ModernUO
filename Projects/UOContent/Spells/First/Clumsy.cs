@@ -41,7 +41,16 @@ namespace Server.Spells.First
 
                 var percentage = (int)(SpellHelper.GetOffsetScalar(Caster, m, true) * 100);
 
-                (m as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.Clumsy, 1075831, length, percentage.ToString()));
+                (m as PlayerMobile)?.AddBuff(
+                    new BuffInfo(
+                        BuffIcon.Clumsy,
+                        1075831,
+                        length,
+                        percentage.ToString(),
+                        pauseWhileOffline: true,
+                        persistAcrossRestart: true
+                    )
+                );
 
                 HarmfulSpell(m);
             }

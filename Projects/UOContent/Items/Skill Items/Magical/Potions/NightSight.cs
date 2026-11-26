@@ -35,10 +35,17 @@ public partial class NightSightPotion : BasePotion
     {
         var duration = GetBuffDuration(from, Duration);
 
-        new LightCycle.NightSightTimer(from, duration).Start();
-        from.LightLevel = LightCycle.DungeonLevel / 2;
+        PlayerBuffPersistence.StartNightSight(from, duration, LightCycle.DungeonLevel / 2);
 
-        (from as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.NightSight, 1075643, duration));
+        (from as PlayerMobile)?.AddBuff(
+            new BuffInfo(
+                BuffIcon.NightSight,
+                1075643,
+                duration,
+                pauseWhileOffline: true,
+                persistAcrossRestart: true
+            )
+        );
 
         from.FixedParticles(0x376A, 9, 32, 5007, EffectLayer.Waist);
         from.PlaySound(0x1E3);

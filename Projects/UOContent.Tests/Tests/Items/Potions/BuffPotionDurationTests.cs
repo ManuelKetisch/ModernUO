@@ -1,6 +1,6 @@
 using System;
-using System.Reflection;
 using Server;
+using Server.Engines.BuffIcons;
 using Server.Items;
 using Server.Mobiles;
 using Server.Tests;
@@ -34,10 +34,6 @@ public class BuffPotionDurationTests : IDisposable
         player.MoveToWorld(new Point3D(1100, 1100, 0), Map.Felucca);
         return player;
     }
-
-    private static TimeSpan ReadStatModDuration(StatMod mod) =>
-        (TimeSpan)(typeof(StatMod).GetField("_duration", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(mod)
-                   ?? TimeSpan.Zero);
 
     [Fact]
     public void BuffPotionsEnforceTwentyMinuteMinimumAndScaleByQuality()
@@ -100,7 +96,7 @@ public class BuffPotionDurationTests : IDisposable
 
         var strMod = player.GetStatMod("[Magic] Str Buff");
         Assert.NotNull(strMod);
-        Assert.Equal(TimeSpan.FromMinutes(30), ReadStatModDuration(strMod));
+        Assert.Equal(TimeSpan.FromMinutes(30), PlayerBuffPersistence.GetStatModRemaining(player, "[Magic] Str Buff"));
 
         var greaterAgilPot = _harness.TrackItem(new GreaterAgilityPotion());
         greaterAgilPot.MoveToWorld(player.Location, player.Map);
@@ -109,6 +105,6 @@ public class BuffPotionDurationTests : IDisposable
 
         var dexMod = player.GetStatMod("[Magic] Dex Buff");
         Assert.NotNull(dexMod);
-        Assert.Equal(TimeSpan.FromMinutes(45), ReadStatModDuration(dexMod));
+        Assert.Equal(TimeSpan.FromMinutes(45), PlayerBuffPersistence.GetStatModRemaining(player, "[Magic] Dex Buff"));
     }
 }

@@ -14,7 +14,7 @@ namespace Server.Spells.Chivalry
             9002
         );
 
-        private static readonly Dictionary<Mobile, TimerExecutionToken> _table = new();
+        private static readonly Dictionary<Mobile, OfflinePausableTimer> _table = new();
 
         public EnemyOfOneSpell(Mobile caster, Item scroll = null) : base(caster, scroll, _info)
         {
@@ -39,11 +39,9 @@ namespace Server.Spells.Chivalry
 
                 RemoveTimer(Caster);
 
-                var delay = Math.Clamp(ComputePowerValue(1) / 60.0, 1.5, 3.5);
+                var delay = TimeSpan.FromMinutes(Math.Clamp(ComputePowerValue(1) / 60.0, 1.5, 3.5));
 
-                Timer.StartTimer(TimeSpan.FromMinutes(delay), () => Expire_Callback(Caster), out var timerToken);
-
-                _table[Caster] = timerToken;
+                _table[Caster] = OfflinePausableTimer.Start(Caster, delay, () => Expire_Callback(Caster));
 
                 if (Caster is PlayerMobile mobile)
                 {
@@ -51,7 +49,7 @@ namespace Server.Spells.Chivalry
                     mobile.WaitingForEnemy = true;
 
                     mobile.AddBuff(
-                        new BuffInfo(BuffIcon.EnemyOfOne, 1075653, 1044111, TimeSpan.FromMinutes(delay))
+                        new BuffInfo(BuffIcon.EnemyOfOne, 1075653, 1044111, delay, pauseWhileOffline: true)
                     );
                 }
             }
@@ -61,9 +59,9 @@ namespace Server.Spells.Chivalry
 
         private static void RemoveTimer(Mobile m)
         {
-            if (_table.Remove(m, out var timerToken))
+            if (_table.Remove(m, out var timer))
             {
-                timerToken.Cancel();
+                timer.Stop();
             }
         }
 

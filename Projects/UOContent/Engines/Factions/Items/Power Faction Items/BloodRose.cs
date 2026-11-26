@@ -1,5 +1,6 @@
 using System;
 using ModernUO.Serialization;
+using Server.Engines.BuffIcons;
 
 namespace Server;
 
@@ -27,7 +28,7 @@ public sealed partial class BloodRose : PowerFactionItem
             from.FixedParticles(0x373A, 10, 15, 5018, EffectLayer.Waist);
 
             from.PlaySound(0x1EE);
-            from.AddStatMod(new StatMod(StatType.All, "blood-rose", amount, TimeSpan.FromMinutes(time)));
+            PlayerBuffPersistence.AddTimedStatMod(from, StatType.All, "blood-rose", amount, TimeSpan.FromMinutes(time));
 
             return true;
         }

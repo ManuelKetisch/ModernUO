@@ -2,6 +2,7 @@ using System;
 using ModernUO.Serialization;
 using Server.Collections;
 using Server.ContextMenus;
+using Server.Engines.BuffIcons;
 using Server.Gumps;
 using Server.Multis;
 
@@ -177,7 +178,7 @@ public partial class RoseOfTrinsicPetal : Item
         else
         {
             from.PlaySound(0x1EE);
-            from.AddStatMod(new StatMod(StatType.Str, "RoseOfTrinsicPetal", 5, TimeSpan.FromMinutes(5.0)));
+            PlayerBuffPersistence.AddTimedStatMod(from, StatType.Str, "RoseOfTrinsicPetal", 5, TimeSpan.FromMinutes(5.0));
 
             Consume();
         }

@@ -64,12 +64,18 @@ namespace Server.Spells.Spellweaving
                 var duration = TimeSpan.FromMinutes((int)(skill / 24) * 2 + FocusLevel);
 
                 var t = new ExpireTimer(m, duration, this);
-                t.Start();
 
                 _table[m] = t;
 
                 (m as PlayerMobile)?.AddBuff(
-                    new BuffInfo(BuffIcon.GiftOfLife, 1031615, 1075807, duration, retainThroughDeath: true)
+                    new BuffInfo(
+                        BuffIcon.GiftOfLife,
+                        1031615,
+                        1075807,
+                        duration,
+                        retainThroughDeath: true,
+                        pauseWhileOffline: true
+                    )
                 );
             }
         }
@@ -131,26 +137,23 @@ namespace Server.Spells.Spellweaving
             timer.DoExpire();
         }
 
-        private class ExpireTimer : Timer
+        private sealed class ExpireTimer
         {
-            private Mobile _mobile;
+            private readonly Mobile _mobile;
+            private readonly OfflinePausableTimer _timer;
 
-            public ExpireTimer(Mobile m, TimeSpan delay, GiftOfLifeSpell spell) : base(delay)
+            public ExpireTimer(Mobile m, TimeSpan delay, GiftOfLifeSpell spell)
             {
                 _mobile = m;
                 Spell = spell;
+                _timer = OfflinePausableTimer.Start(m, delay, DoExpire);
             }
 
             public GiftOfLifeSpell Spell { get; }
 
-            protected override void OnTick()
-            {
-                DoExpire();
-            }
-
             public void DoExpire()
             {
-                Stop();
+                _timer.Stop();
 
                 _mobile.SendLocalizedMessage(1074776); // You are no longer protected with Gift of Life.
                 _table.Remove(_mobile);

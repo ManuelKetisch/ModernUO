@@ -46,7 +46,6 @@ public class DivineFurySpell : PaladinSpell
             var timer = Core.HS && Caster.Skills.Chivalry.Value >= 120 && Caster.Karma >= 10000
                 ? new InternalTimer(Caster, delay, 15, 20, 15, 10)
                 : new InternalTimer(Caster, delay, 10, 10, 10, 20);
-            timer.Start();
 
             _table[Caster] = timer;
 
@@ -60,13 +59,16 @@ public class DivineFurySpell : PaladinSpell
                         1060589,
                         1150218,
                         delay,
-                        $"{timer.AttackBonus}\t{timer.DamageBonus}\t{timer.WeaponSpeed}\t{timer.DefendMalus}"
+                        $"{timer.AttackBonus}\t{timer.DamageBonus}\t{timer.WeaponSpeed}\t{timer.DefendMalus}",
+                        pauseWhileOffline: true
                     )
                 );
             }
             else
             {
-                (Caster as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.DivineFury, 1060589, 1075634, delay));
+                (Caster as PlayerMobile)?.AddBuff(
+                    new BuffInfo(BuffIcon.DivineFury, 1060589, 1075634, delay, pauseWhileOffline: true)
+                );
             }
         }
 
@@ -118,24 +120,23 @@ public class DivineFurySpell : PaladinSpell
 
     public static bool UnderEffect(Mobile m) => _table.ContainsKey(m);
 
-    private class InternalTimer : Timer
+    private sealed class InternalTimer
     {
-        private Mobile _mobile;
+        private readonly OfflinePausableTimer _timer;
         public int DamageBonus { get; }
         public int WeaponSpeed { get; }
         public int AttackBonus { get; }
         public int DefendMalus { get; }
 
         public InternalTimer(Mobile m, TimeSpan delay, int attackBonus, int damageBonus, int weaponSpeed, int defendMalus)
-            : base(delay)
         {
             DamageBonus = damageBonus;
             WeaponSpeed = weaponSpeed;
             AttackBonus = attackBonus;
             DefendMalus = defendMalus;
-            _mobile = m;
+            _timer = OfflinePausableTimer.Start(m, delay, () => StopDivineFury(m));
         }
 
-        protected override void OnTick() => StopDivineFury(_mobile);
+        public void Stop() => _timer.Stop();
     }
 }

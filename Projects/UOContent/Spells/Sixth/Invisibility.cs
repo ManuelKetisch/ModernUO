@@ -19,7 +19,7 @@ namespace Server.Spells.Sixth
             Reagent.Nightshade
         );
 
-        private static readonly Dictionary<Mobile, TimerExecutionToken> _table = new();
+        private static readonly Dictionary<Mobile, OfflinePausableTimer> _table = new();
 
         public InvisibilitySpell(Mobile caster, Item scroll = null) : base(caster, scroll, _info)
         {
@@ -57,19 +57,20 @@ namespace Server.Spells.Sixth
                 if (m is PlayerMobile pm)
                 {
                     pm.RemoveBuff(BuffIcon.HidingAndOrStealth);
-                    pm.AddBuff(new BuffInfo(BuffIcon.Invisibility, 1075825, duration)); // Invisibility/Invisible
+                    pm.AddBuff(
+                        new BuffInfo(BuffIcon.Invisibility, 1075825, duration, pauseWhileOffline: true)
+                    ); // Invisibility/Invisible
                 }
 
-                Timer.StartTimer(duration,
+                _table[m] = OfflinePausableTimer.Start(
+                    m,
+                    duration,
                     () =>
                     {
                         m.RevealingAction();
                         StopTimer(m);
-                    },
-                    out var timerToken
+                    }
                 );
-
-                _table[m] = timerToken;
             }
         }
 
@@ -93,9 +94,9 @@ namespace Server.Spells.Sixth
 
         public static void StopTimer(Mobile m)
         {
-            if (_table.Remove(m, out var timerToken))
+            if (_table.Remove(m, out var timer))
             {
-                timerToken.Cancel();
+                timer.Stop();
             }
         }
     }

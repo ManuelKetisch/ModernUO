@@ -37,18 +37,25 @@ public class NightSightSpell : MagerySpell, ITargetingSpell<Mobile>
 
             if (m.BeginAction<LightCycle>())
             {
-                new LightCycle.NightSightTimer(m).Start();
-
+                var duration = TimeSpan.FromMinutes(Utility.Random(15, 25));
                 var skill = (Core.AOS ? m.Skills.Magery.Value : Caster.Skills.Magery.Value) / 100;
                 var level = (int)(LightCycle.DungeonLevel * skill);
 
-                m.LightLevel = Math.Max(level, 0);
+                PlayerBuffPersistence.StartNightSight(m, duration, Math.Max(level, 0));
 
                 m.FixedParticles(0x376A, 9, 32, 5007, EffectLayer.Waist);
                 m.PlaySound(0x1E3);
 
                 // Night Sight/You ignore lighting effects
-                (m as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.NightSight, 1075643));
+                (m as PlayerMobile)?.AddBuff(
+                    new BuffInfo(
+                        BuffIcon.NightSight,
+                        1075643,
+                        duration,
+                        pauseWhileOffline: true,
+                        persistAcrossRestart: true
+                    )
+                );
             }
             else if (m == Caster)
             {
