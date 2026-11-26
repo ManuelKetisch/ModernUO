@@ -12,7 +12,7 @@ public partial class ZoogiFungus : Item, ICommodity
         Amount = amount;
     }
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     int ICommodity.DescriptionNumber => LabelNumber;
     bool ICommodity.IsDeedable => Core.ML;

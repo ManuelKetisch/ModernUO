@@ -12,5 +12,5 @@ public partial class FertileDirt : Item
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.Reagent;
 }

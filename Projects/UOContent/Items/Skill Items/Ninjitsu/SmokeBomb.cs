@@ -9,7 +9,7 @@ public partial class SmokeBomb : Item
     [Constructible]
     public SmokeBomb() : base(0x2808) => Stackable = Core.ML;
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 
     public override void OnDoubleClick(Mobile from)
     {

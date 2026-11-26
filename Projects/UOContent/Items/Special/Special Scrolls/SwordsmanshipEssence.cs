@@ -17,6 +17,7 @@ public partial class SwordsmanshipEssence : Item
     }
 
     public override string DefaultName => "Essence of Swordsmanship";
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override void OnDoubleClick(Mobile from)
     {

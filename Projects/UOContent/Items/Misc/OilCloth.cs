@@ -13,7 +13,7 @@ public partial class OilCloth : Item, IScissorable, IDyable
 
     public override int LabelNumber => 1041498; // oil cloth
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 
     public bool Dye(Mobile from, DyeTub sender)
     {

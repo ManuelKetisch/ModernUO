@@ -13,7 +13,7 @@ public partial class TribalBerry : Item
         Hue = 6;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override int LabelNumber => 1040001; // tribal berry
 }

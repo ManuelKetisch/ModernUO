@@ -14,7 +14,7 @@ public partial class Kindling : Item
         Amount = amount;
     }
 
-    public override double DefaultWeight => 5.0;
+    public override double DefaultWeight => ItemWeights.ProcessedMaterial;
 
     public override void OnDoubleClick(Mobile from)
     {

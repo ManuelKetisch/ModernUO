@@ -11,6 +11,8 @@ public partial class Blight : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -22,6 +24,8 @@ public partial class LuminescentFungi : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -33,6 +37,8 @@ public partial class CapturedEssence : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -49,6 +55,8 @@ public partial class EyeOfTheTravesty : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -65,6 +73,8 @@ public partial class Corruption : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -81,6 +91,8 @@ public partial class DreadHornMane : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -97,6 +109,8 @@ public partial class ParasiticPlant : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -113,6 +127,8 @@ public partial class Muculent : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -129,6 +145,8 @@ public partial class DiseasedBark : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -145,6 +163,8 @@ public partial class BarkFragment : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -161,6 +181,8 @@ public partial class GrizzledBones : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -177,6 +199,8 @@ public partial class LardOfParoxysmus : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -193,6 +217,8 @@ public partial class PerfectEmerald : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -209,6 +235,8 @@ public partial class DarkSapphire : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -225,6 +253,8 @@ public partial class Turquoise : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -241,6 +271,8 @@ public partial class EcruCitrine : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -257,6 +289,8 @@ public partial class WhitePearl : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -273,6 +307,8 @@ public partial class FireRuby : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -289,6 +325,8 @@ public partial class BlueDiamond : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -305,6 +343,8 @@ public partial class BrilliantAmber : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Gem;
 }
 
 [SerializationGenerator(0, false)]
@@ -322,6 +362,8 @@ public partial class Scourge : Item
         Amount = amount;
         Hue = 150;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -339,6 +381,8 @@ public partial class Putrefication : Item
         Amount = amount;
         Hue = 883;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -356,6 +400,8 @@ public partial class Taint : Item
         Amount = amount;
         Hue = 731;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]
@@ -382,4 +428,6 @@ public partial class SwitchItem : Item
         Stackable = true;
         Amount = amount;
     }
+
+    public override double DefaultWeight => ItemWeights.Reagent;
 }

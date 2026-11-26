@@ -10,7 +10,7 @@ public partial class DaemonBone : BaseReagent
     {
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override bool IsDeedable => Core.ML;
 }

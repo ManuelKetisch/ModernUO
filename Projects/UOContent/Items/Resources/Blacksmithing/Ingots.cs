@@ -14,7 +14,7 @@ public abstract partial class BaseIngot : Item, ICommodity
         _resource = resource;
     }
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.RefinedMaterial;
 
     [SerializableField(0, fieldChanged: nameof(OnResourceChanged))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]

@@ -33,7 +33,7 @@ public partial class PetOintment : Item
     public PetOintment() : base(0x0E24) => Hue = 0x48E;
 
     public override string DefaultName => "pet ointment";
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 
     public override void GetProperties(IPropertyList list)
     {

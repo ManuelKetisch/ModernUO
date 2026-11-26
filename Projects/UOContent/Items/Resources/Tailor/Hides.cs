@@ -13,7 +13,7 @@ public abstract partial class BaseHides : Item, ICommodity
         _resource = resource;
     }
 
-    public override double DefaultWeight => 5.0;
+    public override double DefaultWeight => ItemWeights.RawHide;
 
     [SerializableField(0, fieldChanged: nameof(OnResourceChanged))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]

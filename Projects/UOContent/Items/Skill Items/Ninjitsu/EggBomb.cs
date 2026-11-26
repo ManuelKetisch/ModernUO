@@ -13,7 +13,7 @@ public partial class EggBomb : Item
         Stackable = Core.ML;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 
     public override int LabelNumber => 1030249;
 

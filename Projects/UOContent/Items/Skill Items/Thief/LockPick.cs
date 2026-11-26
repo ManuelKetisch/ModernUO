@@ -29,6 +29,8 @@ public partial class Lockpick : Item
         Amount = amount;
     }
 
+    public override double DefaultWeight => ItemWeights.SmallSupply;
+
     public override void OnDoubleClick(Mobile from)
     {
         from.SendLocalizedMessage(502068); // What do you want to pick?

@@ -12,7 +12,7 @@ public partial class Fish : Item, ICarvable
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.WholeFish;
 
     public void Carve(Mobile from, Item item)
     {

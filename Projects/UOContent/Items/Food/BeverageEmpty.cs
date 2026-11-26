@@ -11,7 +11,7 @@ public partial class Glass : Item
     {
     }
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 }
 
 [SerializationGenerator(0, false)]
@@ -22,5 +22,5 @@ public partial class GlassBottle : Item
     {
     }
 
-    public override double DefaultWeight => 0.3;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 }

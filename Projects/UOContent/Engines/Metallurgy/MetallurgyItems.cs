@@ -13,7 +13,7 @@ public partial class MeteoriteFragment : Item
     }
 
     public override string DefaultName => "meteorite fragment";
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override void GetProperties(IPropertyList list)
     {
@@ -33,7 +33,7 @@ public partial class MeteoricBronzeIngot : Item
     }
 
     public override string DefaultName => "meteoric bronze ingot";
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.RefinedMaterial;
 
     public override void GetProperties(IPropertyList list)
     {

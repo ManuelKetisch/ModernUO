@@ -14,7 +14,7 @@ public partial class Cloth : Item, IScissorable, IDyable, ICommodity
         Amount = amount;
     }
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.RefinedMaterial;
     int ICommodity.DescriptionNumber => LabelNumber;
     bool ICommodity.IsDeedable => true;
 

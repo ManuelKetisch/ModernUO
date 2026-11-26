@@ -13,7 +13,7 @@ public abstract partial class BaseLeather : Item, ICommodity
         _resource = resource;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.ProcessedMaterial;
 
     [SerializableField(0, fieldChanged: nameof(OnResourceChanged))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]

@@ -9,7 +9,7 @@ public partial class Sand : Item, ICommodity
     [Constructible]
     public Sand(int amount = 1) : base(0x11EA) => Stackable = Core.ML;
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.ProcessedMaterial;
 
     public override int LabelNumber => 1044626; // sand
     int ICommodity.DescriptionNumber => LabelNumber;

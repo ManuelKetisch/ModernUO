@@ -13,7 +13,7 @@ public partial class Cotton : Item, IDyable
         Amount = amount;
     }
 
-    public override double DefaultWeight => 4.0;
+    public override double DefaultWeight => ItemWeights.RawFiber;
 
     public bool Dye(Mobile from, DyeTub sender)
     {

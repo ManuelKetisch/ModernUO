@@ -85,7 +85,7 @@ public abstract class PetCareItem : Item
     {
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => Server.Items.ItemWeights.SmallSupply;
 
     protected abstract string TargetPrompt { get; }
 

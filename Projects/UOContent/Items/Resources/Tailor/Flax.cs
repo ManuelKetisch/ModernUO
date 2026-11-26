@@ -14,7 +14,7 @@ public partial class Flax : Item
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1;
+    public override double DefaultWeight => ItemWeights.ProcessedMaterial;
 
     public override int LabelNumber => 1026812; // Flax Bundle
 

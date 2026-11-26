@@ -12,7 +12,7 @@ public abstract partial class BaseMagicFish : Item
     public virtual int Bonus => 0;
     public virtual StatType Type => StatType.Str;
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public virtual bool Apply(Mobile from)
     {

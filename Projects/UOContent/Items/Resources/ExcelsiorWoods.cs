@@ -27,7 +27,7 @@ public abstract partial class ExcelsiorLog : ExcelsiorWoodStock, IAxe
     {
     }
 
-    public override double DefaultWeight => 2.0;
+    public override double DefaultWeight => ItemWeights.RawWood;
     public abstract bool Axe(Mobile from, BaseAxe axe);
 
     protected bool TryCreateBoards(Mobile from, double skill, Item boards)
@@ -51,6 +51,8 @@ public abstract partial class ExcelsiorBoard : ExcelsiorWoodStock
     protected ExcelsiorBoard(CraftResource resource, int amount) : base(resource, amount, 0x1BD7)
     {
     }
+
+    public override double DefaultWeight => ItemWeights.ProcessedMaterial;
 }
 
 [SerializationGenerator(0)]

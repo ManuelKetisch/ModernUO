@@ -15,7 +15,7 @@ public sealed partial class VolcanicGlass : Item
     }
 
     public override string DefaultName => "volcanic glass";
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override void GetProperties(IPropertyList list)
     {
@@ -35,7 +35,7 @@ public sealed partial class MeteoricIronOre : Item
     }
 
     public override string DefaultName => "meteoric iron ore";
-    public override double DefaultWeight => 0.2;
+    public override double DefaultWeight => ItemWeights.RawSpecialOre;
 
     public override void GetProperties(IPropertyList list)
     {
@@ -55,7 +55,7 @@ public sealed partial class ConductiveSilverIngot : Item
     }
 
     public override string DefaultName => "conductive silver ingot";
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.RefinedMaterial;
 
     public override void GetProperties(IPropertyList list)
     {

@@ -22,7 +22,7 @@ public partial class PotionKeg : Item
     {
     }
 
-    public override double DefaultWeight => 20 + Math.Clamp(_held, 0, 100) * 0.8;
+    public override double DefaultWeight => ItemWeights.GetPotionKegWeight(_held);
 
     [SerializableProperty(1)]
     [CommandProperty(AccessLevel.GameMaster)]

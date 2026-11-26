@@ -26,7 +26,7 @@ public partial class Log : Item, ICommodity, IAxe
         Hue = CraftResources.GetHue(resource);
     }
 
-    public override double DefaultWeight => 2.0;
+    public override double DefaultWeight => ItemWeights.RawWood;
 
     [SerializableField(0, fieldChanged: nameof(OnResourceChanged))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]

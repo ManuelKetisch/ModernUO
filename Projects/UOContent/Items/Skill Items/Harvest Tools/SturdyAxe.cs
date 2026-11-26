@@ -33,7 +33,7 @@ public partial class GradeALog : Item
         Amount = amount;
     }
 
-    public override double DefaultWeight => 2.0;
+    public override double DefaultWeight => ItemWeights.RawWood;
     public override string DefaultName => "grade A logs";
 
     public override void GetProperties(IPropertyList list)

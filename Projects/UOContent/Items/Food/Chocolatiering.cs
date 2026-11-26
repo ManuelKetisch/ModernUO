@@ -9,7 +9,7 @@ public partial class CocoaLiquor : Item
     public CocoaLiquor() : base(0x103F) => Hue = 0x46A;
 
     public override int LabelNumber => 1080007; // Cocoa liquor
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 }
 
 [SerializationGenerator(0, false)]
@@ -24,7 +24,7 @@ public partial class SackOfSugar : Item
     }
 
     public override int LabelNumber => 1080003; // Sack of sugar
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 }
 
 [SerializationGenerator(0, false)]
@@ -34,7 +34,7 @@ public partial class CocoaButter : Item
     public CocoaButter() : base(0x1044) => Hue = 0x457;
 
     public override int LabelNumber => 1080005; // Cocoa butter
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 }
 
 [SerializationGenerator(0, false)]
@@ -49,7 +49,7 @@ public partial class Vanilla : Item
     }
 
     public override int LabelNumber => 1080009; // Vanilla
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 }
 
 [SerializationGenerator(0, false)]
@@ -64,7 +64,7 @@ public partial class CocoaPulp : Item
     }
 
     public override int LabelNumber => 1080530; // cocoa pulp
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 }
 
 [SerializationGenerator(0, false)]

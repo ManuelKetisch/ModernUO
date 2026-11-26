@@ -14,7 +14,7 @@ public partial class Dough : Item, IT2ACombinable
         Stackable = Core.ML;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override void OnDoubleClick(Mobile from)
     {
@@ -85,7 +85,7 @@ public partial class SweetDough : Item, IT2ACombinable
         Hue = 150;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
     public override int LabelNumber => 1041340; // sweet dough
 
     public override void OnDoubleClick(Mobile from)
@@ -167,7 +167,7 @@ public partial class JarHoney : Item, IT2ACombinable
         Stackable = true;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override void OnDoubleClick(Mobile from)
     {
@@ -212,7 +212,7 @@ public partial class BowlFlour : Item, IT2ACombinable
     {
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override void OnDoubleClick(Mobile from)
     {
@@ -271,7 +271,7 @@ public partial class SackFlour : Item, IHasQuantity, IT2ACombinable
         _quantity = 20;
     }
 
-    public override double DefaultWeight => 5.0;
+    public override double DefaultWeight => ItemWeights.SackFlour;
 
     [SerializableField(0, fieldChanged: nameof(OnQuantityChanged), allowFieldChange: nameof(AllowQuantityChange))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]
@@ -370,7 +370,7 @@ public partial class WheatSheaf : Item
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override void OnDoubleClick(Mobile from)
     {

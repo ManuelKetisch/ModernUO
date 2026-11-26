@@ -12,5 +12,5 @@ public partial class Tourmaline : Item
         Amount = amount;
     }
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Gem;
 }

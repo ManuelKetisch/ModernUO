@@ -116,7 +116,7 @@ public sealed partial class DippedArrow : Item
     }
 
     public override string DefaultName => $"{GetName(Kind)} arrows";
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Ammunition;
 
     public override bool CanStackWith(Item dropped) =>
         dropped is DippedArrow arrow && arrow.Kind == Kind && arrow.Readied == Readied && base.CanStackWith(dropped);

@@ -24,7 +24,7 @@ public partial class RecallRune : Item
         CalculateHue();
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 
     [SerializableProperty(0)]
     [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]

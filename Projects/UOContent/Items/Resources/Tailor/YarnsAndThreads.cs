@@ -12,7 +12,7 @@ public abstract partial class BaseClothMaterial : Item, IDyable
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 
     public bool Dye(Mobile from, DyeTub sender)
     {

@@ -17,7 +17,7 @@ public partial class AncientWyrmScale : Item
     }
 
     public override string DefaultName => "Ancient Wyrm scale";
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Reagent;
 }
 
 [SerializationGenerator(0, false)]

@@ -13,7 +13,7 @@ public sealed partial class JinxedSkull : Item
     }
 
     public override string DefaultName => "jinxed skull";
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 }
 
 [SerializationGenerator(0)]
@@ -26,5 +26,5 @@ public sealed partial class HellhoundRib : Item
     }
 
     public override string DefaultName => "hellhound rib";
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 }

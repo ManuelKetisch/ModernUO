@@ -16,7 +16,7 @@ public partial class GreenThorns : Item
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override int LabelNumber => 1060837; // green thorns
 

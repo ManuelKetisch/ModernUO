@@ -20,7 +20,7 @@ public partial class OrangePetals : Item
 
     public override int LabelNumber => 1053122; // orange petals
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override bool CheckItemUse(Mobile from, Item item)
     {

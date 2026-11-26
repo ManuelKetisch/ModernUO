@@ -21,6 +21,8 @@ public partial class Board : Item, ICommodity
         Hue = CraftResources.GetHue(resource);
     }
 
+    public override double DefaultWeight => ItemWeights.ProcessedMaterial;
+
     [SerializableField(0, fieldChanged: nameof(OnResourceChanged))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]
     [InvalidateProperties]

@@ -25,7 +25,7 @@ public partial class FukiyaDarts : Item, ICraftable, INinjaAmmo
     [Constructible]
     public FukiyaDarts(int amount = 1) : base(0x2806) => _usesRemaining = amount;
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.SmallSupply;
 
     public int OnCraft(
         int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, BaseTool tool,

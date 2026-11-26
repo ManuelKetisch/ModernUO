@@ -16,7 +16,7 @@ public partial class RedLeaves : Item
 
     public override int LabelNumber => 1053123; // red leaves
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Reagent;
 
     public override void OnDoubleClick(Mobile from)
     {

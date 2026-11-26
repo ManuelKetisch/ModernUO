@@ -14,5 +14,5 @@ public sealed partial class EtherealPowder : Item
     }
 
     public override string DefaultName => "ethereal powder";
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.Reagent;
 }

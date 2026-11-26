@@ -96,7 +96,7 @@ public partial class RawRibs : CookableFood
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override Food Cook() => new Ribs();
 }
@@ -111,6 +111,8 @@ public partial class RawLambLeg : CookableFood
         Amount = amount;
     }
 
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
+
     public override Food Cook() => new LambLeg();
 }
 
@@ -123,7 +125,7 @@ public partial class RawChickenLeg : CookableFood
         Stackable = true;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override Food Cook() => new ChickenLeg();
 }
@@ -138,7 +140,7 @@ public partial class RawBird : CookableFood
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override Food Cook() => new CookedBird();
 }
@@ -274,7 +276,7 @@ public partial class Eggs : CookableFood
         Amount = amount;
     }
 
-    public override double DefaultWeight => 1.0;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override Food Cook() => new FriedEggs();
 }
@@ -345,7 +347,7 @@ public partial class RawFishSteak : CookableFood
         Amount = amount;
     }
 
-    public override double DefaultWeight => 0.1;
+    public override double DefaultWeight => ItemWeights.CookingIngredient;
 
     public override Food Cook() => new FishSteak();
 }
