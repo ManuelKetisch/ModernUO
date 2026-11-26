@@ -1728,4 +1728,114 @@ public sealed class SAItemizationAndCraftingTests : IDisposable
             }
         }
     }
+
+    [Fact]
+    public void PolishFixes_WoodenDefaultsRunicToolsQuiverTalismanMultiSchoolSpellbooksAndToTPigments()
+    {
+        Core.Expansion = Expansion.EJ;
+        if (DefInscription.CraftSystem == null)
+        {
+            DefInscription.Initialize();
+        }
+
+        // 1) Wooden shields & Woodland armor default to RegularWood (not Iron).
+        var woodenItems = new BaseArmor[]
+        {
+            _world.TrackItem(new WoodenShield()),
+            _world.TrackItem(new GargishWoodenShield()),
+            _world.TrackItem(new WoodlandChest()),
+            _world.TrackItem(new FemaleElvenPlateChest()),
+            _world.TrackItem(new WoodlandArms()),
+            _world.TrackItem(new WoodlandGloves()),
+            _world.TrackItem(new WoodlandGorget()),
+            _world.TrackItem(new WoodlandLegs())
+        };
+        foreach (var item in woodenItems)
+        {
+            Assert.Equal(CraftResource.RegularWood, item.DefaultResource);
+            Assert.Equal(CraftResource.RegularWood, item.Resource);
+        }
+
+        // 2) RunicTinkerTool & RunicCarpenterSaw inherit material hue; Fletcher & DovetailSaw display Excelsior wood name.
+        var tinkerTool = _world.TrackItem(new RunicTinkerTool(CraftResource.Valorite));
+        Assert.Equal(CraftResources.GetHue(CraftResource.Valorite), tinkerTool.Hue);
+
+        var carpSaw = _world.TrackItem(new RunicCarpenterSaw(CraftResource.PetrifiedWood));
+        Assert.Equal(CraftResources.GetHue(CraftResource.PetrifiedWood), carpSaw.Hue);
+
+        var fletcherTool = _world.TrackItem(new RunicFletcherTool(CraftResource.PetrifiedWood));
+        var dovetailSaw = _world.TrackItem(new RunicDovetailSaw(CraftResource.PetrifiedWood));
+        var petrifiedName = CraftResources.GetName(CraftResource.PetrifiedWood);
+        Assert.Contains(DecodeOpl(fletcherTool), e => e.Arg.Contains(petrifiedName, StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(DecodeOpl(dovetailSaw), e => e.Arg.Contains(petrifiedName, StringComparison.OrdinalIgnoreCase));
+
+        // 3) BaseQuiver emits SA attributes + Publish 81 rarity; BaseTalisman emits Publish 81 rarity.
+        var quiver = _world.TrackItem(new ElvenQuiver());
+        quiver.Attributes.CastingFocus = 6;
+        quiver.Attributes.DamageEater = 10;
+        var quiverOpl = DecodeOpl(quiver);
+        Assert.Contains(quiverOpl, e => e.Cliloc == 1113696); // Casting Focus
+        Assert.Contains(quiverOpl, e => e.Cliloc == 1113598); // Damage Eater
+        Assert.Contains(quiverOpl, e => e.Cliloc is >= 1151488 and <= 1151495);
+
+        var talisman = _world.TrackItem(new BaseTalisman());
+        talisman.Attributes.Luck = 100;
+        talisman.Attributes.LowerManaCost = 8;
+        var talismanOpl = DecodeOpl(talisman);
+        Assert.Contains(talismanOpl, e => e.Cliloc is >= 1151488 and <= 1151495);
+
+        // 4) DefInscription crafts all school spellbooks with MysticSpellbook maxSkill 120, and OnCraft scales with school skill.
+        var mysticRecipe = DefInscription.CraftSystem.CraftItems.SearchFor(typeof(MysticSpellbook));
+        Assert.NotNull(mysticRecipe);
+        Assert.Equal(120.0, mysticRecipe.Skills[0].MaxSkill);
+        Assert.NotNull(DefInscription.CraftSystem.CraftItems.SearchFor(typeof(NecromancerSpellbook)));
+        Assert.NotNull(DefInscription.CraftSystem.CraftItems.SearchFor(typeof(BookOfChivalry)));
+        Assert.NotNull(DefInscription.CraftSystem.CraftItems.SearchFor(typeof(BookOfBushido)));
+        Assert.NotNull(DefInscription.CraftSystem.CraftItems.SearchFor(typeof(BookOfNinjitsu)));
+        Assert.NotNull(DefInscription.CraftSystem.CraftItems.SearchFor(typeof(SpellweavingBook)));
+
+        var mystic = CreatePlayer(1560, 1560);
+        mystic.Skills.Mysticism.Cap = 120.0;
+        mystic.Skills.Mysticism.Base = 120.0;
+        mystic.Skills.Magery.Base = 0.0;
+        mystic.Skills.Inscribe.Base = 80.0;
+
+        var mysticBook = _world.TrackItem(new MysticSpellbook());
+        mysticBook.OnCraft(
+            2,
+            true,
+            mystic,
+            DefInscription.CraftSystem,
+            typeof(BlankScroll),
+            null,
+            mysticRecipe,
+            0
+        );
+        Assert.True(ItemRarity.ComputeItemWeight(mysticBook) > 0);
+        Assert.True(mysticBook.Attributes.CastingFocus > 0 || mysticBook.Attributes.SpellDamage > 0);
+
+        // 5) Multi-school looted spellbooks keep spell bits strictly within BookCount.
+        var spellEntry = new LootPackEntry(false, [new LootPackItem(typeof(Spellbook), 1)], 100.0, 1, 4, 40, 80);
+        var sawNonMageryBook = false;
+        for (var i = 0; i < 40; i++)
+        {
+            var dropped = _world.TrackItem(spellEntry.Construct(mystic, 0, false));
+            var sb = Assert.IsType<Spellbook>(dropped, exactMatch: false);
+            if (sb.GetType() != typeof(Spellbook))
+            {
+                sawNonMageryBook = true;
+            }
+
+            if (sb.BookCount < 64)
+            {
+                var validMask = (1UL << sb.BookCount) - 1;
+                Assert.Equal(0UL, sb.Content & ~validMask);
+            }
+        }
+
+        Assert.True(sawNonMageryBook);
+
+        // 6) ToTThree NormalRewards[2] exposes PigmentsOfTokuno at Ihara Soko.
+        Assert.Contains(Server.Gumps.ToTRedeemGump.NormalRewards[2], r => r.Type == typeof(PigmentsOfTokuno));
+    }
 }

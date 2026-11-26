@@ -546,7 +546,20 @@ namespace Server.Engines.Craft
                 return;
             }
 
-            var effectiveSkill = Math.Max(crafter.Skills.Magery.Value, crafter.Skills.Inscribe.Value);
+            var schoolSkill = book switch
+            {
+                NecromancerSpellbook => crafter.Skills.Necromancy.Value,
+                BookOfChivalry       => crafter.Skills.Chivalry.Value,
+                BookOfBushido        => crafter.Skills.Bushido.Value,
+                BookOfNinjitsu       => crafter.Skills.Ninjitsu.Value,
+                SpellweavingBook     => crafter.Skills.Spellweaving.Value,
+                MysticSpellbook      => crafter.Skills.Mysticism.Value,
+                _                    => crafter.Skills.Magery.Value
+            };
+            var effectiveSkill = Math.Max(
+                Math.Max(crafter.Skills.Magery.Value, crafter.Skills.Inscribe.Value),
+                schoolSkill
+            );
             if (craftSystem != null)
             {
                 effectiveSkill = Math.Max(effectiveSkill, crafter.Skills[craftSystem.MainSkill].Value);

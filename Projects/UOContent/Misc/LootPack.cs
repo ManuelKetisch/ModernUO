@@ -777,11 +777,12 @@ namespace Server
                         if (spellbook.Content == 0)
                         {
                             ulong bits = 0;
-                            var spellCount = Utility.RandomMinMax(4, 16);
+                            var maxSpells = Math.Clamp(spellbook.BookCount, 1, 64);
+                            var spellCount = Utility.RandomMinMax(Math.Min(4, maxSpells), Math.Min(16, maxSpells));
 
                             for (var i = 0; i < spellCount; ++i)
                             {
-                                bits |= 1UL << Utility.Random(64);
+                                bits |= 1UL << Utility.Random(maxSpells);
                             }
 
                             spellbook.Content = bits;
@@ -1055,7 +1056,19 @@ namespace Server
 
                 if (Type == typeof(Spellbook))
                 {
-                    return Core.AOS ? new Spellbook() : Loot.RandomArmorOrShieldOrWeapon();
+                    if (!Core.AOS)
+                    {
+                        return Loot.RandomArmorOrShieldOrWeapon();
+                    }
+
+                    return Utility.Random(100) switch
+                    {
+                        < 55             => new Spellbook(),
+                        < 72             => new NecromancerSpellbook(),
+                        < 86 when Core.ML => new SpellweavingBook(),
+                        _ when Core.SA   => new MysticSpellbook(),
+                        _                => new Spellbook()
+                    };
                 }
 
                 if (Type == typeof(RandomTalisman) || Type == typeof(BaseTalisman))

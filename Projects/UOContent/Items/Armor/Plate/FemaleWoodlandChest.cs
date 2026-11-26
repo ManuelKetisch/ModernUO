@@ -30,5 +30,6 @@ namespace Server.Items
         public override int ArmorBase => 30;
 
         public override ArmorMaterialType MaterialType => ArmorMaterialType.Wood;
+        public override CraftResource DefaultResource => CraftResource.RegularWood;
     }
 }

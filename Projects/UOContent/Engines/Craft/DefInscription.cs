@@ -442,7 +442,16 @@ public class DefInscription : CraftSystem
 
         if (Core.SE)
         {
-            AddCraft(typeof(Spellbook), 1044294, 1023834, 50.0, 126, typeof(BlankScroll), 1044377, 10, 1044378);
+            AddCraft(typeof(Spellbook), 1044294, 1023834, 50.0, 120.0, typeof(BlankScroll), 1044377, 10, 1044378);
+            AddCraft(typeof(NecromancerSpellbook), 1044294, 1028787, 50.0, 120.0, typeof(BlankScroll), 1044377, 10, 1044378);
+            AddCraft(typeof(BookOfChivalry), 1044294, 1028786, 50.0, 120.0, typeof(BlankScroll), 1044377, 10, 1044378);
+            AddCraft(typeof(BookOfBushido), 1044294, 1029100, 50.0, 120.0, typeof(BlankScroll), 1044377, 10, 1044378);
+            AddCraft(typeof(BookOfNinjitsu), 1044294, 1029120, 50.0, 120.0, typeof(BlankScroll), 1044377, 10, 1044378);
+        }
+
+        if (Core.ML)
+        {
+            AddCraft(typeof(SpellweavingBook), 1044294, 1031600, 50.0, 120.0, typeof(BlankScroll), 1044377, 10, 1044378);
         }
 
         /* TODO
@@ -460,7 +469,7 @@ public class DefInscription : CraftSystem
 
         if (Core.SA)
         {
-            AddCraft(typeof(MysticSpellbook), 1044294, 1031677, 50.0, 150.0, typeof(BlankScroll), 1044377, 10, 1044378);
+            AddCraft(typeof(MysticSpellbook), 1044294, 1031677, 50.0, 120.0, typeof(BlankScroll), 1044377, 10, 1044378);
 
             AddMysticismSpell(0, 4, -25.0, 25.0, typeof(NetherBoltScroll), Reagent.BlackPearl, Reagent.SulfurousAsh);
             AddMysticismSpell(

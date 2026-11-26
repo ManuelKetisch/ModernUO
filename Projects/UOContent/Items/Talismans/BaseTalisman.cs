@@ -606,6 +606,8 @@ public partial class BaseTalisman : Item, IAosItem
 
         SkillBonuses.GetProperties(list);
 
+        ItemRarity.AddRarityProperty(this, list);
+
         Attributes.GetProperties(list);
 
         if (_maxCharges > 0)

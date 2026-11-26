@@ -30,4 +30,29 @@ public partial class RunicFletcherTool : BaseRunicTool
             return 1044559; // Fletcher's Tools
         }
     }
+
+    public override void AddNameProperties(IPropertyList list)
+    {
+        base.AddNameProperties(list);
+
+        var index = CraftResources.GetIndex(Resource);
+        if (index is >= 1 and <= 6)
+        {
+            return;
+        }
+
+        if (!CraftResources.IsStandard(Resource))
+        {
+            var num = CraftResources.GetLocalizationNumber(Resource);
+
+            if (num > 0)
+            {
+                list.Add(num);
+            }
+            else
+            {
+                list.Add(CraftResources.GetName(Resource));
+            }
+        }
+    }
 }

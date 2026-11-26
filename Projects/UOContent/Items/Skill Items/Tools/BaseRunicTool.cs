@@ -109,9 +109,17 @@ public abstract partial class BaseRunicTool : BaseTool
     private static readonly BitArray m_Props = new(MaxProperties);
     private static readonly int[] m_Possible = new int[MaxProperties];
 
-    public BaseRunicTool(CraftResource resource, int itemID) : base(itemID) => _resource = resource;
+    public BaseRunicTool(CraftResource resource, int itemID) : base(itemID)
+    {
+        _resource = resource;
+        Hue = CraftResources.GetHue(resource);
+    }
 
-    public BaseRunicTool(CraftResource resource, int uses, int itemID) : base(uses, itemID) => _resource = resource;
+    public BaseRunicTool(CraftResource resource, int uses, int itemID) : base(uses, itemID)
+    {
+        _resource = resource;
+        Hue = CraftResources.GetHue(resource);
+    }
 
     [SerializableField(0, fieldChanged: nameof(OnResourceChanged))]
     [SerializedCommandProperty(AccessLevel.GameMaster)]

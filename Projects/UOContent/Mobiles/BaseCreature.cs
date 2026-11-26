@@ -3555,7 +3555,7 @@ namespace Server.Mobiles
                 {
                     if (_isParagon && Paragon.ChestChance > Utility.RandomDouble())
                     {
-                        PackItem(new ParagonChest(Name, treasureLevel));
+                        PackItem(new ParagonChest(Name, treasureLevel, LootPack.GetLuckChanceForKiller(this)));
                     }
                     else if ((Map == Map.Felucca || Map == Map.Trammel) && Utility.RandomDouble() < TreasureMapChance)
                     {

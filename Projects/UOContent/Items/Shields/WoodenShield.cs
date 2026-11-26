@@ -26,4 +26,5 @@ public partial class WoodenShield : BaseShield
     public override int ArmorBase => 8;
 
     public override ArmorMaterialType MaterialType => ArmorMaterialType.Wood;
+    public override CraftResource DefaultResource => CraftResource.RegularWood;
 }

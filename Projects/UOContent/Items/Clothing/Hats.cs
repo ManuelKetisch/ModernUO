@@ -47,10 +47,7 @@ namespace Server.Items
 
             if (Quality == ClothingQuality.Exceptional)
             {
-                DistributeBonuses(
-                    tool is BaseRunicTool ? 6 :
-                    Core.SE ? 15 : 14
-                ); // BLAME OSI. (We can't confirm it's an OSI bug yet.)
+                DistributeBonuses(Core.SE ? 15 : 14);
             }
 
             return base.OnCraft(quality, makersMark, from, craftSystem, typeRes, tool, craftItem, resHue);

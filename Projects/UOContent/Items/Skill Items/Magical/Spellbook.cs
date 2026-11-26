@@ -157,7 +157,20 @@ public partial class Spellbook : Item, ICraftable, ISlayer, IAosItem
         BaseTool tool, CraftItem craftItem, int resHue
     )
     {
-        var craftSkill = Math.Max(from.Skills.Magery.BaseFixedPoint, from.Skills.Inscribe.BaseFixedPoint);
+        var schoolSkill = this switch
+        {
+            NecromancerSpellbook => from.Skills.Necromancy.BaseFixedPoint,
+            BookOfChivalry       => from.Skills.Chivalry.BaseFixedPoint,
+            BookOfBushido        => from.Skills.Bushido.BaseFixedPoint,
+            BookOfNinjitsu       => from.Skills.Ninjitsu.BaseFixedPoint,
+            SpellweavingBook     => from.Skills.Spellweaving.BaseFixedPoint,
+            MysticSpellbook      => from.Skills.Mysticism.BaseFixedPoint,
+            _                    => from.Skills.Magery.BaseFixedPoint
+        };
+        var craftSkill = Math.Max(
+            Math.Max(from.Skills.Magery.BaseFixedPoint, from.Skills.Inscribe.BaseFixedPoint),
+            schoolSkill
+        );
 
         if (craftSkill >= 800)
         {

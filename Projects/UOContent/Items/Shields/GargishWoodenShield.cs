@@ -25,4 +25,5 @@ public partial class GargishWoodenShield : BaseShield
     public override int RequiredRaces => Race.AllowGargoylesOnly;
 
     public override ArmorMaterialType MaterialType => ArmorMaterialType.Wood;
+    public override CraftResource DefaultResource => CraftResource.RegularWood;
 }

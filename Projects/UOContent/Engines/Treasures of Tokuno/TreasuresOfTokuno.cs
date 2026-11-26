@@ -542,7 +542,8 @@ namespace Server.Gumps
                 new TypeTileButtonInfo(typeof(RuneBeetleCarapace), 0x277D, 1070968, 1071006),
                 new TypeTileButtonInfo(typeof(KasaOfTheRajin), 0x2798, 1070969, 1071007),
                 new TypeTileButtonInfo(typeof(Stormgrip), 0x2792, 1070970, 1071008),
-                new TypeTileButtonInfo(typeof(TomeOfLostKnowledge), 0x0EFA, 0x530, 1070971, 1071009)
+                new TypeTileButtonInfo(typeof(TomeOfLostKnowledge), 0x0EFA, 0x530, 1070971, 1071009),
+                new TypeTileButtonInfo(typeof(PigmentsOfTokuno), 0x0EFF, 1070933, 1071011)
             }
         };
 
