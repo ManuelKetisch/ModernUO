@@ -354,12 +354,67 @@ namespace Server.Items
             blue.ArmorPoisonResist = -3;
             blue.ArmorEnergyResist = 10;
 
-            OakWood = WoodRunic(1, 2, 30, 60);
-            AshWood = WoodRunic(2, 2, 35, 65);
-            YewWood = WoodRunic(2, 3, 40, 70);
-            Heartwood = WoodRunic(3, 3, 45, 75);
-            Bloodwood = WoodRunic(3, 4, 50, 80);
-            Frostwood = WoodRunic(4, 4, 55, 85);
+            var oak = OakWood = WoodRunic(1, 2, 40, 75);
+            oak.ArmorPhysicalResist = 3;
+            oak.ArmorFireResist = 3;
+            oak.ArmorPoisonResist = 2;
+            oak.ArmorEnergyResist = 3;
+            oak.ArmorLuck = 40;
+            oak.ArmorDurability = 50;
+            oak.WeaponLuck = 40;
+            oak.WeaponDurability = 50;
+
+            var ash = AshWood = WoodRunic(2, 2, 45, 80);
+            ash.ArmorFireResist = 2;
+            ash.ArmorColdResist = 4;
+            ash.ArmorPoisonResist = 1;
+            ash.ArmorEnergyResist = 6;
+            ash.ArmorLowerRequirements = 20;
+            ash.ArmorDurability = 50;
+            ash.WeaponLowerRequirements = 20;
+            ash.WeaponDurability = 50;
+
+            var yew = YewWood = WoodRunic(2, 3, 50, 85);
+            yew.ArmorPhysicalResist = 6;
+            yew.ArmorFireResist = 3;
+            yew.ArmorColdResist = 3;
+            yew.ArmorEnergyResist = 3;
+            yew.ArmorDurability = 50;
+            yew.WeaponLuck = 20;
+            yew.WeaponDurability = 50;
+
+            var heartwood = Heartwood = WoodRunic(3, 4, 55, 90);
+            heartwood.ArmorPhysicalResist = 2;
+            heartwood.ArmorFireResist = 3;
+            heartwood.ArmorColdResist = 2;
+            heartwood.ArmorPoisonResist = 7;
+            heartwood.ArmorEnergyResist = 2;
+            heartwood.ArmorLuck = 40;
+            heartwood.ArmorLowerRequirements = 20;
+            heartwood.ArmorDurability = 75;
+            heartwood.WeaponLuck = 40;
+            heartwood.WeaponLowerRequirements = 20;
+            heartwood.WeaponDurability = 75;
+
+            var bloodwood = Bloodwood = WoodRunic(4, 4, 65, 95);
+            bloodwood.ArmorPhysicalResist = 3;
+            bloodwood.ArmorFireResist = 8;
+            bloodwood.ArmorColdResist = 1;
+            bloodwood.ArmorPoisonResist = 3;
+            bloodwood.ArmorEnergyResist = 3;
+            bloodwood.ArmorDurability = 100;
+            bloodwood.WeaponFireDamage = 20;
+            bloodwood.WeaponDurability = 100;
+
+            var frostwood = Frostwood = WoodRunic(4, 5, 75, 100);
+            frostwood.ArmorPhysicalResist = 2;
+            frostwood.ArmorFireResist = 1;
+            frostwood.ArmorColdResist = 8;
+            frostwood.ArmorPoisonResist = 3;
+            frostwood.ArmorEnergyResist = 4;
+            frostwood.ArmorDurability = 100;
+            frostwood.WeaponColdDamage = 40;
+            frostwood.WeaponDurability = 100;
         }
 
         private static CraftAttributeInfo WoodRunic(int minCount, int maxCount, int minIntensity, int maxIntensity) =>

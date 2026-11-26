@@ -167,6 +167,6 @@ public abstract partial class BaseThrown : BaseRanged
     public override void GetProperties(IPropertyList list)
     {
         base.GetProperties(list);
-        list.Add(1149791, MinThrowRange); // Min Throw Range: ~1_val~
+        list.Add($"{"Min Throw Range"}\t{MinThrowRange}");
     }
 }

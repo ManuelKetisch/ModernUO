@@ -78,7 +78,7 @@ public partial class TreasureMapChest : LockableContainer
         _temporary = temporary;
 
         _expireTimer = Timer.DelayCall(TimeSpan.FromHours(3.0), Delete);
-        Fill(this, level);
+        Fill(this, level, _owner != null ? LootPack.GetLuckChance(_owner, null) : 0);
         _filled = true;
     }
 
@@ -100,79 +100,159 @@ public partial class TreasureMapChest : LockableContainer
 
     public override bool IsDecoContainer => false;
 
-    private static void GetRandomAOSStats(out int attributeCount, out int min, out int max)
+    private static void GetRandomAOSStats(int level, bool isApex, out int attributeCount, out int min, out int max)
     {
-        var rnd = Utility.Random(15);
-
-        if (Core.SE)
+        if (isApex)
         {
-            if (rnd < 1)
-            {
-                attributeCount = Utility.RandomMinMax(3, 5);
-                min = 50;
-                max = 100;
-            }
-            else if (rnd < 3)
-            {
-                attributeCount = Utility.RandomMinMax(2, 5);
-                min = 40;
-                max = 80;
-            }
-            else if (rnd < 6)
-            {
-                attributeCount = Utility.RandomMinMax(2, 4);
-                min = 30;
-                max = 60;
-            }
-            else if (rnd < 10)
-            {
-                attributeCount = Utility.RandomMinMax(1, 3);
-                min = 20;
-                max = 40;
-            }
-            else
-            {
-                attributeCount = 1;
-                min = 10;
-                max = 20;
-            }
-
+            attributeCount = 5;
+            min = 80;
+            max = 120;
             return;
         }
 
-        if (rnd < 1)
+        var tier = Math.Clamp(level, 1, 6);
+        var rnd = Utility.Random(100);
+
+        switch (tier)
         {
-            attributeCount = Utility.RandomMinMax(2, 5);
-            min = 20;
-            max = 70;
-        }
-        else if (rnd < 3)
-        {
-            attributeCount = Utility.RandomMinMax(2, 4);
-            min = 20;
-            max = 50;
-        }
-        else if (rnd < 6)
-        {
-            attributeCount = Utility.RandomMinMax(2, 3);
-            min = 20;
-            max = 40;
-        }
-        else if (rnd < 10)
-        {
-            attributeCount = Utility.RandomMinMax(1, 2);
-            min = 10;
-            max = 30;
-        }
-        else
-        {
-            attributeCount = 1;
-            min = 10;
-            max = 20;
+            case 1:
+                {
+                    if (rnd < 20)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 25;
+                        max = 65;
+                    }
+                    else if (rnd < 60)
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 3);
+                        min = 15;
+                        max = 55;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(1, 2);
+                        min = 10;
+                        max = 45;
+                    }
+
+                    break;
+                }
+            case 2:
+                {
+                    if (rnd < 25)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 30;
+                        max = 75;
+                    }
+                    else if (rnd < 65)
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 4);
+                        min = 20;
+                        max = 65;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 3);
+                        min = 15;
+                        max = 55;
+                    }
+
+                    break;
+                }
+            case 3:
+                {
+                    if (rnd < 25)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 35;
+                        max = 85;
+                    }
+                    else if (rnd < 65)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 25;
+                        max = 75;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 4);
+                        min = 20;
+                        max = 65;
+                    }
+
+                    break;
+                }
+            case 4:
+                {
+                    if (rnd < 30)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 45;
+                        max = 95;
+                    }
+                    else if (rnd < 70)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 5);
+                        min = 35;
+                        max = 85;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 30;
+                        max = 75;
+                    }
+
+                    break;
+                }
+            case 5:
+                {
+                    if (rnd < 40)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 55;
+                        max = 100;
+                    }
+                    else if (rnd < 80)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 45;
+                        max = 95;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 5);
+                        min = 40;
+                        max = 85;
+                    }
+
+                    break;
+                }
+            default:
+                {
+                    if (rnd < 50)
+                    {
+                        attributeCount = 5;
+                        min = 60;
+                        max = 100;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 50;
+                        max = 100;
+                    }
+
+                    break;
+                }
         }
     }
 
-    public static void Fill(LockableContainer cont, int level)
+    public static void Fill(LockableContainer cont, int level) => Fill(cont, level, 0);
+
+    private static void Fill(LockableContainer cont, int level, int luckChance)
     {
         cont.Movable = false;
         cont.Locked = true;
@@ -228,18 +308,33 @@ public partial class TreasureMapChest : LockableContainer
                 _ => 0
             } : level * 6;
 
+            var apexItemIndex = -1;
+
+            // Cap Apex Legendary drops to at most one item per high-level chest.
+            if (Core.AOS && level >= 5 && numberItems > 0)
+            {
+                var baseApexChance = level == 5 ? 0.25 : 0.45;
+                var luckBoost = 1.0 + Math.Clamp(luckChance / 7000.0, 0.0, 0.5);
+
+                if (Utility.RandomDouble() < Math.Min(0.75, baseApexChance * luckBoost))
+                {
+                    apexItemIndex = Utility.Random(numberItems);
+                }
+            }
+
             for (var i = 0; i < numberItems; ++i)
             {
                 var item = Core.AOS
                     ? Loot.RandomArmorOrShieldOrWeaponOrJewelry()
                     : Loot.RandomArmorOrShieldOrWeapon();
+                var isApex = i == apexItemIndex;
 
                 if (item is BaseWeapon weapon)
                 {
                     if (Core.AOS)
                     {
-                        GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                        BaseRunicTool.ApplyAttributesTo(weapon, attributeCount, min, max);
+                        GetRandomAOSStats(level, isApex, out var attributeCount, out var min, out var max);
+                        BaseRunicTool.ApplyAttributesTo(weapon, false, luckChance, attributeCount, min, max);
                     }
                     else
                     {
@@ -254,8 +349,8 @@ public partial class TreasureMapChest : LockableContainer
                 {
                     if (Core.AOS)
                     {
-                        GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                        BaseRunicTool.ApplyAttributesTo(armor, attributeCount, min, max);
+                        GetRandomAOSStats(level, isApex, out var attributeCount, out var min, out var max);
+                        BaseRunicTool.ApplyAttributesTo(armor, false, luckChance, attributeCount, min, max);
                     }
                     else
                     {
@@ -269,16 +364,16 @@ public partial class TreasureMapChest : LockableContainer
                 {
                     if (Core.AOS)
                     {
-                        GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                        BaseRunicTool.ApplyAttributesTo(hat, attributeCount, min, max);
+                        GetRandomAOSStats(level, isApex, out var attributeCount, out var min, out var max);
+                        BaseRunicTool.ApplyAttributesTo(hat, false, luckChance, attributeCount, min, max);
                     }
 
                     cont.DropItem(hat);
                 }
                 else if (item is BaseJewel jewel)
                 {
-                    GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                    BaseRunicTool.ApplyAttributesTo(jewel, attributeCount, min, max);
+                    GetRandomAOSStats(level, isApex, out var attributeCount, out var min, out var max);
+                    BaseRunicTool.ApplyAttributesTo(jewel, false, luckChance, attributeCount, min, max);
 
                     cont.DropItem(jewel);
                 }

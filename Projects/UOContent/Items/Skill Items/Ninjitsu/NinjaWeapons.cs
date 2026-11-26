@@ -203,7 +203,7 @@ public static class NinjaWeapon
     {
         var defWeapon = defender.Weapon as BaseWeapon;
 
-        var atkSkill = defender.Skills.Ninjitsu;
+        var atkSkill = attacker.Skills.Ninjitsu;
         // Skill defSkill = defender.Skills[defWeapon.Skill];
 
         var atSkillValue = attacker.Skills.Ninjitsu.Value;
@@ -229,9 +229,10 @@ public static class NinjaWeapon
             attackValue -= 25;
         }
 
-        if (attackValue > 45)
+        var attackChanceCap = SoloProgression.GetAttackChanceCap(attacker);
+        if (attackValue > attackChanceCap)
         {
-            attackValue = 45;
+            attackValue = attackChanceCap;
         }
 
         attackValue = (atSkillValue + 20.0) * (100 + attackValue);
@@ -252,12 +253,12 @@ public static class NinjaWeapon
             defenseValue += refBonus;
         }
 
-        if (Discordance.GetEffect(attacker, ref refBonus))
+        if (Discordance.GetEffect(defender, ref refBonus))
         {
             defenseValue -= refBonus;
         }
 
-        defenseValue = Math.Min(defenseValue, AOS.GetDefenseChanceCap(defender));
+        defenseValue = Math.Clamp(defenseValue, -45, AOS.GetDefenseChanceCap(defender));
 
         defenseValue = (defSkillValue + 20.0) * (100 + defenseValue);
 
@@ -268,7 +269,15 @@ public static class NinjaWeapon
             chance = 0.02;
         }
 
-        return attacker.CheckSkill(atkSkill.SkillName, chance);
+        var streakBonus = SoloProgression.GetPvMMissStreakBonus(attacker, defender);
+        if (streakBonus > 0.0)
+        {
+            chance = Math.Min(chance + streakBonus, Math.Max(chance, SoloProgression.PvMMissStreakMaxChance));
+        }
+
+        var hit = attacker.CheckSkill(atkSkill.SkillName, chance);
+        SoloProgression.RecordPvMAttackResult(attacker, defender, hit);
+        return hit;
     }
 
     private static void OnHit(Mobile from, Mobile target, INinjaWeapon weapon)

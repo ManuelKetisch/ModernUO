@@ -1,3 +1,4 @@
+using System;
 using ModernUO.Serialization;
 
 namespace Server.Items;
@@ -22,11 +23,15 @@ public partial class ParagonChest : LockableContainer
     private string _name;
 
     [Constructible]
-    public ParagonChest(string name, int level) : base(_itemIDs.RandomElement())
+    public ParagonChest(string name, int level) : this(name, level, 0)
+    {
+    }
+
+    public ParagonChest(string name, int level, int luckChance) : base(_itemIDs.RandomElement())
     {
         _name = name;
         Hue = _hues.RandomElement();
-        Fill(level);
+        Fill(level, luckChance);
     }
 
     public override void OnSingleClick(Mobile from)
@@ -42,39 +47,153 @@ public partial class ParagonChest : LockableContainer
         list.Add(1063449, _name);
     }
 
-    private static void GetRandomAOSStats(out int attributeCount, out int min, out int max)
+    private static void GetRandomAOSStats(int level, bool isApex, out int attributeCount, out int min, out int max)
     {
-        var rnd = Utility.Random(15);
+        if (isApex)
+        {
+            attributeCount = 5;
+            min = 80;
+            max = 120;
+            return;
+        }
 
-        if (rnd < 1)
+        var tier = Math.Clamp(level, 1, 6);
+        var rnd = Utility.Random(100);
+
+        switch (tier)
         {
-            attributeCount = Utility.RandomMinMax(2, 6);
-            min = 20;
-            max = 70;
-        }
-        else if (rnd < 3)
-        {
-            attributeCount = Utility.RandomMinMax(2, 4);
-            min = 20;
-            max = 50;
-        }
-        else if (rnd < 6)
-        {
-            attributeCount = Utility.RandomMinMax(2, 3);
-            min = 20;
-            max = 40;
-        }
-        else if (rnd < 10)
-        {
-            attributeCount = Utility.RandomMinMax(1, 2);
-            min = 10;
-            max = 30;
-        }
-        else
-        {
-            attributeCount = 1;
-            min = 10;
-            max = 20;
+            case 1:
+                {
+                    if (rnd < 15)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 25;
+                        max = 65;
+                    }
+                    else if (rnd < 50)
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 3);
+                        min = 15;
+                        max = 55;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(1, 2);
+                        min = 10;
+                        max = 45;
+                    }
+
+                    break;
+                }
+            case 2:
+                {
+                    if (rnd < 20)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 30;
+                        max = 75;
+                    }
+                    else if (rnd < 60)
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 4);
+                        min = 20;
+                        max = 65;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 3);
+                        min = 15;
+                        max = 55;
+                    }
+
+                    break;
+                }
+            case 3:
+                {
+                    if (rnd < 25)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 35;
+                        max = 85;
+                    }
+                    else if (rnd < 65)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 25;
+                        max = 75;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(2, 3);
+                        min = 20;
+                        max = 65;
+                    }
+
+                    break;
+                }
+            case 4:
+                {
+                    if (rnd < 30)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 45;
+                        max = 95;
+                    }
+                    else if (rnd < 70)
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 5);
+                        min = 35;
+                        max = 85;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 25;
+                        max = 75;
+                    }
+
+                    break;
+                }
+            case 5:
+                {
+                    if (rnd < 40)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 55;
+                        max = 100;
+                    }
+                    else if (rnd < 80)
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 45;
+                        max = 95;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(3, 4);
+                        min = 35;
+                        max = 85;
+                    }
+
+                    break;
+                }
+            default:
+                {
+                    if (rnd < 50)
+                    {
+                        attributeCount = 5;
+                        min = 60;
+                        max = 100;
+                    }
+                    else
+                    {
+                        attributeCount = Utility.RandomMinMax(4, 5);
+                        min = 50;
+                        max = 100;
+                    }
+
+                    break;
+                }
         }
     }
 
@@ -90,43 +209,61 @@ public partial class ParagonChest : LockableContainer
         };
     }
 
-    private void Fill(int level)
+    private void Fill(int level, int luckChance)
     {
+        var effectiveLevel = Math.Clamp(level, 1, 6);
+
         TrapType = TrapType.ExplosionTrap;
-        TrapPower = level * 25;
-        TrapLevel = level;
+        TrapPower = effectiveLevel * 25;
+        TrapLevel = effectiveLevel;
         Locked = true;
 
-        RequiredSkill = level switch
+        RequiredSkill = effectiveLevel switch
         {
-            1 => 36,
-            2 => 76,
-            3 => 84,
-            4 => 92,
-            5 => 100,
-            _ => RequiredSkill
+            1   => 36,
+            2   => 76,
+            3   => 84,
+            4   => 92,
+            >= 5 => 100,
+            _   => 36
         };
 
         LockLevel = RequiredSkill - 10;
         MaxLockLevel = RequiredSkill + 40;
 
-        DropItem(new Gold(level * 200));
+        DropItem(new Gold(effectiveLevel * 200));
 
-        for (var i = 0; i < level; ++i)
+        for (var i = 0; i < effectiveLevel; ++i)
         {
             DropItem(Loot.RandomScroll(0, 63, SpellbookType.Regular));
         }
 
-        for (var i = 0; i < level * 2; ++i)
+        var itemCount = effectiveLevel * 2;
+        var apexItemIndex = -1;
+
+        // Cap Apex Legendary drops to at most one item per high-level paragon chest.
+        if (Core.AOS && effectiveLevel >= 5 && itemCount > 0)
+        {
+            var baseApexChance = effectiveLevel == 5 ? 0.20 : 0.35;
+            var luckBoost = 1.0 + Math.Clamp(luckChance / 7000.0, 0.0, 0.5);
+
+            if (Utility.RandomDouble() < Math.Min(0.65, baseApexChance * luckBoost))
+            {
+                apexItemIndex = Utility.Random(itemCount);
+            }
+        }
+
+        for (var i = 0; i < itemCount; ++i)
         {
             var item = Core.AOS ? Loot.RandomArmorOrShieldOrWeaponOrJewelry() : Loot.RandomArmorOrShieldOrWeapon();
+            var isApex = i == apexItemIndex;
 
             if (item is BaseWeapon weapon)
             {
                 if (Core.AOS)
                 {
-                    GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                    BaseRunicTool.ApplyAttributesTo(weapon, attributeCount, min, max);
+                    GetRandomAOSStats(effectiveLevel, isApex, out var attributeCount, out var min, out var max);
+                    BaseRunicTool.ApplyAttributesTo(weapon, false, luckChance, attributeCount, min, max);
                 }
                 else
                 {
@@ -141,8 +278,8 @@ public partial class ParagonChest : LockableContainer
             {
                 if (Core.AOS)
                 {
-                    GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                    BaseRunicTool.ApplyAttributesTo(armor, attributeCount, min, max);
+                    GetRandomAOSStats(effectiveLevel, isApex, out var attributeCount, out var min, out var max);
+                    BaseRunicTool.ApplyAttributesTo(armor, false, luckChance, attributeCount, min, max);
                 }
                 else
                 {
@@ -156,34 +293,34 @@ public partial class ParagonChest : LockableContainer
             {
                 if (Core.AOS)
                 {
-                    GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                    BaseRunicTool.ApplyAttributesTo(hat, attributeCount, min, max);
+                    GetRandomAOSStats(effectiveLevel, isApex, out var attributeCount, out var min, out var max);
+                    BaseRunicTool.ApplyAttributesTo(hat, false, luckChance, attributeCount, min, max);
                 }
 
                 DropItem(hat);
             }
             else if (item is BaseJewel jewel)
             {
-                GetRandomAOSStats(out var attributeCount, out var min, out var max);
-                BaseRunicTool.ApplyAttributesTo(jewel, attributeCount, min, max);
+                GetRandomAOSStats(effectiveLevel, isApex, out var attributeCount, out var min, out var max);
+                BaseRunicTool.ApplyAttributesTo(jewel, false, luckChance, attributeCount, min, max);
 
                 DropItem(jewel);
             }
         }
 
-        for (var i = 0; i < level; i++)
+        for (var i = 0; i < effectiveLevel; i++)
         {
             var item = Loot.RandomPossibleReagent();
             item.Amount = Utility.RandomMinMax(40, 60);
             DropItem(item);
         }
 
-        for (var i = 0; i < level; i++)
+        for (var i = 0; i < effectiveLevel; i++)
         {
             var item = Loot.RandomGem();
             DropItem(item);
         }
 
-        DropItem(new TreasureMap(level + 1, Utility.RandomBool() ? Map.Felucca : Map.Trammel));
+        DropItem(new TreasureMap(Math.Min(6, effectiveLevel + 1), Utility.RandomBool() ? Map.Felucca : Map.Trammel));
     }
 }

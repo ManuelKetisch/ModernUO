@@ -90,6 +90,11 @@ namespace Server.Spells
                 var hasProtection = ProtectionSpell.Registry.TryGetValue(Caster, out var d);
                 if (!hasProtection || d < 1000 && d < Utility.Random(1000))
                 {
+                    if (Core.AOS && SAItemCombatMechanics.TryResistSpellDisturb(Caster))
+                    {
+                        return;
+                    }
+
                     Disturb(DisturbType.Hurt, false, true);
                 }
             }
@@ -243,6 +248,11 @@ namespace Server.Spells
             if (context?.Spell is ReaperFormSpell spell)
             {
                 damageBonus += spell.SpellDamageBonus;
+            }
+
+            if (Core.AOS)
+            {
+                damageBonus += SAItemCombatMechanics.RollCastingFocusDamageBonus(Caster);
             }
 
             damage = AOS.Scale(damage, 100 + damageBonus);
@@ -767,6 +777,11 @@ namespace Server.Spells
             }
             else if (CheckFizzle())
             {
+                if (Core.AOS)
+                {
+                    SAItemCombatMechanics.TryTriggerManaPhase(Caster, ref mana);
+                }
+
                 Caster.Mana -= mana;
 
                 if (Scroll is SpellScroll)

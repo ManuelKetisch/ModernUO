@@ -190,6 +190,15 @@ namespace Server.Mobiles
 
             var luck = LootPack.GetLuckChanceForKiller(boss);
 
+            if (SoloProgression.Enabled)
+            {
+                return boss switch
+                {
+                    DemonKnight => 10000 + luck,
+                    _           => 5000 + luck / 2
+                };
+            }
+
             return boss switch
             {
                 DemonKnight => 1500 + luck / 5,

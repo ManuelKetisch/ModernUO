@@ -5,6 +5,7 @@ using ModernUO.Serialization;
 using Server.Collections;
 using Server.Engines.BioEngineering;
 using Server.Engines.Craft;
+using Server.Engines.Imbuing;
 using Server.Engines.Virtues;
 using Server.Engines.WeaponLeveling;
 using Server.Ethics;
@@ -736,15 +737,22 @@ public abstract partial class BaseWeapon
 
             if (Quality == WeaponQuality.Exceptional)
             {
-                Attributes.WeaponDamage = 35;
+                var exceptionalDamage = 35;
 
                 if (Core.ML)
                 {
-                    Attributes.WeaponDamage += GetExceptionalArmsLoreDamageBonus(from.Skills.ArmsLore.Value);
+                    exceptionalDamage += GetExceptionalArmsLoreDamageBonus(from.Skills.ArmsLore.Value);
 
                     from.CheckSkill(SkillName.ArmsLore, 0, 100);
                 }
+
+                if (Attributes.WeaponDamage < exceptionalDamage)
+                {
+                    Attributes.WeaponDamage = exceptionalDamage;
+                }
             }
+
+            CraftedItemBonuses.ApplyWeaponBonuses(this, from, craftSystem, tool);
         }
         else if (tool is BaseRunicTool runicTool)
         {
@@ -981,6 +989,7 @@ public abstract partial class BaseWeapon
         // Set HP/Max again because of durability
         weap.HitPoints = HitPoints;
         weap.MaxHitPoints = MaxHitPoints;
+        ImbuingPersistence.CopyImbuedState(this, newItem);
     }
 
     public int GetDurabilityBonus()
@@ -1311,10 +1320,7 @@ public abstract partial class BaseWeapon
 
             bonus += AosAttributes.GetValue(attacker, AosAttribute.AttackChance);
 
-            if (DivineFurySpell.UnderEffect(attacker))
-            {
-                bonus += 10; // attacker gets 10% bonus when they're under divine fury
-            }
+            bonus += DivineFurySpell.GetAttackBonus(attacker);
 
             if (AnimalForm.UnderTransformation(attacker, typeof(GreyWolf)) ||
                 AnimalForm.UnderTransformation(attacker, typeof(BakeKitsune)))
@@ -1334,17 +1340,19 @@ public abstract partial class BaseWeapon
                 bonus += ability.AccuracyBonus;
             }
 
+            // Max Hit Chance Increase = 45% (or solo progression cap)
+            var attackChanceCap = SoloProgression.GetAttackChanceCap(attacker);
+            if (bonus > attackChanceCap)
+            {
+                bonus = attackChanceCap;
+            }
+
+            // Special move accuracy bonuses (e.g. Lightning Strike +50%) apply after the gear HCI cap.
             var move = SpecialMove.GetCurrentMove(attacker);
 
             if (move != null)
             {
                 bonus += move.GetAccuracyBonus(attacker);
-            }
-
-            // Max Hit Chance Increase = 45%
-            if (bonus > 45)
-            {
-                bonus = 45;
             }
 
             ourValue = (atkValue + 20.0) * (100 + bonus);
@@ -1358,10 +1366,7 @@ public abstract partial class BaseWeapon
                 bonus -= info.DefenseChanceMalus;
             }
 
-            if (DivineFurySpell.UnderEffect(defender))
-            {
-                bonus -= 20; // defender loses 20% bonus when they're under divine fury
-            }
+            bonus -= DivineFurySpell.GetDefendMalus(defender);
 
             if (HitLower.IsUnderDefenseEffect(defender))
             {
@@ -1385,12 +1390,12 @@ public abstract partial class BaseWeapon
             var discordanceEffect = 0;
 
             // Defender loses -0/-28% if under the effect of Discordance.
-            if (Discordance.GetEffect(attacker, ref discordanceEffect))
+            if (Discordance.GetEffect(defender, ref discordanceEffect))
             {
                 bonus -= discordanceEffect;
             }
 
-            bonus = Math.Min(bonus, AOS.GetDefenseChanceCap(defender));
+            bonus = Math.Clamp(bonus, -45, AOS.GetDefenseChanceCap(defender));
 
             theirValue = (defValue + 20.0) * (100 + bonus);
 
@@ -1411,7 +1416,15 @@ public abstract partial class BaseWeapon
             chance = 0.02;
         }
 
-        return attacker.CheckSkill(atkSkill.SkillName, chance);
+        var streakBonus = SoloProgression.GetPvMMissStreakBonus(attacker, defender);
+        if (streakBonus > 0.0)
+        {
+            chance = Math.Min(chance + streakBonus, Math.Max(chance, SoloProgression.PvMMissStreakMaxChance));
+        }
+
+        var hit = attacker.CheckSkill(atkSkill.SkillName, chance);
+        SoloProgression.RecordPvMAttackResult(attacker, defender, hit);
+        return hit;
     }
 
     /// <summary>
@@ -1689,6 +1702,10 @@ public abstract partial class BaseWeapon
                 var shield = defender.FindItemOnLayer<BaseShield>(Layer.TwoHanded);
 
                 shield?.OnHit(this, damage);
+                if (this is not BaseRanged)
+                {
+                    SAItemCombatMechanics.TryReactiveParalyze(defender, attacker);
+                }
             }
         }
 
@@ -1931,6 +1948,11 @@ public abstract partial class BaseWeapon
         if (attacker.Talisman is BaseTalisman talisman && talisman.Killer != null)
         {
             percentageBonus += talisman.Killer.DamageBonus(defender);
+        }
+
+        if (Core.AOS)
+        {
+            percentageBonus += SAItemCombatMechanics.GetBattleLustDamageBonus(attacker, defender);
         }
 
         percentageBonus = Math.Min(percentageBonus, 300);
@@ -2300,6 +2322,8 @@ public abstract partial class BaseWeapon
                 {
                     DoLowerDefense(attacker, defender);
                 }
+
+                SAItemCombatMechanics.OnWeaponHitEffects(this, attacker, defender, damageGiven, propertyBonus);
             }
         }
 
@@ -2974,6 +2998,12 @@ public abstract partial class BaseWeapon
             CraftResource.GreenScales   => 1060819,
             CraftResource.WhiteScales   => 1060821,
             CraftResource.BlueScales    => 1060815,
+            CraftResource.OakWood       => 1072533,
+            CraftResource.AshWood       => 1072534,
+            CraftResource.YewWood       => 1072535,
+            CraftResource.Heartwood     => 1072536,
+            CraftResource.Bloodwood     => 1072538,
+            CraftResource.Frostwood     => 1072539,
             _                           => 0
         };
 
@@ -3061,6 +3091,9 @@ public abstract partial class BaseWeapon
         {
             list.Add(1061078, ArtifactRarity); // artifact rarity ~1_val~
         }
+
+        ItemRarity.AddRarityProperty(this, list);
+        ImbuingPersistence.AddImbuedProperty(this, list);
 
         if (this is IUsesRemaining usesRemaining && usesRemaining.ShowUsesRemaining)
         {

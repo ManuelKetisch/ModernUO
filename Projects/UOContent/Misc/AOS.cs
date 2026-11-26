@@ -236,7 +236,9 @@ namespace Server
                 SpellHelper.DoLeech(totalDamage, from, m);
             }
 
+            SAItemCombatMechanics.RecordIncomingElement(m, phys, fire, cold, pois, nrgy);
             m.Damage(totalDamage, from);
+            SAItemCombatMechanics.OnDamageApplied(m, from, totalDamage, phys, fire, cold, pois, nrgy, direct);
             return totalDamage;
         }
 
@@ -304,7 +306,14 @@ namespace Server
         Luck = 0x00100000,
         SpellChanneling = 0x00200000,
         NightSight = 0x00400000,
-        IncreasedKarmaLoss = 0x00800000
+        IncreasedKarmaLoss = 0x00800000,
+        CastingFocus = 0x01000000,
+        DamageEater = 0x02000000,
+        KineticEater = 0x04000000,
+        FireEater = 0x08000000,
+        ColdEater = 0x10000000,
+        PoisonEater = 0x20000000,
+        EnergyEater = 0x40000000
     }
 
     public interface IAosItem
@@ -496,6 +505,55 @@ namespace Server
             set => this[AosAttribute.IncreasedKarmaLoss] = value;
         }
 
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int CastingFocus
+        {
+            get => this[AosAttribute.CastingFocus];
+            set => this[AosAttribute.CastingFocus] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int DamageEater
+        {
+            get => this[AosAttribute.DamageEater];
+            set => this[AosAttribute.DamageEater] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int KineticEater
+        {
+            get => this[AosAttribute.KineticEater];
+            set => this[AosAttribute.KineticEater] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int FireEater
+        {
+            get => this[AosAttribute.FireEater];
+            set => this[AosAttribute.FireEater] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ColdEater
+        {
+            get => this[AosAttribute.ColdEater];
+            set => this[AosAttribute.ColdEater] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int PoisonEater
+        {
+            get => this[AosAttribute.PoisonEater];
+            set => this[AosAttribute.PoisonEater] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int EnergyEater
+        {
+            get => this[AosAttribute.EnergyEater];
+            set => this[AosAttribute.EnergyEater] = value;
+        }
+
         public void GetProperties(IPropertyList list, int damageBonus = 0, int hitChanceBonus = 0, int luckBonus = 0)
         {
             int prop;
@@ -619,6 +677,41 @@ namespace Server
             {
                 list.Add(1075210, prop); // Increased Karma Loss ~1val~%
             }
+
+            if ((prop = CastingFocus) != 0)
+            {
+                list.Add(1113696, prop); // Casting Focus ~1_val~%
+            }
+
+            if ((prop = DamageEater) != 0)
+            {
+                list.Add(1113598, prop); // Damage Eater ~1_Val~%
+            }
+
+            if ((prop = KineticEater) != 0)
+            {
+                list.Add(1113597, prop); // Kinetic Eater ~1_Val~%
+            }
+
+            if ((prop = FireEater) != 0)
+            {
+                list.Add(1113593, prop); // Fire Eater ~1_Val~%
+            }
+
+            if ((prop = ColdEater) != 0)
+            {
+                list.Add(1113594, prop); // Cold Eater ~1_Val~%
+            }
+
+            if ((prop = PoisonEater) != 0)
+            {
+                list.Add(1113595, prop); // Poison Eater ~1_Val~%
+            }
+
+            if ((prop = EnergyEater) != 0)
+            {
+                list.Add(1113596, prop); // Energy Eater ~1_Val~%
+            }
         }
 
         public static int GetValue(Mobile m, AosAttribute attribute)
@@ -721,22 +814,22 @@ namespace Server
             var dexBonus = BonusDex;
             var intBonus = BonusInt;
 
-            if (strBonus != 0 || dexBonus != 0 || intBonus != 0)
+            if (Owner != null && (strBonus != 0 || dexBonus != 0 || intBonus != 0))
             {
-                var hashCode = GetHashCode();
+                var serial = Owner.Serial;
                 if (strBonus != 0)
                 {
-                    to.AddStatMod(new StatMod(StatType.Str, $"{hashCode}Str", strBonus, TimeSpan.Zero));
+                    to.AddStatMod(new StatMod(StatType.Str, $"{serial}Str", strBonus, TimeSpan.Zero));
                 }
 
                 if (dexBonus != 0)
                 {
-                    to.AddStatMod(new StatMod(StatType.Dex, $"{hashCode}Dex", dexBonus, TimeSpan.Zero));
+                    to.AddStatMod(new StatMod(StatType.Dex, $"{serial}Dex", dexBonus, TimeSpan.Zero));
                 }
 
                 if (intBonus != 0)
                 {
-                    to.AddStatMod(new StatMod(StatType.Int, $"{hashCode}Int", intBonus, TimeSpan.Zero));
+                    to.AddStatMod(new StatMod(StatType.Int, $"{serial}Int", intBonus, TimeSpan.Zero));
                 }
             }
 
@@ -745,6 +838,11 @@ namespace Server
 
         public void RemoveStatBonuses(Mobile from)
         {
+            if (Owner == null)
+            {
+                return;
+            }
+
             var serial = Owner.Serial;
 
             from.RemoveStatMod($"{serial}Str");
@@ -782,7 +880,14 @@ namespace Server
         ResistEnergyBonus = 0x00200000,
         UseBestSkill = 0x00400000,
         MageWeapon = 0x00800000,
-        DurabilityBonus = 0x01000000
+        DurabilityBonus = 0x01000000,
+        BattleLust = 0x02000000,
+        SplinteringWeapon = 0x04000000,
+        HitCurse = 0x08000000,
+        HitFatigue = 0x10000000,
+        HitManaDrain = 0x20000000,
+        BloodDrinker = 0x40000000,
+        Bane = unchecked((int)0x80000000)
     }
 
     public sealed class AosWeaponAttributes : BaseAttributes
@@ -976,6 +1081,55 @@ namespace Server
             set => this[AosWeaponAttribute.DurabilityBonus] = value;
         }
 
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int BattleLust
+        {
+            get => this[AosWeaponAttribute.BattleLust];
+            set => this[AosWeaponAttribute.BattleLust] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int SplinteringWeapon
+        {
+            get => this[AosWeaponAttribute.SplinteringWeapon];
+            set => this[AosWeaponAttribute.SplinteringWeapon] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int HitCurse
+        {
+            get => this[AosWeaponAttribute.HitCurse];
+            set => this[AosWeaponAttribute.HitCurse] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int HitFatigue
+        {
+            get => this[AosWeaponAttribute.HitFatigue];
+            set => this[AosWeaponAttribute.HitFatigue] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int HitManaDrain
+        {
+            get => this[AosWeaponAttribute.HitManaDrain];
+            set => this[AosWeaponAttribute.HitManaDrain] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int BloodDrinker
+        {
+            get => this[AosWeaponAttribute.BloodDrinker];
+            set => this[AosWeaponAttribute.BloodDrinker] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int Bane
+        {
+            get => this[AosWeaponAttribute.Bane];
+            set => this[AosWeaponAttribute.Bane] = value;
+        }
+
         public static int GetValue(Mobile m, AosWeaponAttribute attribute)
         {
             if (!Core.AOS)
@@ -1106,6 +1260,41 @@ namespace Server
             {
                 list.Add(1060450, prop); // self repair ~1_val~
             }
+
+            if (BattleLust != 0)
+            {
+                list.Add(1113710); // Battle Lust
+            }
+
+            if ((prop = SplinteringWeapon) != 0)
+            {
+                list.Add(1112857, prop); // splintering weapon ~1_val~%
+            }
+
+            if ((prop = HitCurse) != 0)
+            {
+                list.Add(1113712, prop); // Hit Curse ~1_val~%
+            }
+
+            if ((prop = HitFatigue) != 0)
+            {
+                list.Add(1113700, prop); // Hit Fatigue ~1_val~%
+            }
+
+            if ((prop = HitManaDrain) != 0)
+            {
+                list.Add(1113699, prop); // Hit Mana Drain ~1_val~%
+            }
+
+            if (BloodDrinker != 0)
+            {
+                list.Add(1113591); // Blood Drinker
+            }
+
+            if (Bane != 0)
+            {
+                list.Add(1154671); // Bane
+            }
         }
 
         public override string ToString() => "...";
@@ -1117,7 +1306,15 @@ namespace Server
         LowerStatReq = 0x00000001,
         SelfRepair = 0x00000002,
         MageArmor = 0x00000004,
-        DurabilityBonus = 0x00000008
+        DurabilityBonus = 0x00000008,
+        ReactiveParalyze = 0x00000010,
+        SoulCharge = 0x00000020,
+        ManaPhase = 0x00000040,
+        KineticResonance = 0x00000080,
+        FireResonance = 0x00000100,
+        ColdResonance = 0x00000200,
+        PoisonResonance = 0x00000400,
+        EnergyResonance = 0x00000800
     }
 
     public sealed class AosArmorAttributes : BaseAttributes
@@ -1162,6 +1359,62 @@ namespace Server
         {
             get => this[AosArmorAttribute.DurabilityBonus];
             set => this[AosArmorAttribute.DurabilityBonus] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ReactiveParalyze
+        {
+            get => this[AosArmorAttribute.ReactiveParalyze];
+            set => this[AosArmorAttribute.ReactiveParalyze] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int SoulCharge
+        {
+            get => this[AosArmorAttribute.SoulCharge];
+            set => this[AosArmorAttribute.SoulCharge] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ManaPhase
+        {
+            get => this[AosArmorAttribute.ManaPhase];
+            set => this[AosArmorAttribute.ManaPhase] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int KineticResonance
+        {
+            get => this[AosArmorAttribute.KineticResonance];
+            set => this[AosArmorAttribute.KineticResonance] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int FireResonance
+        {
+            get => this[AosArmorAttribute.FireResonance];
+            set => this[AosArmorAttribute.FireResonance] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ColdResonance
+        {
+            get => this[AosArmorAttribute.ColdResonance];
+            set => this[AosArmorAttribute.ColdResonance] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int PoisonResonance
+        {
+            get => this[AosArmorAttribute.PoisonResonance];
+            set => this[AosArmorAttribute.PoisonResonance] = value;
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int EnergyResonance
+        {
+            get => this[AosArmorAttribute.EnergyResonance];
+            set => this[AosArmorAttribute.EnergyResonance] = value;
         }
 
         public static int GetValue(Mobile m, AosArmorAttribute attribute)
@@ -1213,6 +1466,46 @@ namespace Server
             if ((prop = SelfRepair) != 0)
             {
                 list.Add(1060450, prop); // self repair ~1_val~
+            }
+
+            if (ReactiveParalyze != 0)
+            {
+                list.Add(1112364); // reactive paralyze
+            }
+
+            if ((prop = SoulCharge) != 0)
+            {
+                list.Add(1113630, prop); // Soul Charge ~1_val~%
+            }
+
+            if (ManaPhase != 0)
+            {
+                list.Add(1116158); // Mana Phase
+            }
+
+            if ((prop = KineticResonance) != 0)
+            {
+                list.Add(1113695, prop); // Kinetic Resonance ~1_val~%
+            }
+
+            if ((prop = FireResonance) != 0)
+            {
+                list.Add(1113691, prop); // Fire Resonance ~1_val~%
+            }
+
+            if ((prop = ColdResonance) != 0)
+            {
+                list.Add(1113692, prop); // Cold Resonance ~1_val~%
+            }
+
+            if ((prop = PoisonResonance) != 0)
+            {
+                list.Add(1113693, prop); // Poison Resonance ~1_val~%
+            }
+
+            if ((prop = EnergyResonance) != 0)
+            {
+                list.Add(1113694, prop); // Energy Resonance ~1_val~%
             }
         }
 

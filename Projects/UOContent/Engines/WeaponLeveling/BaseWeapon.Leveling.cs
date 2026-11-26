@@ -1,6 +1,7 @@
 using System;
 using Server.Collections;
 using Server.ContextMenus;
+using Server.Engines.Imbuing;
 using Server.Engines.WeaponLeveling;
 using Server.Mobiles;
 
@@ -29,6 +30,12 @@ public partial class BaseWeapon
     {
         if (IsWeaponLevelingEnabled || !CanManageWeaponLeveling(player))
         {
+            return false;
+        }
+
+        if (ImbuingPersistence.IsImbued(this))
+        {
+            player.SendMessage("Imbued weapons cannot be enabled for weapon leveling.");
             return false;
         }
 

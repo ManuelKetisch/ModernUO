@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ModernUO.Serialization;
 using Server.Engines.Craft;
+using Server.Engines.Imbuing;
 using Server.Ethics;
 using Server.Factions;
 using Server.Network;
@@ -195,6 +196,29 @@ namespace Server.Items
             if (context?.DoNotColor == true)
             {
                 Hue = 0;
+            }
+
+            if (Core.AOS)
+            {
+                if (tool is BaseRunicTool runicTool && this is BaseHat hat)
+                {
+                    var attrs = CraftResources.GetInfo(runicTool.Resource)?.AttributeInfo;
+
+                    if (attrs is { RunicMaxAttributes: > 0 })
+                    {
+                        var attributeCount = Utility.RandomMinMax(attrs.RunicMinAttributes, attrs.RunicMaxAttributes);
+                        BaseRunicTool.ApplyAttributesTo(
+                            hat,
+                            true,
+                            0,
+                            attributeCount,
+                            attrs.RunicMinIntensity,
+                            attrs.RunicMaxIntensity
+                        );
+                    }
+                }
+
+                CraftedItemBonuses.ApplyClothingBonuses(this, from, craftSystem, tool);
             }
 
             return quality;
@@ -612,6 +636,7 @@ namespace Server.Items
             // Set HP/Max again because of durability
             clothing.HitPoints = HitPoints;
             clothing.MaxHitPoints = MaxHitPoints;
+            ImbuingPersistence.CopyImbuedState(this, clothing);
         }
 
         public override bool AllowEquippedCast(Mobile from) =>
@@ -717,6 +742,9 @@ namespace Server.Items
             {
                 list.Add(1061078, prop); // artifact rarity ~1_val~
             }
+
+            ItemRarity.AddRarityProperty(this, list);
+            ImbuingPersistence.AddImbuedProperty(this, list);
 
             ClothingAttributes.GetProperties(list);
 

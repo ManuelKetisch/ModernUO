@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ModernUO.Serialization;
 using Server.Engines.Craft;
+using Server.Engines.Imbuing;
 using Server.Ethics;
 using Server.Factions;
 using Server.Mobiles;
@@ -557,14 +558,10 @@ namespace Server.Items
 
             if (Quality == ArmorQuality.Exceptional)
             {
-                // Guessed Core.ML removed exceptional resist bonuses from crafted shields
+                // Core.ML shield resists and masterwork affixes are handled in CraftedItemBonuses.
                 if (!(Core.ML && this is BaseShield))
                 {
-                    DistributeBonuses(
-                        tool is BaseRunicTool ? 6 :
-                        // Not sure since when, but right now 15 points are added, not 14.
-                        Core.SE ? 15 : 14
-                    );
+                    DistributeBonuses(Core.SE ? 15 : 14);
                 }
 
                 if (Core.ML && this is not BaseShield)
@@ -610,6 +607,7 @@ namespace Server.Items
             if (Core.AOS)
             {
                 (tool as BaseRunicTool)?.ApplyAttributesTo(this);
+                CraftedItemBonuses.ApplyArmorBonuses(this, from, craftSystem, tool);
             }
 
             return quality;
@@ -810,6 +808,7 @@ namespace Server.Items
             // Set HP/Max again because of durability
             armor.HitPoints = HitPoints;
             armor.MaxHitPoints = MaxHitPoints;
+            ImbuingPersistence.CopyImbuedState(this, armor);
         }
 
         public int ComputeStatReq(StatType type)
@@ -1279,6 +1278,12 @@ namespace Server.Items
                 CraftResource.GreenScales   => 1060819,
                 CraftResource.WhiteScales   => 1060821,
                 CraftResource.BlueScales    => 1060815,
+                CraftResource.OakWood       => 1072533,
+                CraftResource.AshWood       => 1072534,
+                CraftResource.YewWood       => 1072535,
+                CraftResource.Heartwood     => 1072536,
+                CraftResource.Bloodwood     => 1072538,
+                CraftResource.Frostwood     => 1072539,
                 _                           => 0
             };
 
@@ -1363,6 +1368,9 @@ namespace Server.Items
             {
                 list.Add(1061078, prop); // artifact rarity ~1_val~
             }
+
+            ItemRarity.AddRarityProperty(this, list);
+            ImbuingPersistence.AddImbuedProperty(this, list);
 
             ArmorAttributes.GetProperties(list);
 

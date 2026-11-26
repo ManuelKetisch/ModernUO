@@ -1,6 +1,7 @@
 using System;
 using ModernUO.Serialization;
 using Server.Engines.Craft;
+using Server.Engines.Imbuing;
 using Server.Mobiles;
 
 namespace Server.Items;
@@ -215,7 +216,12 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
             runic.ApplyToJewelry(this);
         }
 
-        return 1;
+        if (Core.AOS)
+        {
+            CraftedItemBonuses.ApplyJewelryBonuses(this, quality, from, craftSystem, tool);
+        }
+
+        return quality;
     }
 
     public override void OnSingleClick(Mobile from)
@@ -327,6 +333,7 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
 
         // Set hue again because of resource
         jewel.Hue = Hue;
+        ImbuingPersistence.CopyImbuedState(this, jewel);
     }
 
     public override void OnAdded(IEntity parent)
@@ -433,6 +440,9 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
         {
             list.Add(1061078, prop); // artifact rarity ~1_val~
         }
+
+        ItemRarity.AddRarityProperty(this, list);
+        ImbuingPersistence.AddImbuedProperty(this, list);
 
         Attributes.GetProperties(list);
 

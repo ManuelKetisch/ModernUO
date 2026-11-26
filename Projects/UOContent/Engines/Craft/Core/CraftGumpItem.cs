@@ -170,7 +170,7 @@ public class CraftGumpItem : DynamicGump
         }
         else
         {
-            showExceptionalChance = false;
+            showExceptionalChance = !_craftItem.ForceNonExceptional && typeof(BaseJewel).IsAssignableFrom(type);
         }
     }
 

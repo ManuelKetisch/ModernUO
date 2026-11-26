@@ -1,5 +1,8 @@
 using System;
+using Server.Engines.CannedEvil;
+using Server.Engines.Quests;
 using Server.Items;
+using Server.Regions;
 
 namespace Server.Mobiles;
 
@@ -10,7 +13,12 @@ public static class Paragon
 
     public static Map[] Maps =
     {
-        Map.Ilshenar
+        Map.Ilshenar,
+        Map.Trammel,
+        Map.Felucca,
+        Map.Malas,
+        Map.Tokuno,
+        Map.TerMur
     };
 
     private static readonly TimeSpan FastRegenRate = TimeSpan.FromSeconds(0.5);
@@ -176,9 +184,43 @@ public static class Paragon
             return false;
         }
 
-        if (bc is BaseChampion or Harrower or BaseVendor or BaseEscortable or Clone || bc.IsParagon)
+        if (bc.Controlled || bc.Summoned || bc.Blessed || bc.IsInvulnerable || bc.NoKillAwards ||
+            bc.GivesMLMinorArtifact || bc.IsParagon ||
+            bc is BaseChampion or Harrower or BaseVendor or BaseEscortable or Clone or BaseHire or BaseShieldGuard
+                or BaseMount or BaseQuester)
         {
             return false;
+        }
+
+        // Keep peaceful wilderness critters and neutral mounts out of Paragon rolls on non-Ilshenar hunting facets.
+        if (m != Map.Ilshenar && bc.FightMode is FightMode.None or FightMode.Aggressor)
+        {
+            return false;
+        }
+
+        if (m != null)
+        {
+            var region = Region.Find(location, m);
+
+            if (region != null)
+            {
+                if (region.IsPartOf<ChampionSpawnRegion>() ||
+                    region.IsPartOf<TownRegion>() ||
+                    region.IsPartOf<ApprenticeRegion>() ||
+                    region.IsPartOf<HouseRegion>() ||
+                    region.IsPartOf("Haven Island") ||
+                    region.IsPartOf("New Haven") ||
+                    region.IsPartOf("Haven") ||
+                    region.IsPartOf("Ocllo"))
+                {
+                    return false;
+                }
+
+                if (region.GetRegion<GuardedRegion>() is { } guarded && !guarded.IsDisabled())
+                {
+                    return false;
+                }
+            }
         }
 
         var fame = bc.Fame;
@@ -193,11 +235,11 @@ public static class Paragon
         return chance > Utility.RandomDouble();
     }
 
-    public static bool CheckArtifactChance(Mobile m, BaseCreature bc)
+    public static double GetArtifactChance(Mobile m, BaseCreature bc)
     {
-        if (!Core.AOS)
+        if (!Core.AOS || m == null || bc == null)
         {
-            return false;
+            return 0.0;
         }
 
         double fame = bc.Fame;
@@ -207,12 +249,25 @@ public static class Paragon
             fame = 32000;
         }
 
-        var chance =
-            1 / (Math.Max(10, 100 * (0.83 - Math.Round(Math.Log(Math.Round(fame / 6000, 3) + 0.001, 10), 3))) *
-                (100 - Math.Sqrt(m.Luck)) / 100.0);
+        var clampedLuck = Math.Max(0, m.Luck);
+        var luckFactor = Math.Max(0.25, (100.0 - Math.Sqrt(clampedLuck)) / 100.0);
+        var baseDenominator = Math.Max(
+            10.0,
+            100.0 * (0.83 - Math.Round(Math.Log(Math.Round(fame / 6000.0, 3) + 0.001, 10), 3))
+        );
+        var chance = 1.0 / (baseDenominator * luckFactor);
 
-        return chance > Utility.RandomDouble();
+        if (SoloProgression.Enabled)
+        {
+            var soloLuckScale = 1.0 + Math.Min(1.0, Math.Sqrt(clampedLuck) / 60.0);
+            chance = Math.Min(0.50, chance * 3.5 * soloLuckScale);
+        }
+
+        return chance;
     }
+
+    public static bool CheckArtifactChance(Mobile m, BaseCreature bc) =>
+        GetArtifactChance(m, bc) > Utility.RandomDouble();
 
     public static void GiveArtifactTo(Mobile m)
     {

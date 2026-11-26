@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ModernUO.Serialization;
 using Server.Commands;
 using Server.Engines.Craft;
+using Server.Engines.Imbuing;
 using Server.Ethics;
 using Server.Mobiles;
 using Server.Multis;
@@ -156,33 +157,36 @@ public partial class Spellbook : Item, ICraftable, ISlayer, IAosItem
         BaseTool tool, CraftItem craftItem, int resHue
     )
     {
-        var magery = from.Skills.Magery.BaseFixedPoint;
+        var craftSkill = Math.Max(from.Skills.Magery.BaseFixedPoint, from.Skills.Inscribe.BaseFixedPoint);
 
-        if (magery >= 800)
+        if (craftSkill >= 800)
         {
             int[] propertyCounts;
             int minIntensity;
             int maxIntensity;
 
-            if (magery >= 1000)
+            if (craftSkill >= 1000)
             {
-                if (magery >= 1200)
+                if (craftSkill >= 1200)
                 {
                     propertyCounts = _legendPropertyCounts;
+                    minIntensity = 85;
+                    maxIntensity = 100;
                 }
-                else if (magery >= 1100)
+                else if (craftSkill >= 1100)
                 {
                     propertyCounts = _elderPropertyCounts;
+                    minIntensity = 75;
+                    maxIntensity = 100;
                 }
                 else
                 {
                     propertyCounts = _grandPropertyCounts;
+                    minIntensity = 65;
+                    maxIntensity = 100;
                 }
-
-                minIntensity = 55;
-                maxIntensity = 75;
             }
-            else if (magery >= 900)
+            else if (craftSkill >= 900)
             {
                 propertyCounts = _masterPropertyCounts;
                 minIntensity = 25;
@@ -205,7 +209,13 @@ public partial class Spellbook : Item, ICraftable, ISlayer, IAosItem
             Crafter = from.RawName;
         }
 
-        Quality = (BookQuality)(quality - 1);
+        Quality = quality >= 2 ? BookQuality.Exceptional : BookQuality.Regular;
+
+        if (Core.AOS)
+        {
+            CraftedItemBonuses.ApplySpellbookBonuses(this, from, craftSystem);
+        }
+
         return quality;
     }
 
@@ -543,6 +553,7 @@ public partial class Spellbook : Item, ICraftable, ISlayer, IAosItem
 
         book.Attributes = new AosAttributes(newItem, _attributes);
         book.SkillBonuses = new AosSkillBonuses(newItem, _skillBonuses);
+        ImbuingPersistence.CopyImbuedState(this, book);
     }
 
     public override void OnAdded(IEntity parent)
@@ -647,6 +658,9 @@ public partial class Spellbook : Item, ICraftable, ISlayer, IAosItem
         {
             list.Add(1050043, _crafter); // crafted by ~1_NAME~
         }
+
+        ItemRarity.AddRarityProperty(this, list);
+        ImbuingPersistence.AddImbuedProperty(this, list);
 
         _skillBonuses.GetProperties(list);
 

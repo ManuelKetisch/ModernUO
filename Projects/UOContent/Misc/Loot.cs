@@ -148,8 +148,8 @@ namespace Server
 
         public static Type[] JewelryTypes { get; } =
         {
-            typeof(GoldRing), typeof(GoldBracelet),
-            typeof(SilverRing), typeof(SilverBracelet)
+            typeof(GoldRing), typeof(GoldBracelet), typeof(GoldEarrings),
+            typeof(SilverRing), typeof(SilverBracelet), typeof(SilverEarrings)
         };
 
         public static Type[] RegTypes { get; } =

@@ -427,6 +427,10 @@ public class DefTinkering : CraftSystem
         AddRes(index, typeof(BarrelLid), 1044251, 1, 1044253);
         AddRes(index, typeof(BarrelTap), 1044252, 1, 1044253);
 
+        index = AddCraft(typeof(SoulForge), 1044051, "soulforge", 80.0, 110.0, typeof(IronIngot), 1044036, 20, 1044037);
+        AddRes(index, typeof(Diamond), 1044239, 5, 1044240);
+        ForceNonExceptional(index);
+
         // Dart Trap
         index = AddCraft(typeof(DartTrapCraft), 1044052, 1024396, 30.0, 80.0, typeof(IronIngot), 1044036, 1, 1044037);
         AddRes(index, typeof(Bolt), 1044570, 1, 1044253);

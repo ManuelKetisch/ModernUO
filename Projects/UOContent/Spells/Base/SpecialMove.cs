@@ -110,6 +110,11 @@ namespace Server.Spells
 
             if (consume)
             {
+                if (Core.AOS)
+                {
+                    SAItemCombatMechanics.TryTriggerManaPhase(from, ref mana);
+                }
+
                 if (!DelayedContext)
                 {
                     SetContext(from);

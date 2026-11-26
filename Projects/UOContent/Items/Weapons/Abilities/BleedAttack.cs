@@ -26,11 +26,7 @@ namespace Server.Items
 
             ClearCurrentAbility(attacker);
 
-            // Necromancers under Lich or Wraith Form are immune to Bleed Attacks.
-            var context = TransformationSpellHelper.GetContext(defender);
-
-            if (context != null && (context.Type == typeof(LichFormSpell) || context.Type == typeof(WraithFormSpell)) ||
-                defender is BaseCreature creature && creature.BleedImmune)
+            if (IsBleedImmune(defender))
             {
                 attacker.SendLocalizedMessage(1062052); // Your target is not affected by the bleed attack!
                 return;
@@ -56,6 +52,20 @@ namespace Server.Items
             BeginBleed(defender, attacker);
         }
 
+        public static bool IsBleedImmune(Mobile defender)
+        {
+            if (defender == null)
+            {
+                return true;
+            }
+
+            // Necromancers under Lich or Wraith Form are immune to Bleed Attacks.
+            var context = TransformationSpellHelper.GetContext(defender);
+
+            return context != null && (context.Type == typeof(LichFormSpell) || context.Type == typeof(WraithFormSpell)) ||
+                   defender is BaseCreature { BleedImmune: true };
+        }
+
         public static bool IsBleeding(Mobile m) => _table.ContainsKey(m);
 
         public static void BeginBleed(Mobile m, Mobile from)
@@ -69,7 +79,7 @@ namespace Server.Items
 
         public static void DoBleed(Mobile m, Mobile from, int level)
         {
-            if (m.Alive)
+            if (m is { Deleted: false, Alive: true })
             {
                 var damage = Utility.RandomMinMax(level, level * 2);
 
@@ -78,8 +88,11 @@ namespace Server.Items
                     damage *= 2;
                 }
 
+                var hitsBefore = m.Hits;
                 m.PlaySound(0x133);
                 m.Damage(damage, from);
+                var actualDamage = Math.Max(0, hitsBefore - m.Hits);
+                SAItemCombatMechanics.OnBleedTick(m, from, actualDamage);
 
                 var blood = new Blood { ItemID = Utility.Random(0x122A, 5) };
                 blood.MoveToWorld(m.Location, m.Map);

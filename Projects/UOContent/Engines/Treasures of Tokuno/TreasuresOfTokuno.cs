@@ -95,16 +95,30 @@ namespace Server.Misc
             typeof(BaseFormTalisman), typeof(BaseWand), typeof(JesterHatofChuckles)
         };
 
+        [CallPriority(60)]
         public static void Configure()
         {
             var pathToTFile = Path.Combine(Core.BaseDirectory, ToTConfigurationPath);
-            _totConfig = File.Exists(pathToTFile)
-                ? JsonConfig.Deserialize<ToTConfig>(pathToTFile)
-                : new ToTConfig
+            if (File.Exists(pathToTFile))
+            {
+                _totConfig = JsonConfig.Deserialize<ToTConfig>(pathToTFile);
+            }
+            else if (SoloProgression.Enabled)
+            {
+                _totConfig = new ToTConfig
+                {
+                    DropEra = TreasuresOfTokunoEra.ToTThree,
+                    RewardEra = TreasuresOfTokunoEra.ToTThree
+                };
+            }
+            else
+            {
+                _totConfig = new ToTConfig
                 {
                     DropEra = TreasuresOfTokunoEra.None,
-                    RewardEra = TreasuresOfTokunoEra.ToTOne,
+                    RewardEra = TreasuresOfTokunoEra.ToTOne
                 };
+            }
         }
 
         private static ToTConfig _totConfig;
@@ -194,7 +208,7 @@ namespace Server.Misc
             // 25000 for 1/100 chance, 10 hyrus
             // 1500, 1/1000 chance, 20 lizard men for that chance.
 
-            pm.ToTTotalMonsterFame += (int)(bc.Fame * (1 + Math.Sqrt(pm.Luck) / 100));
+            pm.ToTTotalMonsterFame += (int)(bc.Fame * (1 + Math.Sqrt(Math.Max(0, pm.Luck)) / 100));
 
             // This is the Exponential regression with only 2 datapoints.
             // A log. func would also work, but it didn't make as much sense.

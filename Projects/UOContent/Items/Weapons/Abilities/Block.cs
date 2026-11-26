@@ -27,10 +27,8 @@ namespace Server.Items
 
             attacker.FixedParticles(0x37C4, 1, 16, 0x251D, 0x39D, 0x3, EffectLayer.RightHand);
 
-            var bonus = (int)(10.0 * ((Math.Max(
-                attacker.Skills.Bushido.Value,
-                attacker.Skills.Ninjitsu.Value
-            ) - 50.0) / 70.0 + 5));
+            var skill = Math.Max(attacker.Skills.Bushido.Value, attacker.Skills.Ninjitsu.Value);
+            var bonus = Math.Clamp(10 + (int)((skill - 50.0) / 14.0), 10, 15);
 
             BeginBlock(attacker, bonus);
         }
@@ -49,7 +47,9 @@ namespace Server.Items
         public static void BeginBlock(Mobile m, int bonus)
         {
             EndBlock(m);
-            _table[m] = new InternalTimer(m, bonus);
+            var timer = new InternalTimer(m, bonus);
+            timer.Start();
+            _table[m] = timer;
         }
 
         public static void EndBlock(Mobile m)

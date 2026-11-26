@@ -120,9 +120,30 @@ internal static class ExcelsiorMaterials
     )
     {
         var attributes = Runic(runic);
+        var (armor, durability) = GetWoodArmorStats(resource);
+        SetArmor(attributes, armor, durability, requirements);
         SetWeapon(attributes, weapon, requirements);
         return new ExcelsiorMaterial(new CraftResourceInfo(hue, 0, name, attributes, resource, types), CraftResourceType.Wood, skill);
     }
+
+    private static ((int Physical, int Fire, int Cold, int Poison, int Energy) Resists, int Durability) GetWoodArmorStats(
+        CraftResource resource
+    ) =>
+        resource switch
+        {
+            CraftResource.PineWood         => ((2, 1, 3, 1, 1), 50),
+            CraftResource.MahoganyWood     => ((2, 2, 1, 2, 3), 65),
+            CraftResource.ZircoteWood      => ((3, 3, 3, 3, 3), 90),
+            CraftResource.EbonyWood        => ((3, 2, 6, 2, 3), 105),
+            CraftResource.BambooWood       => ((3, 2, 3, 2, 7), 115),
+            CraftResource.PurpleHeartWood  => ((3, 8, 2, 3, 3), 130),
+            CraftResource.Redwood          => ((4, 3, 3, 8, 3), 150),
+            CraftResource.PetrifiedWood    => ((8, 4, 4, 4, 4), 180),
+            CraftResource.ExcelsiorAshWood => ((2, 4, 2, 1, 2), 70),
+            CraftResource.ExcelsiorYewWood => ((3, 2, 4, 1, 3), 80),
+            CraftResource.ExcelsiorOakWood => ((3, 2, 2, 4, 3), 90),
+            _                              => ((2, 2, 2, 2, 2), 60)
+        };
 
     private static CraftAttributeInfo Runic((int Min, int Max, int MinIntensity, int MaxIntensity) runic) =>
         new()

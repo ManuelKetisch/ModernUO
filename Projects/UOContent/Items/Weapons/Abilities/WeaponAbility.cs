@@ -313,6 +313,11 @@ public abstract class WeaponAbility
 
         if (consume)
         {
+            if (Core.AOS)
+            {
+                SAItemCombatMechanics.TryTriggerManaPhase(from, ref mana);
+            }
+
             if (!OnCooldown(from))
             {
                 Timer timer = new WeaponAbilityTimer(from);

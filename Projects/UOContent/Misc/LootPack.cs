@@ -70,7 +70,7 @@ namespace Server
 
             var luck = killer.Luck;
 
-            if (killer is PlayerMobile pmKiller && pmKiller.SentHonorContext != null &&
+            if (victim != null && killer is PlayerMobile pmKiller && pmKiller.SentHonorContext != null &&
                 pmKiller.SentHonorContext.Target == victim)
             {
                 luck += pmKiller.SentHonorContext.PerfectionLuckBonus;
@@ -122,22 +122,15 @@ namespace Server
                 return;
             }
 
-            var checkLuck = Core.AOS;
-
             for (var i = 0; i < m_Entries.Length; ++i)
             {
                 var entry = m_Entries[i];
 
                 var shouldAdd = entry.Chance > Utility.Random(10000);
 
-                if (!shouldAdd && checkLuck)
+                if (!shouldAdd && Core.AOS && CheckLuck(luckChance))
                 {
-                    checkLuck = false;
-
-                    if (CheckLuck(luckChance))
-                    {
-                        shouldAdd = entry.Chance > Utility.Random(10000);
-                    }
+                    shouldAdd = entry.Chance > Utility.Random(10000);
                 }
 
                 if (!shouldAdd)
@@ -163,16 +156,18 @@ namespace Server
             new LootPackItem(typeof(BaseRanged), 53),
             new LootPackItem(typeof(BaseArmor), 303),
             new LootPackItem(typeof(BaseShield), 39),
-            new LootPackItem(typeof(BaseJewel), 158)
+            new LootPackItem(typeof(BaseJewel), 158),
+            new LootPackItem(typeof(Spellbook), 32),
+            new LootPackItem(typeof(RandomTalisman), 18)
         ];
 
         public static readonly LootPack MlRich = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "4d50+450"),
-                new LootPackEntry(false, AosMagicItemsRichType1, 100.00, 1, 3, 0, 75),
-                new LootPackEntry(false, AosMagicItemsRichType1, 80.00, 1, 3, 0, 75),
-                new LootPackEntry(false, AosMagicItemsRichType1, 60.00, 1, 5, 0, 100),
-                new LootPackEntry(false, Instruments, 1.00, 1)
+                new LootPackEntry(false, AosMagicItemsRichType1, 100.00, 1, 4, 20, 75),
+                new LootPackEntry(false, AosMagicItemsRichType1, 90.00, 1, 4, 25, 80),
+                new LootPackEntry(false, AosMagicItemsRichType2, 75.00, 1, 5, 30, 85),
+                new LootPackEntry(false, Instruments, 1.50, 1)
             ]
         );
 
@@ -227,7 +222,9 @@ namespace Server
             new LootPackItem(typeof(BaseRanged), 43),
             new LootPackItem(typeof(BaseArmor), 245),
             new LootPackItem(typeof(BaseShield), 32),
-            new LootPackItem(typeof(BaseJewel), 128)
+            new LootPackItem(typeof(BaseJewel), 128),
+            new LootPackItem(typeof(Spellbook), 26),
+            new LootPackItem(typeof(RandomTalisman), 16)
         ];
 
         public static readonly LootPackItem[] AosMagicItemsFilthyRichType1 =
@@ -236,7 +233,9 @@ namespace Server
             new LootPackItem(typeof(BaseRanged), 55),
             new LootPackItem(typeof(BaseArmor), 315),
             new LootPackItem(typeof(BaseShield), 41),
-            new LootPackItem(typeof(BaseJewel), 164)
+            new LootPackItem(typeof(BaseJewel), 164),
+            new LootPackItem(typeof(Spellbook), 38),
+            new LootPackItem(typeof(RandomTalisman), 24)
         ];
 
         public static readonly LootPackItem[] AosMagicItemsFilthyRichType2 =
@@ -245,7 +244,9 @@ namespace Server
             new LootPackItem(typeof(BaseRanged), 60),
             new LootPackItem(typeof(BaseArmor), 343),
             new LootPackItem(typeof(BaseShield), 90),
-            new LootPackItem(typeof(BaseJewel), 45)
+            new LootPackItem(typeof(BaseJewel), 45),
+            new LootPackItem(typeof(Spellbook), 38),
+            new LootPackItem(typeof(RandomTalisman), 24)
         ];
 
         public static readonly LootPackItem[] AosMagicItemsUltraRich =
@@ -254,83 +255,85 @@ namespace Server
             new LootPackItem(typeof(BaseRanged), 69),
             new LootPackItem(typeof(BaseArmor), 397),
             new LootPackItem(typeof(BaseShield), 52),
-            new LootPackItem(typeof(BaseJewel), 207)
+            new LootPackItem(typeof(BaseJewel), 207),
+            new LootPackItem(typeof(Spellbook), 50),
+            new LootPackItem(typeof(RandomTalisman), 35)
         ];
 
         public static readonly LootPack SePoor = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "2d10+20"),
-                new LootPackEntry(false, AosMagicItemsPoor, 1.00, 1, 5, 0, 100),
-                new LootPackEntry(false, Instruments, 0.02, 1)
+                new LootPackEntry(false, AosMagicItemsPoor, 8.00, 1, 2, 5, 45),
+                new LootPackEntry(false, Instruments, 0.05, 1)
             ]
         );
 
         public static readonly LootPack SeMeager = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "4d10+40"),
-                new LootPackEntry(false, AosMagicItemsMeagerType1, 20.40, 1, 2, 0, 50),
-                new LootPackEntry(false, AosMagicItemsMeagerType2, 10.20, 1, 5, 0, 100),
-                new LootPackEntry(false, Instruments, 0.10, 1)
+                new LootPackEntry(false, AosMagicItemsMeagerType1, 35.00, 1, 2, 10, 50),
+                new LootPackEntry(false, AosMagicItemsMeagerType2, 20.00, 1, 3, 15, 60),
+                new LootPackEntry(false, Instruments, 0.20, 1)
             ]
         );
 
         public static readonly LootPack SeAverage = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "8d10+100"),
-                new LootPackEntry(false, AosMagicItemsAverageType1, 32.80, 1, 3, 0, 50),
-                new LootPackEntry(false, AosMagicItemsAverageType1, 32.80, 1, 4, 0, 75),
-                new LootPackEntry(false, AosMagicItemsAverageType2, 19.50, 1, 5, 0, 100),
-                new LootPackEntry(false, Instruments, 0.40, 1)
+                new LootPackEntry(false, AosMagicItemsAverageType1, 50.00, 1, 3, 15, 60),
+                new LootPackEntry(false, AosMagicItemsAverageType1, 45.00, 1, 3, 20, 65),
+                new LootPackEntry(false, AosMagicItemsAverageType2, 30.00, 1, 4, 20, 70),
+                new LootPackEntry(false, Instruments, 0.50, 1)
             ]
         );
 
         public static readonly LootPack SeRich = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "15d10+225"),
-                new LootPackEntry(false, AosMagicItemsRichType1, 76.30, 1, 4, 0, 75),
-                new LootPackEntry(false, AosMagicItemsRichType1, 76.30, 1, 4, 0, 75),
-                new LootPackEntry(false, AosMagicItemsRichType2, 61.70, 1, 5, 0, 100),
-                new LootPackEntry(false, Instruments, 1.00, 1)
+                new LootPackEntry(false, AosMagicItemsRichType1, 85.00, 1, 3, 20, 70),
+                new LootPackEntry(false, AosMagicItemsRichType1, 85.00, 1, 4, 20, 75),
+                new LootPackEntry(false, AosMagicItemsRichType2, 75.00, 1, 4, 25, 80),
+                new LootPackEntry(false, Instruments, 1.50, 1)
             ]
         );
 
         public static readonly LootPack SeFilthyRich = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "3d100+400"),
-                new LootPackEntry(false, AosMagicItemsFilthyRichType1, 79.50, 1, 5, 0, 100),
-                new LootPackEntry(false, AosMagicItemsFilthyRichType1, 79.50, 1, 5, 0, 100),
-                new LootPackEntry(false, AosMagicItemsFilthyRichType2, 77.60, 1, 5, 25, 100),
-                new LootPackEntry(false, Instruments, 2.00, 1)
+                new LootPackEntry(false, AosMagicItemsFilthyRichType1, 90.00, 1, 4, 25, 80),
+                new LootPackEntry(false, AosMagicItemsFilthyRichType1, 90.00, 1, 4, 30, 85),
+                new LootPackEntry(false, AosMagicItemsFilthyRichType2, 85.00, 1, 5, 35, 85),
+                new LootPackEntry(false, Instruments, 2.50, 1)
             ]
         );
 
         public static readonly LootPack SeUltraRich = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "6d100+600"),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 33, 100),
-                new LootPackEntry(false, Instruments, 2.00, 1)
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 40, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 40, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 40, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 40, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 40, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 45, 100, 0.04),
+                new LootPackEntry(false, Instruments, 2.50, 1)
             ]
         );
 
         public static readonly LootPack SeSuperBoss = new(
             [
                 new LootPackEntry(true, Gold, 100.00, "10d100+800"),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 25, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 33, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 33, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 33, 100),
-                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 33, 100),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 45, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 45, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 45, 95),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 45, 95),
                 new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 50, 100),
                 new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 50, 100),
-                new LootPackEntry(false, Instruments, 2.00, 1)
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 50, 100),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 50, 100),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 60, 100, 0.08),
+                new LootPackEntry(false, AosMagicItemsUltraRich, 100.00, 1, 5, 60, 100, 0.08),
+                new LootPackEntry(false, Instruments, 2.50, 1)
             ]
         );
 
@@ -577,8 +580,24 @@ namespace Server
         }
 
         public LootPackEntry(
+            bool atSpawnTime, LootPackItem[] items, double chance, int quantity, int maxProps,
+            int minIntensity, int maxIntensity, double apexChance
+        ) : this(
+            atSpawnTime,
+            items,
+            chance,
+            new LootPackDice(0, 0, quantity),
+            maxProps,
+            minIntensity,
+            maxIntensity,
+            apexChance
+        )
+        {
+        }
+
+        public LootPackEntry(
             bool atSpawnTime, LootPackItem[] items, double chance, LootPackDice quantity, int maxProps = 0,
-            int minIntensity = 0, int maxIntensity = 0
+            int minIntensity = 0, int maxIntensity = 0, double apexChance = 0.0
         )
         {
             m_AtSpawnTime = atSpawnTime;
@@ -588,6 +607,7 @@ namespace Server
             MaxProps = maxProps;
             MinIntensity = minIntensity;
             MaxIntensity = maxIntensity;
+            ApexChance = apexChance;
         }
 
         public int Chance { get; set; }
@@ -599,6 +619,8 @@ namespace Server
         public int MinIntensity { get; set; }
 
         public int MaxIntensity { get; set; }
+
+        public double ApexChance { get; set; }
 
         public LootPackItem[] Items { get; set; }
 
@@ -699,7 +721,7 @@ namespace Server
                 return new FireHorn();
             }
 
-            if (item is BaseWeapon or BaseArmor or BaseJewel or BaseHat)
+            if (item is BaseWeapon or BaseArmor or BaseJewel or BaseHat or Spellbook)
             {
                 if (Core.AOS)
                 {
@@ -714,34 +736,58 @@ namespace Server
 
                     var props = 1 + bonusProps;
 
-                    // Make sure we're not spawning items with 6 properties.
+                    // Make sure normal drops never exceed MaxProps.
                     if (props > MaxProps)
                     {
                         props = MaxProps;
                     }
 
+                    if (ApexChance > 0.0)
+                    {
+                        var effectiveApexChance = ApexChance * (1.0 + Math.Clamp(luckChance / 5000.0, 0.0, 1.5));
+
+                        if (Utility.RandomDouble() < effectiveApexChance)
+                        {
+                            props = ApexChance >= 0.08 ? Utility.RandomMinMax(5, 6) : Math.Max(MaxProps, 5);
+                            min = 80;
+                            max = 120;
+                        }
+                    }
+
                     if (item is BaseWeapon weapon)
                     {
-                        BaseRunicTool.ApplyAttributesTo(weapon, false, luckChance, props, MinIntensity, MaxIntensity);
+                        BaseRunicTool.ApplyAttributesTo(weapon, false, luckChance, props, min, max);
                     }
                     else if (item is BaseArmor armor)
                     {
-                        BaseRunicTool.ApplyAttributesTo(armor, false, luckChance, props, MinIntensity, MaxIntensity);
+                        BaseRunicTool.ApplyAttributesTo(armor, false, luckChance, props, min, max);
                     }
                     else if (item is BaseJewel jewel)
                     {
-                        BaseRunicTool.ApplyAttributesTo(jewel, false, luckChance, props, MinIntensity, MaxIntensity);
+                        BaseRunicTool.ApplyAttributesTo(jewel, false, luckChance, props, min, max);
                     }
-                    else
+                    else if (item is BaseHat hat)
                     {
-                        BaseRunicTool.ApplyAttributesTo(
-                            (BaseHat)item,
-                            false,
-                            luckChance,
-                            props,
-                            MinIntensity,
-                            MaxIntensity
-                        );
+                        BaseRunicTool.ApplyAttributesTo(hat, false, luckChance, props, min, max);
+                    }
+                    else if (item is Spellbook spellbook)
+                    {
+                        spellbook.LootType = LootType.Regular;
+
+                        if (spellbook.Content == 0)
+                        {
+                            ulong bits = 0;
+                            var spellCount = Utility.RandomMinMax(4, 16);
+
+                            for (var i = 0; i < spellCount; ++i)
+                            {
+                                bits |= 1UL << Utility.Random(64);
+                            }
+
+                            spellbook.Content = bits;
+                        }
+
+                        BaseRunicTool.ApplyAttributesTo(spellbook, false, luckChance, props, min, max);
                     }
                 }
                 else // not aos
@@ -826,48 +872,53 @@ namespace Server
 
         public int GetBonusProperties()
         {
+            if (MaxProps <= 1)
+            {
+                return 0;
+            }
+
             int p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 0, p5 = 0;
 
             switch (MaxProps)
             {
-                case 1:
-                    {
-                        p0 = 3;
-                        p1 = 1;
-                        break;
-                    }
                 case 2:
                     {
-                        p0 = 6;
-                        p1 = 3;
-                        p2 = 1;
+                        p0 = 4;
+                        p1 = 6;
                         break;
                     }
                 case 3:
                     {
-                        p0 = 10;
-                        p1 = 6;
-                        p2 = 3;
-                        p3 = 1;
+                        p0 = 5;
+                        p1 = 8;
+                        p2 = 7;
                         break;
                     }
                 case 4:
                     {
-                        p0 = 16;
-                        p1 = 12;
-                        p2 = 6;
-                        p3 = 5;
-                        p4 = 1;
+                        p0 = 5;
+                        p1 = 10;
+                        p2 = 12;
+                        p3 = 8;
                         break;
                     }
                 case 5:
                     {
-                        p0 = 30;
-                        p1 = 25;
-                        p2 = 20;
-                        p3 = 15;
-                        p4 = 9;
-                        p5 = 1;
+                        p0 = 8;
+                        p1 = 18;
+                        p2 = 28;
+                        p3 = 28;
+                        p4 = 18;
+                        break;
+                    }
+                default:
+                    {
+                        p0 = 5;
+                        p1 = 12;
+                        p2 = 23;
+                        p3 = 25;
+                        p4 = 20;
+                        p5 = 15;
                         break;
                     }
             }
@@ -965,7 +1016,7 @@ namespace Server
                 rnd -= m_BlankTypes.Length;
             }
 
-            if (Core.AOS && rnd < m_NecroTypes.Length)
+            if (Core.AOS && rnd < m_NecroTypes[index].Length)
             {
                 return Loot.Construct(m_NecroTypes[index]);
             }
@@ -1000,6 +1051,16 @@ namespace Server
                 if (Type == typeof(BaseJewel))
                 {
                     return Core.AOS ? Loot.RandomJewelry() : Loot.RandomArmorOrShieldOrWeapon();
+                }
+
+                if (Type == typeof(Spellbook))
+                {
+                    return Core.AOS ? new Spellbook() : Loot.RandomArmorOrShieldOrWeapon();
+                }
+
+                if (Type == typeof(RandomTalisman) || Type == typeof(BaseTalisman))
+                {
+                    return Core.ML ? new RandomTalisman() : Loot.RandomArmorOrShieldOrWeapon();
                 }
 
                 if (Type == typeof(BaseInstrument))

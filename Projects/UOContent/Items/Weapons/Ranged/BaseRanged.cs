@@ -4,6 +4,7 @@ using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Engines.Craft;
+using Server.Engines.Imbuing;
 using Server.Engines.WeaponLeveling;
 
 namespace Server.Items
@@ -143,12 +144,26 @@ namespace Server.Items
 
                     if (attacker.Player)
                     {
-                        attacker.SendLocalizedMessage(1072794); // Your arrow hits its mark with velocity!
+                        if (this is BaseThrown)
+                        {
+                            attacker.SendMessage("Your throw hits its mark with velocity!");
+                        }
+                        else
+                        {
+                            attacker.SendLocalizedMessage(1072794); // Your arrow hits its mark with velocity!
+                        }
                     }
 
                     if (defender.Player)
                     {
-                        defender.SendLocalizedMessage(1072795); // You have been hit by an arrow with velocity!
+                        if (this is BaseThrown)
+                        {
+                            defender.SendMessage("You have been hit by a thrown weapon with velocity!");
+                        }
+                        else
+                        {
+                            defender.SendLocalizedMessage(1072795); // You have been hit by an arrow with velocity!
+                        }
                     }
                 }
             }
@@ -239,30 +254,30 @@ namespace Server.Items
         {
             var craftResource = CraftResources.GetFromType(resource);
 
+            // Inherent Luck, LowerRequirements, Durability, and ColdDamage are provided by ResourceInfo.
+            // Clamp additive combat bonuses to standard crafting caps and respect the 5-property ceiling.
             switch (craftResource)
             {
                 case CraftResource.OakWood:
                     {
-                        Attributes.Luck += 40;
-                        Attributes.WeaponDamage += 5;
+                        AddClampedWeaponAttr(AosAttribute.WeaponDamage, 5, 50);
                         break;
                     }
                 case CraftResource.AshWood:
                     {
-                        Attributes.WeaponSpeed += 10;
-                        WeaponAttributes.LowerStatReq += 20;
+                        AddClampedWeaponAttr(AosAttribute.WeaponSpeed, 10, 30);
                         break;
                     }
                 case CraftResource.YewWood:
                     {
-                        Attributes.AttackChance += 5;
-                        Attributes.WeaponDamage += 10;
+                        AddClampedWeaponAttr(AosAttribute.AttackChance, 5, 15);
+                        AddClampedWeaponAttr(AosAttribute.WeaponDamage, 10, 50);
                         break;
                     }
                 case CraftResource.Bloodwood:
                     {
-                        Attributes.RegenHits += 2;
-                        WeaponAttributes.HitLeechHits += 16;
+                        AddClampedWeaponAttr(AosAttribute.RegenHits, 2, 2);
+                        AddClampedHitAttr(AosWeaponAttribute.HitLeechHits, 16, 50);
                         break;
                     }
                 case CraftResource.Heartwood:
@@ -272,9 +287,7 @@ namespace Server.Items
                     }
                 case CraftResource.Frostwood:
                     {
-                        AosElementDamages.Physical = 60;
-                        AosElementDamages.Cold = 40;
-                        Attributes.WeaponDamage += 12;
+                        AddClampedWeaponAttr(AosAttribute.WeaponDamage, 12, 50);
                         break;
                     }
             }
@@ -282,38 +295,72 @@ namespace Server.Items
 
         private void ApplyHeartwoodBonus()
         {
-            switch (Utility.Random(6))
+            switch (Utility.Random(4))
             {
                 case 0:
                     {
-                        Attributes.Luck += 40;
+                        AddClampedWeaponAttr(AosAttribute.WeaponSpeed, 10, 30);
                         break;
                     }
                 case 1:
                     {
-                        WeaponAttributes.DurabilityBonus += 50;
+                        AddClampedWeaponAttr(AosAttribute.AttackChance, 5, 15);
                         break;
                     }
                 case 2:
                     {
-                        WeaponAttributes.LowerStatReq += 20;
+                        AddClampedHitAttr(AosWeaponAttribute.HitLeechHits, 10, 50);
                         break;
                     }
-                case 3:
+                default:
                     {
-                        Attributes.WeaponSpeed += 10;
+                        AddClampedWeaponAttr(AosAttribute.WeaponDamage, 10, 50);
                         break;
                     }
-                case 4:
-                    {
-                        Attributes.AttackChance += 5;
-                        break;
-                    }
-                case 5:
-                    {
-                        WeaponAttributes.HitLeechHits += 10;
-                        break;
-                    }
+            }
+        }
+
+        private void AddClampedWeaponAttr(AosAttribute attr, int bonus, int cap)
+        {
+            var current = Attributes[attr];
+            if (current <= 0 && ImbuingCatalog.CountProperties(this) >= ImbuingCatalog.MaxProperties)
+            {
+                return;
+            }
+
+            if (current < cap)
+            {
+                var next = Math.Min(cap, current + bonus);
+                var mod = ImbuingCatalog.FindMod(attr);
+                if (Quality == WeaponQuality.Exceptional && mod != null &&
+                    ImbuingCatalog.ComputeProjectedWeight(this, mod, next) > 535)
+                {
+                    return;
+                }
+
+                Attributes[attr] = next;
+            }
+        }
+
+        private void AddClampedHitAttr(AosWeaponAttribute attr, int bonus, int cap)
+        {
+            var current = WeaponAttributes[attr];
+            if (current <= 0 && ImbuingCatalog.CountProperties(this) >= ImbuingCatalog.MaxProperties)
+            {
+                return;
+            }
+
+            if (current < cap)
+            {
+                var next = Math.Min(cap, current + bonus);
+                var mod = ImbuingCatalog.FindMod(attr);
+                if (Quality == WeaponQuality.Exceptional && mod != null &&
+                    ImbuingCatalog.ComputeProjectedWeight(this, mod, next) > 535)
+                {
+                    return;
+                }
+
+                WeaponAttributes[attr] = next;
             }
         }
     }

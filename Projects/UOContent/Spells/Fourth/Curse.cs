@@ -26,10 +26,60 @@ namespace Server.Spells.Fourth
 
         public override SpellCircle Circle => SpellCircle.Fourth;
 
+        private static readonly TimeSpan WeaponCurseMinDuration = TimeSpan.FromSeconds(15.0);
+        private const double WeaponCurseMinOffsetScalar = 0.08;
+
         public static bool DoCurse(Mobile caster, Mobile m)
         {
             var duration = SpellHelper.GetDuration(caster, m);
+            var newStrOffset = SpellHelper.GetOffset(caster, m, StatType.Str, true);
+            var newDexOffset = SpellHelper.GetOffset(caster, m, StatType.Dex, true);
+            var newIntOffset = SpellHelper.GetOffset(caster, m, StatType.Int, true);
+            var percentage = (int)(SpellHelper.GetOffsetScalar(caster, m, true) * 100);
 
+            return ApplyCurse(caster, m, duration, newStrOffset, newDexOffset, newIntOffset, percentage, skillCheck: true);
+        }
+
+        public static bool DoWeaponCurse(Mobile caster, Mobile m)
+        {
+            if (caster == null || m == null || m.Deleted || !m.Alive || !caster.CanBeHarmful(m, false))
+            {
+                return false;
+            }
+
+            var duration = SpellHelper.GetDuration(caster, m);
+            if (duration < WeaponCurseMinDuration)
+            {
+                duration = WeaponCurseMinDuration;
+            }
+
+            var scalar = Math.Max(WeaponCurseMinOffsetScalar, SpellHelper.GetOffsetScalar(caster, m, true));
+            int newStrOffset;
+            int newDexOffset;
+            int newIntOffset;
+
+            if (Core.AOS)
+            {
+                newStrOffset = m.RawStr > 0 ? Math.Max(1, (int)(m.RawStr * scalar)) : 0;
+                newDexOffset = m.RawDex > 0 ? Math.Max(1, (int)(m.RawDex * scalar)) : 0;
+                newIntOffset = m.RawInt > 0 ? Math.Max(1, (int)(m.RawInt * scalar)) : 0;
+            }
+            else
+            {
+                newStrOffset = Math.Max(1, SpellHelper.GetOffset(caster, m, StatType.Str, true));
+                newDexOffset = Math.Max(1, SpellHelper.GetOffset(caster, m, StatType.Dex, true));
+                newIntOffset = Math.Max(1, SpellHelper.GetOffset(caster, m, StatType.Int, true));
+            }
+
+            var percentage = (int)(scalar * 100);
+            return ApplyCurse(caster, m, duration, newStrOffset, newDexOffset, newIntOffset, percentage, skillCheck: false);
+        }
+
+        private static bool ApplyCurse(
+            Mobile caster, Mobile m, TimeSpan duration, int newStrOffset, int newDexOffset, int newIntOffset,
+            int percentage, bool skillCheck
+        )
+        {
             if (duration == TimeSpan.Zero)
             {
                 return false;
@@ -41,10 +91,6 @@ namespace Server.Spells.Fourth
                 return false;
             }
 
-            var newStrOffset = SpellHelper.GetOffset(caster, m, StatType.Str, true);
-            var newDexOffset = SpellHelper.GetOffset(caster, m, StatType.Dex, true);
-            var newIntOffset = SpellHelper.GetOffset(caster, m, StatType.Int, true);
-
             if (newStrOffset == 0 && newDexOffset == 0 && newIntOffset == 0)
             {
                 return false;
@@ -54,14 +100,14 @@ namespace Server.Spells.Fourth
             var oldDexOffset = SpellHelper.GetCurse(caster, m, StatType.Dex);
             var oldIntOffset = SpellHelper.GetCurse(caster, m, StatType.Int);
 
-            if (oldStrOffset > newStrOffset && oldDexOffset > newDexOffset && oldIntOffset > newIntOffset)
+            if (-oldStrOffset >= newStrOffset && -oldDexOffset >= newDexOffset && -oldIntOffset >= newIntOffset)
             {
                 return false;
             }
 
             var strCurse = SpellHelper.AddStatCurse(caster, m, StatType.Str, newStrOffset, duration);
             var dexCurse = SpellHelper.AddStatCurse(caster, m, StatType.Dex, newDexOffset, duration);
-            var intCurse = SpellHelper.AddStatCurse(caster, m, StatType.Int, newIntOffset, duration, true);
+            var intCurse = SpellHelper.AddStatCurse(caster, m, StatType.Int, newIntOffset, duration, skillCheck);
 
             if (!strCurse && !dexCurse && !intCurse)
             {
@@ -79,7 +125,6 @@ namespace Server.Spells.Fourth
             m.FixedParticles(0x374A, 10, 15, 5028, EffectLayer.Waist);
             m.PlaySound(0x1E1);
 
-            var percentage = (int)(SpellHelper.GetOffsetScalar(caster, m, true) * 100);
             var args = $"{percentage}\t{percentage}\t{percentage}\t{10}\t{10}\t{10}\t{10}";
 
             (m as PlayerMobile)?.AddBuff(
