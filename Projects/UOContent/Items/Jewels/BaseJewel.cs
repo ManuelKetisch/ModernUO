@@ -379,7 +379,9 @@ public abstract partial class BaseJewel : Item, ICraftable, IAosItem
                 player.SendMessage(
                     JewelrySlots.IsRingItem(this)
                         ? "All six ring slots are occupied."
-                        : "Both earring slots are occupied."
+                        : JewelrySlots.IsEarringsItem(this)
+                            ? "Both earring slots are occupied."
+                            : "Both bracelet slots are occupied."
                 );
                 return;
             }

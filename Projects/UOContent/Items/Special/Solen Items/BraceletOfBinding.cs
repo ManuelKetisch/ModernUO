@@ -178,13 +178,13 @@ public partial class BraceletOfBinding : BaseBracelet, TranslocationItem
             return false;
         }
 
-        if (from.FindItemOnLayer(Layer.Bracelet) != this)
+        if (Parent != from || !JewelrySlots.IsBraceletLayer(Layer))
         {
             from.SendLocalizedMessage(1054004); // You must equip the bracelet in order to use its power.
             return false;
         }
 
-        if (boundRoot?.NetState == null || boundRoot.FindItemOnLayer(Layer.Bracelet) != bound)
+        if (boundRoot?.NetState == null || bound.Parent != boundRoot || !JewelrySlots.IsBraceletLayer(bound.Layer))
         {
             // The bracelet emits a red glow. The bracelet's twin is not available for transport.
             from.SendLocalizedMessage(1054006);
