@@ -204,6 +204,8 @@ public abstract partial class BasePotion : Item, ICraftable, ICommodity
         }
     }
 
+    public static readonly TimeSpan MinimumBuffDuration = TimeSpan.FromMinutes(20.0);
+
     public static int EnhancePotions(Mobile m)
     {
         var EP = AosAttributes.GetValue(m, AosAttribute.EnhancePotions);
@@ -215,6 +217,28 @@ public abstract partial class BasePotion : Item, ICraftable, ICommodity
         }
 
         return EP + skillBonus;
+    }
+
+    public static int GetBuffDurationBonusPercent(Mobile m)
+    {
+        if (m == null)
+        {
+            return 0;
+        }
+
+        var enhancePotions = Math.Max(0, EnhancePotions(m));
+        var tasteBonus = Math.Max(0, (int)(m.Skills.TasteID.Value / 5.0));
+        var statBonus = Math.Max(0, (Math.Max(0, m.RawStr) + Math.Max(0, m.RawInt)) / 10);
+
+        return enhancePotions + tasteBonus + statBonus;
+    }
+
+    public static TimeSpan GetBuffDuration(Mobile m, TimeSpan baseDuration)
+    {
+        var floor = baseDuration > MinimumBuffDuration ? baseDuration : MinimumBuffDuration;
+        var bonusPercent = GetBuffDurationBonusPercent(m);
+
+        return TimeSpan.FromSeconds(Math.Round(floor.TotalSeconds * (100 + bonusPercent) / 100.0));
     }
 
     public static TimeSpan Scale(Mobile m, TimeSpan v)

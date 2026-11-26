@@ -1,5 +1,7 @@
 using System;
 using ModernUO.Serialization;
+using Server.Engines.BuffIcons;
+using Server.Mobiles;
 using Server.Spells;
 
 namespace Server.Items;
@@ -21,12 +23,17 @@ public abstract partial class BaseAgilityPotion : BasePotion
             return false;
         }
 
-        // TODO: Verify scaled; is it offset, duration, or both?
-        if (!SpellHelper.AddStatOffset(from, StatType.Dex, Scale(from, DexOffset), Duration))
+        var offset = Scale(from, DexOffset);
+        var duration = GetBuffDuration(from, Duration);
+
+        if (!SpellHelper.AddStatOffset(from, StatType.Dex, offset, duration))
         {
             from.SendLocalizedMessage(502173); // You are already under a similar effect.
             return false;
         }
+
+        var percent = from.RawDex > 0 ? (int)Math.Round(offset * 100.0 / from.RawDex) : offset;
+        (from as PlayerMobile)?.AddBuff(new BuffInfo(BuffIcon.Agility, 1075841, duration, percent.ToString()));
 
         from.FixedEffect(0x375A, 10, 15);
         from.PlaySound(0x1E7);

@@ -12,5 +12,5 @@ public partial class GreaterStrengthPotion : BaseStrengthPotion
     }
 
     public override int StrOffset => 20;
-    public override TimeSpan Duration => TimeSpan.FromMinutes(2.0);
+    public override TimeSpan Duration => TimeSpan.FromMinutes(30.0);
 }

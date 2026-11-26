@@ -112,10 +112,11 @@ namespace Server
         {
             private readonly Mobile m_Owner;
 
-            public NightSightTimer(Mobile owner) : base(TimeSpan.FromMinutes(Utility.Random(15, 25)))
+            public NightSightTimer(Mobile owner) : this(owner, TimeSpan.FromMinutes(Utility.Random(15, 25)))
             {
-                m_Owner = owner;
             }
+
+            public NightSightTimer(Mobile owner, TimeSpan duration) : base(duration) => m_Owner = owner;
 
             protected override void OnTick()
             {
